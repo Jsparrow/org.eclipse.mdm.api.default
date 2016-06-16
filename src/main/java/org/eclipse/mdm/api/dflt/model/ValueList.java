@@ -16,7 +16,7 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class ValueList extends BaseEntity implements Datable, Describable, Deletable {
@@ -25,7 +25,7 @@ public final class ValueList extends BaseEntity implements Datable, Describable,
 	// Constructors
 	// ======================================================================
 
-	ValueList(EntityCore core) {
+	ValueList(Core core) {
 		super(core);
 	}
 
@@ -34,7 +34,7 @@ public final class ValueList extends BaseEntity implements Datable, Describable,
 	// ======================================================================
 
 	public Optional<ValueListValue> getValueListValue(String name) {
-		return getValueListValues().stream().filter(vlv -> vlv.getName().equals(name)).findAny();
+		return getValueListValues().stream().filter(vlv -> vlv.nameMatches(name)).findAny();
 	}
 
 	public List<ValueListValue> getValueListValues() {

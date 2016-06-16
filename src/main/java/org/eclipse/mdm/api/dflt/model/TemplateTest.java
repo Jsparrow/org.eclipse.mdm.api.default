@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class TemplateTest extends BaseEntity implements Deletable, Describable, Versionable {
@@ -32,7 +33,7 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	// Constructors
 	// ======================================================================
 
-	TemplateTest(EntityCore core) {
+	TemplateTest(Core core) {
 		super(core);
 	}
 
@@ -65,7 +66,7 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	//	}
 
 	public Optional<TemplateTestStepUsage> getTemplateTestStepUsage(String name) {
-		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.getName().equals(name)).findAny();
+		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameMatches(name)).findAny();
 	}
 
 	public List<TemplateTestStepUsage> getTemplateTestStepUsages() {
@@ -96,6 +97,10 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 		}
 
 		return sb.append(')').toString();
+	}
+
+	public static Optional<TemplateTest> of(Test test) {
+		return Optional.ofNullable(getCore(test).getMutableStore().get(TemplateTest.class));
 	}
 
 }

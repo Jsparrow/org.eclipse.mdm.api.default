@@ -8,17 +8,21 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 
 public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables
 	// ======================================================================
+
+	// TODO: ONLY for sorting of template attributes within a template component or sensor
+	public static final Comparator<TemplateAttribute> COMPARATOR = Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
 
 	public static final String ATTR_DEFAULT_VALUE = "DefaultValue";
 	public static final String ATTR_VALUE_READONLY = "ValueReadonly";
@@ -28,7 +32,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// Constructors
 	// ======================================================================
 
-	TemplateAttribute(EntityCore core) {
+	TemplateAttribute(Core core) {
 		super(core);
 	}
 
@@ -79,11 +83,14 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	public TemplateRoot getTemplateRoot() {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent();
+		Optional<TemplateSensor> templateSensor = getTemplateSensor();
 		if(templateComponent.isPresent()) {
 			return templateComponent.get().getTemplateRoot();
+		} else if(templateSensor.isPresent()) {
+			return templateSensor.get().getTemplateRoot();
+		} else {
+			throw new IllegalStateException("Parent entity is unknown.");
 		}
-
-		return getTemplateSensor().orElseThrow(() -> new IllegalStateException("Parent entity is unknown.")).getTemplateRoot();
 	}
 
 	public Optional<TemplateComponent> getTemplateComponent() {

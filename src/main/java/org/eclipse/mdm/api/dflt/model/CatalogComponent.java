@@ -19,7 +19,7 @@ import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class CatalogComponent extends BaseEntity implements Datable, Deletable, Describable {
@@ -34,10 +34,10 @@ public final class CatalogComponent extends BaseEntity implements Datable, Delet
 	// Constructors
 	// ======================================================================
 
-	CatalogComponent(EntityCore core) {
+	CatalogComponent(Core core) {
 		super(core);
 
-		String typeName = core.getURI().getTypeName().toUpperCase(Locale.ROOT);
+		String typeName = core.getTypeName().toUpperCase(Locale.ROOT);
 		for(ContextType contextTypeCandidate : ContextType.values()) {
 			if(typeName.contains(contextTypeCandidate.name())) {
 				contextType = contextTypeCandidate;
@@ -62,7 +62,7 @@ public final class CatalogComponent extends BaseEntity implements Datable, Delet
 	}
 
 	public Optional<CatalogAttribute> getCatalogAttribute(String name) {
-		return getCatalogAttributes().stream().filter(ca -> ca.getName().equals(name)).findAny();
+		return getCatalogAttributes().stream().filter(ca -> ca.nameMatches(name)).findAny();
 	}
 
 	public List<CatalogAttribute> getCatalogAttributes() {
@@ -80,7 +80,7 @@ public final class CatalogComponent extends BaseEntity implements Datable, Delet
 	}
 
 	public Optional<CatalogSensor> getCatalogSensor(String name) {
-		return getCatalogSensors().stream().filter(cs -> cs.getName().equals(name)).findAny();
+		return getCatalogSensors().stream().filter(cs -> cs.nameMatches(name)).findAny();
 	}
 
 	public List<CatalogSensor> getCatalogSensors() {

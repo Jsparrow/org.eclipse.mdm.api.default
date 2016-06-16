@@ -14,12 +14,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.ContextComponent;
 import org.eclipse.mdm.api.base.model.Deletable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Value;
 
-public final class TemplateComponent extends BaseEntity implements Deletable, Sortable<TemplateComponent> {
+public final class TemplateComponent extends BaseEntity implements Deletable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -33,7 +34,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	// Constructors
 	// ======================================================================
 
-	TemplateComponent(EntityCore core) {
+	TemplateComponent(Core core) {
 		super(core);
 	}
 
@@ -83,7 +84,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	}
 
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
-		return getTemplateAttributes().stream().filter(ta -> ta.getName().equals(name)).findAny();
+		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
 	}
 
 	public List<TemplateAttribute> getTemplateAttributes() {
@@ -103,7 +104,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	// TODO java doc lookup is recursive in all template components children
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.getName().equals(name)).findAny();
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
 		if(templateComponent.isPresent()) {
 			return templateComponent;
 		}
@@ -126,7 +127,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	}
 
 	public Optional<TemplateSensor> getTemplateSensor(String name) {
-		return getTemplateSensors().stream().filter(ts -> ts.getName().equals(name)).findAny();
+		return getTemplateSensors().stream().filter(ts -> ts.nameMatches(name)).findAny();
 	}
 
 	public List<TemplateSensor> getTemplateSensors() {
@@ -171,6 +172,10 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 		}
 
 		return sb.append(')').toString();
+	}
+
+	public static TemplateComponent of(ContextComponent contextComponent) {
+		return getCore(contextComponent).getMutableStore().get(TemplateComponent.class);
 	}
 
 }

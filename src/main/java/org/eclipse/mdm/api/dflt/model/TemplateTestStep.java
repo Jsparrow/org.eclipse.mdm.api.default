@@ -16,7 +16,8 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.TestStep;
 
 public final class TemplateTestStep extends BaseEntity implements Deletable, Describable, Versionable {
 
@@ -24,7 +25,7 @@ public final class TemplateTestStep extends BaseEntity implements Deletable, Des
 	// Constructors
 	// ======================================================================
 
-	TemplateTestStep(EntityCore core) {
+	TemplateTestStep(Core core) {
 		super(core);
 	}
 
@@ -52,6 +53,10 @@ public final class TemplateTestStep extends BaseEntity implements Deletable, Des
 		boolean contained = getTemplateRoot(contextType).isPresent();
 		getCore().getMutableStore().remove(TemplateRoot.class, contextType);
 		return contained;
+	}
+
+	public static Optional<TemplateTestStep> of(TestStep testStep) {
+		return Optional.ofNullable(getCore(testStep).getMutableStore().get(TemplateTestStep.class));
 	}
 
 }

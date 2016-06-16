@@ -18,7 +18,7 @@ import org.eclipse.mdm.api.base.model.AxisType;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Interpolation;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.SequenceRepresentation;
@@ -28,7 +28,7 @@ import org.eclipse.mdm.api.base.model.Unit;
 import org.eclipse.mdm.api.base.model.Value;
 import org.eclipse.mdm.api.base.model.VersionState;
 
-public final class CatalogAttribute extends BaseEntity implements Deletable, Describable, Sortable<CatalogAttribute> {
+public final class CatalogAttribute extends BaseEntity implements Deletable, Describable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -41,7 +41,6 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	public static final String VATTR_ENUMERATION_CLASS = "@EnumerationClass";
 	public static final String VATTR_SCALAR_TYPE = "@ScalarType";
 	public static final String VATTR_SEQUENCE = "@Sequence";
-	public static final String VATTR_PARENT_NAME = "@ParentName";
 
 	// ======================================================================
 	// Instance variables
@@ -57,7 +56,7 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	// Constructors
 	// ======================================================================
 
-	CatalogAttribute(EntityCore core) {
+	CatalogAttribute(Core core) {
 		super(core);
 
 		Map<String, Value> values = core.getValues();
@@ -169,17 +168,19 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	public String toString() {
 		StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
 
-		sb.append("ScalarType = ").append(getScalarType()).append(", Sequence = ").append(isSequence());
+		sb.append("ScalarType = ").append(getScalarType());
 		if(getScalarType().isEnumeration()) {
 			sb.append(", EnumerationClass = ").append(getEnumerationClass());
 		}
 
+		sb.append(", Sequence = ").append(isSequence());
+
 		Optional<Unit> unit = getUnit();
 		if(unit.isPresent()) {
-			sb.append(", UnitName = ").append(unit.get().getName());
+			sb.append(", Unit = ").append(unit.get());
 		}
 
-		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
+		sb.append(", ").append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		return sb.append(')').toString();
 	}

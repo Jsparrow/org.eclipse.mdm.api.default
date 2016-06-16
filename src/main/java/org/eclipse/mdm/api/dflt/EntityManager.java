@@ -14,7 +14,9 @@ import java.util.Optional;
 import org.eclipse.mdm.api.base.BaseEntityManager;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Entity;
+import org.eclipse.mdm.api.base.model.StatusAttachable;
 import org.eclipse.mdm.api.base.query.DataAccessException;
+import org.eclipse.mdm.api.dflt.model.Status;
 import org.eclipse.mdm.api.dflt.model.Versionable;
 
 public interface EntityManager extends BaseEntityManager {
@@ -23,84 +25,51 @@ public interface EntityManager extends BaseEntityManager {
 	// Public methods
 	// ======================================================================
 
-	// this one is required to load template roots ... or catalog components
-	default <T extends Entity> List<T> loadAll(Class<T> type, ContextType contextType) throws DataAccessException {
-		return loadAll(type, contextType, "*");
+
+	default Optional<Status> loadStatus(Class<? extends StatusAttachable> entityClass, String name) throws DataAccessException {
+		return loadAllStatus(entityClass, name).stream()
+				.filter(s -> s.nameMatches(name))
+				.findAny();
 	}
 
-	<T extends Entity> List<T> loadAll(Class<T> type, ContextType contextType, String pattern) throws DataAccessException;
+	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, Long instanceID) throws DataAccessException;
 
-	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> type, ContextType contextType, String name) throws DataAccessException {
-		int currentVersion = 0;
-		T result = null;
-
-		/*
-		 * TODO: this works but load unnecessarily all similar versionables including all of their children!
-		 *
-		 * alternative approach:
-		 * 1. query versions of all VALID versionables -> find highest version
-		 * (this must not necessarily be the one with the highest instance ID!)
-		 * 2. load the versionable with a predefined filter!
-		 * (described solution should outperform this default implementation)
-		 */
-
-		for(T versionable : loadAll(type, contextType, name)) {
-			if(!versionable.getName().equals(name) || !versionable.getVersionState().isValid()) {
-				continue;
-			}
-
-			if(currentVersion < versionable.getVersion()) {
-				result = versionable;
-				currentVersion = versionable.getVersion();
-			}
-		}
-
-		return Optional.ofNullable(result);
+	default List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass) throws DataAccessException {
+		return loadAllStatus(entityClass, "*");
 	}
 
-	// TODO name is NOT a pattern -> use EQUALS instead of LIKE operation!
-	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> type, String name) throws DataAccessException {
-		int currentVersion = 0;
-		T result = null;
+	List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass, String pattern) throws DataAccessException;
 
-		/*
-		 * TODO: this works but load unnecessarily all similar versionables including all of their children!
-		 *
-		 * alternative approach:
-		 * 1. query versions of all VALID versionables -> find highest version
-		 * (this must not necessarily be the one with the highest instance ID!)
-		 * 2. load the versionable with a predefined filter!
-		 * (described solution should outperform this default implementation)
-		 */
-
-		for(T versionable : loadAll(type, name)) {
-			if(!versionable.getName().equals(name) || !versionable.getVersionState().isValid()) {
-				continue;
-			}
-
-			if(currentVersion < versionable.getVersion()) {
-				result = versionable;
-				currentVersion = versionable.getVersion();
-			}
-		}
-
-		return Optional.ofNullable(result);
+	default <T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType) throws DataAccessException {
+		return loadAll(entityClass, contextType, "*");
 	}
 
-	//	List<Status> loadStatus(Class<? extends StatusAttachable> type) throws DataAccessException;
-	//
-	//	Optional<Status> loadStatus(Class<? extends StatusAttachable> type, String name) throws DataAccessException;
-	//
-	//	default <T extends StatusAttachable> List<T> loadAll(Class<T> type, Status status) throws DataAccessException {
-	//		return loadAll(type, status, "*");
-	//	}
-	//
-	//	<T extends StatusAttachable> List<T> loadAll(Class<T> type, Status status, String pattern) throws DataAccessException;
-	//
-	//	default <T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> type, Status status) throws DataAccessException {
-	//		return loadChildren(parent, type, status, "*");
-	//	}
-	//
-	//	<T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> type, Status status, String pattern) throws DataAccessException;
+	default <T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status status) throws DataAccessException {
+		return loadAll(entityClass, status, "*");
+	}
+
+	<T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status status, String pattern) throws DataAccessException;
+
+	<T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType, String pattern) throws DataAccessException;
+
+	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name) throws DataAccessException {
+		return loadAll(entityClass, name).stream()
+				.filter(v -> v.nameMatches(name))
+				.filter(Versionable::isValid)
+				.max(Versionable.COMPARATOR);
+	}
+
+	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, ContextType contextType, String name) throws DataAccessException {
+		return loadAll(entityClass, contextType, name).stream()
+				.filter(v -> v.nameMatches(name))
+				.filter(Versionable::isValid)
+				.max(Versionable.COMPARATOR);
+	}
+
+	default <T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> entityClass, Status status) throws DataAccessException {
+		return loadChildren(parent, entityClass, status, "*");
+	}
+
+	<T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> entityClass, Status status, String pattern) throws DataAccessException;
 
 }

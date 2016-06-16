@@ -10,10 +10,10 @@ package org.eclipse.mdm.api.dflt.model;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Sortable;
 
-public final class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable<TemplateTestStepUsage> {
+public final class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -26,7 +26,7 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	// Constructors
 	// ======================================================================
 
-	TemplateTestStepUsage(EntityCore core) {
+	TemplateTestStepUsage(Core core) {
 		super(core);
 	}
 

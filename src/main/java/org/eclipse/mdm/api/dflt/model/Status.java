@@ -8,11 +8,12 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.StatusAttachable;
 
 public final class Status extends BaseEntity implements Describable {
@@ -21,7 +22,7 @@ public final class Status extends BaseEntity implements Describable {
 	// Constructors
 	// ======================================================================
 
-	Status(EntityCore core) {
+	Status(Core core) {
 		super(core);
 	}
 
@@ -35,6 +36,14 @@ public final class Status extends BaseEntity implements Describable {
 
 	public static Optional<Status> of(StatusAttachable statusAttachable) {
 		return Optional.ofNullable(getCore(statusAttachable).getMutableStore().get(Status.class));
+	}
+
+	public static void set(Status status, StatusAttachable statusAttachable) {
+
+	}
+
+	public static void set(Status status, Collection<? extends StatusAttachable> statusAttachables) {
+		statusAttachables.stream().map(Status::getCore).map(Core::getPermanentStore).forEach(es -> es.set(status));
 	}
 
 }

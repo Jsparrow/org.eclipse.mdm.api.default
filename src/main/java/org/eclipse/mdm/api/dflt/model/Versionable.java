@@ -8,6 +8,8 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.util.Comparator;
+
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.VersionState;
 
@@ -16,6 +18,10 @@ public interface Versionable extends Datable {
 	// ======================================================================
 	// Class variables
 	// ======================================================================
+
+	// TODO: first by name (ASC) then by version (DESC)
+	static final Comparator<Versionable> COMPARATOR = Comparator.comparing(Versionable::getName)
+			.thenComparing(Comparator.comparing(Versionable::getVersion).reversed());
 
 	/**
 	 * The 'Version' attribute name.
@@ -67,6 +73,13 @@ public interface Versionable extends Datable {
 		getValue(ATTR_VERSION_STATE).set(versionState);
 	}
 
+	//	@Override
+	//	// TODO javadoc: by Name (ASC) Version (DESC)
+	//	default int compareTo(T other) {
+	//		int nameCompare = getName().compareTo(other.getName());
+	//		return nameCompare == 0 ? other.getVersion().compareTo(getVersion()) : nameCompare;
+	//	}
+
 	default boolean isEditable() {
 		/*
 		 * TODO
@@ -81,6 +94,14 @@ public interface Versionable extends Datable {
 		 *  / update statements?!
 		 */
 		return getVersionState().isEditable();
+	}
+
+	default boolean isValid() {
+		return getVersionState().isValid();
+	}
+
+	default boolean isArchived() {
+		return getVersionState().isArchived();
 	}
 
 }

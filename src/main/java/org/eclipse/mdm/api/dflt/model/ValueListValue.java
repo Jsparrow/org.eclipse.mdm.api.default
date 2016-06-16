@@ -11,10 +11,10 @@ package org.eclipse.mdm.api.dflt.model;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Sortable;
 
-public final class ValueListValue extends BaseEntity implements Deletable, Describable, Sortable<ValueListValue> {
+public final class ValueListValue extends BaseEntity implements Deletable, Describable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -27,7 +27,7 @@ public final class ValueListValue extends BaseEntity implements Deletable, Descr
 	// Class variables
 	// ======================================================================
 
-	ValueListValue(EntityCore core) {
+	ValueListValue(Core core) {
 		super(core);
 	}
 

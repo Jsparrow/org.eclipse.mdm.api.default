@@ -16,8 +16,7 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
-import org.eclipse.mdm.api.base.model.Quantity;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class CatalogSensor extends BaseEntity implements Datable, Deletable, Describable {
@@ -26,7 +25,7 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 	// Constructors
 	// ======================================================================
 
-	CatalogSensor(EntityCore core) {
+	CatalogSensor(Core core) {
 		super(core);
 	}
 
@@ -38,12 +37,8 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 		return getCore().getPermanentStore().get(CatalogComponent.class);
 	}
 
-	public Quantity getQuantity() {
-		return getCore().getMutableStore().get(Quantity.class);
-	}
-
 	public Optional<CatalogAttribute> getCatalogAttribute(String name) {
-		return getCatalogAttributes().stream().filter(ca -> ca.getName().equals(name)).findAny();
+		return getCatalogAttributes().stream().filter(ca -> ca.nameMatches(name)).findAny();
 	}
 
 	public List<CatalogAttribute> getCatalogAttributes() {

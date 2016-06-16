@@ -13,13 +13,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Quantity;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Value;
 
-public final class TemplateSensor extends BaseEntity implements Deletable, Describable, Sortable<TemplateSensor> {
+public final class TemplateSensor extends BaseEntity implements Deletable, Describable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -41,7 +43,7 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	// Constructors
 	// ======================================================================
 
-	TemplateSensor(EntityCore core) {
+	TemplateSensor(Core core) {
 		super(core);
 	}
 
@@ -101,6 +103,10 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 		return getCore().getMutableStore().get(CatalogSensor.class);
 	}
 
+	public Quantity getQuantity() {
+		return getCore().getMutableStore().get(Quantity.class);
+	}
+
 	public TemplateRoot getTemplateRoot() {
 		return getTemplateComponent().getTemplateRoot();
 	}
@@ -110,7 +116,7 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	}
 
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
-		return getTemplateAttributes().stream().filter(ta -> ta.getName().equals(name)).findAny();
+		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
 	}
 
 	public List<TemplateAttribute> getTemplateAttributes() {
@@ -141,6 +147,10 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 		}
 
 		return sb.append(')').toString();
+	}
+
+	public static TemplateSensor of(ContextSensor contextSensor) {
+		return getCore(contextSensor).getMutableStore().get(TemplateSensor.class);
 	}
 
 }

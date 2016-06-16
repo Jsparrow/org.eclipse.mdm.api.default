@@ -14,9 +14,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.ContextRoot;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Deletable;
-import org.eclipse.mdm.api.base.model.EntityCore;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class TemplateRoot extends BaseEntity implements Deletable, Versionable {
@@ -31,10 +32,10 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	// Constructors
 	// ======================================================================
 
-	TemplateRoot(EntityCore core) {
+	TemplateRoot(Core core) {
 		super(core);
 
-		String typeName = core.getURI().getTypeName().toUpperCase(Locale.ROOT);
+		String typeName = core.getTypeName().toUpperCase(Locale.ROOT);
 		for(ContextType contextTypeCandidate : ContextType.values()) {
 			if(typeName.contains(contextTypeCandidate.name())) {
 				contextType = contextTypeCandidate;
@@ -61,7 +62,7 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	// TODO java doc lookup is recursive in all template components children
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.getName().equals(name)).findAny();
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
 		if(templateComponent.isPresent()) {
 			return templateComponent;
 		}
@@ -98,6 +99,10 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 		}
 
 		return sb.append(')').toString();
+	}
+
+	public static TemplateRoot of(ContextRoot contextRoot) {
+		return getCore(contextRoot).getMutableStore().get(TemplateRoot.class);
 	}
 
 }

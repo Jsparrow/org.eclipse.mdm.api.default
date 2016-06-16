@@ -15,9 +15,6 @@ import java.util.Optional;
 
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextType;
-import org.eclipse.mdm.api.base.model.Entity;
-import org.eclipse.mdm.api.base.model.EntityCore;
-import org.eclipse.mdm.api.base.model.MimeType;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.ValueType;
 import org.eclipse.mdm.api.base.model.VersionState;
@@ -27,11 +24,10 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 	public CatalogComponent createCatalogComponent(ContextType contextType, String name) {
 		validateCatalogName(name, false);
 
-		CatalogComponent catalogComponent = new CatalogComponent(createComponentCore(contextType, false));
+		CatalogComponent catalogComponent = new CatalogComponent(createCore(CatalogComponent.class, contextType));
 
 		// properties
 		catalogComponent.setName(name);
-		catalogComponent.setMimeType(createCatalogMimeType(catalogComponent));
 		catalogComponent.setDateCreated(LocalDateTime.now());
 
 		// TODO we should check whether this property exists (seems to be a deprecated one..)
@@ -73,18 +69,17 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Given value type is not allowed.");
 		}
 
-		CatalogAttribute catalogAttribute = new CatalogAttribute(createAttributeCore(catalogComponent.getContextType(), false));
+		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).setParent(catalogComponent, false);
+		getPermanentStore(catalogAttribute).set(catalogComponent);
 		getChildrenStore(catalogComponent).add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setMimeType(createCatalogMimeType(catalogAttribute));
 		catalogAttribute.setScalarType(ScalarType.valueOf(valueType.toSingleType().name()));
 		catalogAttribute.setSequence(valueType.isSequence());
-		catalogAttribute.setSortIndex(Integer.valueOf(0)); // TODO
+		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
 	}
@@ -96,24 +91,23 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
 
-		CatalogAttribute catalogAttribute = new CatalogAttribute(createAttributeCore(catalogComponent.getContextType(), false));
+		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).setParent(catalogComponent, false);
+		getPermanentStore(catalogAttribute).set(catalogComponent);
 		getChildrenStore(catalogComponent).add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setMimeType(createCatalogMimeType(catalogAttribute));
 		catalogAttribute.setEnumerationClass(enumerationClass);
 		catalogAttribute.setSequence(false);
-		catalogAttribute.setSortIndex(Integer.valueOf(0)); // TODO
+		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
 	}
 
 	public TemplateRoot createTemplateRoot(ContextType contextType, String name) {
-		TemplateRoot templateRoot = new TemplateRoot(createRootCore(contextType, true));
+		TemplateRoot templateRoot = new TemplateRoot(createCore(TemplateRoot.class, contextType));
 
 		// TODO: name and version have to be a unique combination!!!
 		// => find a way to check this prior creating a new instance
@@ -121,7 +115,6 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 
 		// properties
 		templateRoot.setName(name);
-		templateRoot.setMimeType(createTemplateMimeType(templateRoot));
 		templateRoot.setDateCreated(LocalDateTime.now());
 		templateRoot.setVersionState(VersionState.EDITABLE);
 		templateRoot.setVersion(Integer.valueOf(1));
@@ -136,20 +129,19 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
 		}
 
-		TemplateComponent templateComponent = new TemplateComponent(createComponentCore(templateRoot.getContextType(), true));
+		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).setParent(templateRoot, false);
+		getPermanentStore(templateComponent).set(templateRoot);
 		getMutableStore(templateComponent).set(catalogComponent);
 		getChildrenStore(templateRoot).add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
-		templateComponent.setMimeType(createTemplateMimeType(templateComponent));
 		templateComponent.setOptional(Boolean.TRUE);
 		templateComponent.setDefaultActive(Boolean.TRUE);
 		templateComponent.setSeriesConstant(Boolean.TRUE);
-		templateComponent.setSortIndex(Integer.valueOf(0)); // TODO
+		templateComponent.setSortIndex(nextIndex(templateRoot.getTemplateComponents()));
 
 		// create template attributes
 		catalogComponent.getCatalogAttributes().forEach(ca -> createTemplateAttribute(ca.getName(), templateComponent));
@@ -165,20 +157,19 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
 		}
 
-		TemplateComponent templateComponent = new TemplateComponent(createComponentCore(templateRoot.getContextType(), true));
+		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).setParent(partentComponentTemplate, false);
+		getPermanentStore(templateComponent).set(partentComponentTemplate);
 		getMutableStore(templateComponent).set(catalogComponent);
 		getChildrenStore(partentComponentTemplate).add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
-		templateComponent.setMimeType(createTemplateMimeType(templateComponent));
 		templateComponent.setOptional(Boolean.TRUE);
 		templateComponent.setDefaultActive(Boolean.TRUE);
 		templateComponent.setSeriesConstant(Boolean.TRUE);
-		templateComponent.setSortIndex(Integer.valueOf(0)); // TODO
+		templateComponent.setSortIndex(nextIndex(partentComponentTemplate.getTemplateComponents()));
 
 		// create template attributes
 		catalogComponent.getCatalogAttributes().forEach(ca -> createTemplateAttribute(ca.getName(), templateComponent));
@@ -192,18 +183,18 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Template attribute with name '" + name + "' already exists.");
 		}
 
-		Optional<CatalogAttribute> catalogAttribute = templateComponent.getCatalogComponent().getCatalogAttribute(name);
+		CatalogComponent catalogComponent = templateComponent.getCatalogComponent();
+		Optional<CatalogAttribute> catalogAttribute = catalogComponent.getCatalogAttribute(name);
 		if(catalogAttribute.isPresent()) {
-			TemplateAttribute templateAttribute = new TemplateAttribute(createAttributeCore(templateComponent.getCatalogComponent().getContextType(), true));
+			TemplateAttribute templateAttribute = new TemplateAttribute(createCore(TemplateAttribute.class, catalogComponent.getContextType()));
 
 			// relations
-			getPermanentStore(templateAttribute).setParent(templateComponent, false);
+			getPermanentStore(templateAttribute).set(templateComponent);
 			getMutableStore(templateAttribute).set(catalogAttribute.get());
 			getChildrenStore(templateComponent).add(templateAttribute);
 
 			// properties
 			templateAttribute.setName(name);
-			templateAttribute.setMimeType(createTemplateMimeType(templateAttribute));
 			templateAttribute.setValueReadOnly(Boolean.FALSE);
 			templateAttribute.setOptional(Boolean.TRUE);
 
@@ -222,7 +213,6 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 
 		// properties
 		templateTestStep.setName(name);
-		templateTestStep.setMimeType(getDefaultMimeType(TemplateTestStep.class));
 		templateTestStep.setDateCreated(LocalDateTime.now());
 		templateTestStep.setVersionState(VersionState.EDITABLE);
 		templateTestStep.setVersion(Integer.valueOf(1));
@@ -239,7 +229,6 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 
 		// properties
 		templateTest.setName(name);
-		templateTest.setMimeType(getDefaultMimeType(TemplateTest.class));
 		templateTest.setDateCreated(LocalDateTime.now());
 		templateTest.setVersion(Integer.valueOf(1));
 		templateTest.setVersionState(VersionState.EDITABLE);
@@ -255,16 +244,15 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 		TemplateTestStepUsage templateTestStepUsage = new TemplateTestStepUsage(createCore(TemplateTestStepUsage.class));
 
 		// relations
-		getPermanentStore(templateTestStepUsage).setParent(templateTest, false);
+		getPermanentStore(templateTestStepUsage).set(templateTest);
 		getMutableStore(templateTestStepUsage).set(templateTestStep);
 		getChildrenStore(templateTest).add(templateTestStepUsage);
 
 		// properties
 		templateTestStepUsage.setName(name);
-		templateTestStepUsage.setMimeType(getDefaultMimeType(TemplateTestStepUsage.class));
 		templateTestStepUsage.setOptional(Boolean.TRUE);
 		templateTestStepUsage.setDefaultActive(Boolean.TRUE);
-		templateTestStepUsage.setSortIndex(Integer.valueOf(1)); // TODO
+		templateTestStepUsage.setSortIndex(nextIndex(templateTest.getTemplateTestStepUsages()));
 
 		return templateTestStepUsage;
 	}
@@ -274,7 +262,6 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 
 		// properties
 		valueList.setName(name);
-		valueList.setMimeType(getDefaultMimeType(ValueList.class));
 		valueList.setDateCreated(LocalDateTime.now());
 
 		return valueList;
@@ -288,39 +275,18 @@ public abstract class DefaultEntityFactory extends BaseEntityFactory {
 		ValueListValue valueListValue = new ValueListValue(createCore(ValueListValue.class));
 
 		// relations
-		getPermanentStore(valueListValue).setParent(valueList, false);
+		getPermanentStore(valueListValue).set(valueList);
 		getChildrenStore(valueList).add(valueListValue);
 
 		// properties
 		valueListValue.setName(name);
-		valueListValue.setMimeType(getDefaultMimeType(ValueListValue.class));
-		valueListValue.setSortIndex(Integer.valueOf(0)); // TODO
+		valueListValue.setSortIndex(nextIndex(valueList.getValueListValues()));
 
 		// this property is hidden by the public API and is not allowed to be modified!
 		valueListValue.getValue(ValueListValue.ATTR_SCALAR_TYPE).set(ScalarType.STRING);
 
 		return valueListValue;
 	}
-
-	// TODO add ValueListValue
-
-	protected abstract EntityCore createRootCore(ContextType contextType, boolean forTemplate);
-
-	protected abstract EntityCore createComponentCore(ContextType contextType, boolean forTemplate);
-
-	protected abstract EntityCore createSensorCore(boolean forTemplate);
-
-	protected abstract EntityCore createAttributeCore(ContextType contextType, boolean forTemplate);
-
-	/*
-	 * TODO createCatalogMimeType() & createTemplateMimeType() do both exactly the same...
-	 * is there a way to merge them?!
-	 */
-
-	@Deprecated
-	protected abstract MimeType createCatalogMimeType(Entity entity);
-	@Deprecated
-	protected abstract MimeType createTemplateMimeType(Entity entity);
 
 	private static void validateCatalogName(String name, boolean isAttributeName) {
 		if(name == null || name.isEmpty() || name.length() > 30) {

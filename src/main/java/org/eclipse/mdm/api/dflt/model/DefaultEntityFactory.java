@@ -16,10 +16,25 @@ import java.util.Optional;
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.ScalarType;
+import org.eclipse.mdm.api.base.model.Test;
+import org.eclipse.mdm.api.base.model.TestStep;
+import org.eclipse.mdm.api.base.model.User;
 import org.eclipse.mdm.api.base.model.ValueType;
 import org.eclipse.mdm.api.base.model.VersionState;
 
 public abstract class DefaultEntityFactory extends BaseEntityFactory {
+
+	public Test createTest(String name, Status status, User responsiblePerson) {
+		Test test = super.createTest(name, responsiblePerson);
+		status.assign(test);
+		return test;
+	}
+
+	public TestStep createTestStep(String name, Test test, Status status) {
+		TestStep testStep = super.createTestStep(name, test);
+		status.assign(testStep);
+		return testStep;
+	}
 
 	public CatalogComponent createCatalogComponent(ContextType contextType, String name) {
 		validateCatalogName(name, false);

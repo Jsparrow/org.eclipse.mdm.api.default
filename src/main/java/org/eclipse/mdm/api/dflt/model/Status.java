@@ -8,12 +8,12 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
-import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.StatusAttachable;
 
 public final class Status extends BaseEntity implements Describable {
@@ -26,24 +26,16 @@ public final class Status extends BaseEntity implements Describable {
 		super(core);
 	}
 
-	//	public <T extends StatusAttachable> void assign(List<T> statusAttachables) {
-	//		statusAttachables.forEach(this::assign);
-	//	}
-	//
-	//	public <T extends StatusAttachable> void assign(T statusAttachable) {
-	//		getCore(statusAttachable).getMutableStore().set(this);
-	//	}
+	public <T extends StatusAttachable> void assign(List<T> statusAttachables) {
+		statusAttachables.forEach(this::assign);
+	}
+
+	public <T extends StatusAttachable> void assign(T statusAttachable) {
+		getCore(statusAttachable).getMutableStore().set(this);
+	}
 
 	public static Optional<Status> of(StatusAttachable statusAttachable) {
 		return Optional.ofNullable(getCore(statusAttachable).getMutableStore().get(Status.class));
-	}
-
-	public static void set(Status status, StatusAttachable statusAttachable) {
-
-	}
-
-	public static void set(Status status, Collection<? extends StatusAttachable> statusAttachables) {
-		statusAttachables.stream().map(Status::getCore).map(Core::getPermanentStore).forEach(es -> es.set(status));
 	}
 
 }

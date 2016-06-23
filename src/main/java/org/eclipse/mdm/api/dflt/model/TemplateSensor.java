@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextSensor;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Quantity;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Value;
@@ -149,8 +149,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 		return sb.append(')').toString();
 	}
 
-	public static TemplateSensor of(ContextSensor contextSensor) {
-		return getCore(contextSensor).getMutableStore().get(TemplateSensor.class);
+	public static Optional<TemplateSensor> of(ContextSensor contextSensor) {
+		return Optional.ofNullable(getCore(contextSensor).getMutableStore().get(TemplateSensor.class));
 	}
 
 }

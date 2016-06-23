@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextRoot;
 import org.eclipse.mdm.api.base.model.ContextType;
-import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class TemplateRoot extends BaseEntity implements Deletable, Versionable {
@@ -101,8 +101,8 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 		return sb.append(')').toString();
 	}
 
-	public static TemplateRoot of(ContextRoot contextRoot) {
-		return getCore(contextRoot).getMutableStore().get(TemplateRoot.class);
+	public static Optional<TemplateRoot> of(ContextRoot contextRoot) {
+		return Optional.ofNullable(getCore(contextRoot).getMutableStore().get(TemplateRoot.class));
 	}
 
 }

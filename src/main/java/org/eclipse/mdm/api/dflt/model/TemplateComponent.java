@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextComponent;
-import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Value;
 
@@ -174,8 +174,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 		return sb.append(')').toString();
 	}
 
-	public static TemplateComponent of(ContextComponent contextComponent) {
-		return getCore(contextComponent).getMutableStore().get(TemplateComponent.class);
+	public static Optional<TemplateComponent> of(ContextComponent contextComponent) {
+		return Optional.ofNullable(getCore(contextComponent).getMutableStore().get(TemplateComponent.class));
 	}
 
 }

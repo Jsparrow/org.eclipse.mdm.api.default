@@ -11,6 +11,7 @@ package org.eclipse.mdm.api.dflt.model;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
@@ -29,6 +30,13 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	public static final String ATTR_SERIES_CONSTANT = "TestStepSeriesVariable";
 	public static final String ATTR_DEFAULT_ACTIVE = "DefaultActive";
 	public static final String ATTR_OPTIONAL = "Optional";
+
+	public static final Predicate<TemplateComponent> IS_OPTIONAL = TemplateComponent::isOptional;
+	public static final Predicate<TemplateComponent> IS_MANDATORY = IS_OPTIONAL.negate();
+	public static final Predicate<TemplateComponent> IS_DEFAULT_ACTIVE = TemplateComponent::isDefaultActive;
+	public static final Predicate<TemplateComponent> IS_SERIES_CONSTANT = TemplateComponent::isSeriesConstant;
+	public static final Predicate<TemplateComponent> IS_SERIES_VARIABLE = IS_SERIES_CONSTANT.negate();
+	public static final Predicate<TemplateComponent> IS_IMPLICIT_CREATE = IS_DEFAULT_ACTIVE.or(IS_MANDATORY);
 
 	// ======================================================================
 	// Constructors
@@ -119,7 +127,12 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
 		if(templateComponent.isPresent()) {
-			getCore().getChildrenStore().remove(templateComponent.get());
+			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
+			if(parentTemplateComponent.isPresent()) {
+				parentTemplateComponent.get().removeTemplateComponent(name);
+			} else {
+				getCore().getChildrenStore().remove(templateComponent.get());
+			}
 			return true;
 		}
 

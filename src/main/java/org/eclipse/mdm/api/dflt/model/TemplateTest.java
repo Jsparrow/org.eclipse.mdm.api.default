@@ -13,9 +13,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.Value;
 
@@ -101,6 +101,13 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 
 	public static Optional<TemplateTest> of(Test test) {
 		return Optional.ofNullable(getCore(test).getMutableStore().get(TemplateTest.class));
+	}
+
+	boolean contains(TemplateTestStep templateTestStep) {
+		return getTemplateTestStepUsages().stream().map(TemplateTestStepUsage::getTemplateTestStep)
+				.filter(tts -> tts.getName().equals(templateTestStep.getName()))
+				.filter(tts -> tts.getVersion().equals(templateTestStep.getVersion()))
+				.findFirst().isPresent();
 	}
 
 }

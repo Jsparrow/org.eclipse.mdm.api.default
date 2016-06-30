@@ -8,12 +8,31 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
-import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Deletable;
+import org.eclipse.mdm.api.base.model.DoubleComplex;
+import org.eclipse.mdm.api.base.model.FileLink;
+import org.eclipse.mdm.api.base.model.FloatComplex;
+import org.eclipse.mdm.api.base.model.MimeType;
+import org.eclipse.mdm.api.base.model.ScalarType;
+import org.eclipse.mdm.api.base.model.Value;
+import org.eclipse.mdm.api.base.model.ValueType;
 
 public final class TemplateAttribute extends BaseEntity implements Deletable {
 
@@ -21,7 +40,6 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// Class variables
 	// ======================================================================
 
-	// TODO: ONLY for sorting of template attributes within a template component or sensor
 	public static final Comparator<TemplateAttribute> COMPARATOR = Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
 
 	public static final String ATTR_DEFAULT_VALUE = "DefaultValue";
@@ -40,24 +58,56 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// Public methods
 	// ======================================================================
 
-	public String getDefaultValue() {
-		/*
-		 * TODO: we need to ensure that given String value is compatible
-		 * with the value type defined in the CatalogAttribute!
-		 *
-		 * TODO: see: Parameter.setValue?!
-		 */
-		return getValue(ATTR_DEFAULT_VALUE).extract();
+	public Value getDefaultValue() {
+		ValueType valueType = getDefaultValueValueType();
+		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
+		return valueType.create(getName(), defaultValue.isValid() ? parse(defaultValue.extract(), valueType) : null);
 	}
 
-	public void setDefaultValue(String defaultValue) {
-		/*
-		 * TODO: we need to ensure that given String value is compatible
-		 * with the value type defined in the CatalogAttribute!
-		 *
-		 * TODO: see: Parameter.setValue?!
-		 */
-		getValue(ATTR_DEFAULT_VALUE).set(defaultValue);
+	public void setDefaultValue(Object input) {
+		if(input == null) {
+			getValue(ATTR_DEFAULT_VALUE).set(null);
+			return;
+		}
+
+		ValueType valueType = getDefaultValueValueType();
+		boolean sequence = valueType.isSequence();
+
+		// if this passes -> input is valid
+		Value value = valueType.create("notRelevant", input);
+
+		String stringValue;
+		if(valueType.isFileLinkType()) {
+			FileLink[] values = sequence ? value.extract() : new FileLink[] { value.extract() };
+			stringValue = Stream.of(values)
+					.map(fl -> {
+						StringBuilder sb = new StringBuilder();
+						sb.append(fl.getDescription()).append('[').append(fl.getMimeType()).append(',');
+						if(fl.isRemote()) {
+							sb.append(fl.getRemotePath());
+						} else if(fl.isLocal()) {
+							sb.append(FileLinkParser.LOCAL_MARKER).append(fl.getLocalPath());
+						} else {
+							throw new IllegalStateException("File link is neither in local nor remote state: " + fl);
+						}
+
+						return sb.append(']');
+					}).collect(Collectors.joining(","));
+		} else if(valueType.isDateType()) {
+			LocalDateTime[] values = sequence ? value.extract() : new LocalDateTime[] { value.extract() };
+			stringValue = Stream.of(values).map(ldt -> ldt.format(Value.LOCAL_DATE_TIME_FORMATTER))
+					.collect(Collectors.joining(","));
+		} else {
+			if(input.getClass().isArray()) {
+				stringValue = IntStream.range(0, Array.getLength(input))
+						.mapToObj(i -> Array.get(input, i).toString())
+						.collect(Collectors.joining(","));
+			} else {
+				stringValue = value.extract().toString();
+			}
+		}
+
+		getValue(ATTR_DEFAULT_VALUE).set(stringValue);
 	}
 
 	public Boolean isValueReadOnly() {
@@ -99,6 +149,101 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	public Optional<TemplateSensor> getTemplateSensor() {
 		return Optional.ofNullable(getCore().getPermanentStore().get(TemplateSensor.class));
+	}
+
+	private ValueType getDefaultValueValueType() {
+		ScalarType scalarType =	getCatalogAttribute().getScalarType();
+		boolean sequence = getCatalogAttribute().isSequence();
+		return sequence ? scalarType.toValueType().toSequenceType() : scalarType.toValueType();
+	}
+
+	private static Object parse(String value, ValueType valueType) {
+		if(valueType.isFileLinkType()) {
+			Pattern pattern = Pattern.compile("[^,](.*?)\\[(.*?),(.*?)\\]");
+			Matcher matcher = pattern.matcher(value);
+			List<FileLink> fileLinks = new ArrayList<>();
+			while(matcher.find()) {
+				fileLinks.add(FileLinkParser.parse(matcher.group()));
+			}
+
+			return valueType.isSequence() ? fileLinks.toArray(new FileLink[fileLinks.size()]) : fileLinks.get(0);
+		} else {
+			Function<String, Object> converter = getParser(valueType);
+			if(valueType.isSequence()) {
+				List<Object> values = Stream.of(value.split(",")).map(converter).collect(Collectors.toList());
+				Object array = Array.newInstance(valueType.type, values.size());
+
+				if(valueType.type.getComponentType().isPrimitive()) {
+					IntStream.range(0, values.size()).forEach(i -> Array.set(array, i, values.get(i)));
+				} else {
+					values.toArray((Object[])array);
+				}
+
+				return array;
+			} else {
+				return converter.apply(value);
+			}
+		}
+	}
+
+	private static Function<String, Object> getParser(ValueType valueType) {
+		Function<String, Object> converter;
+
+		if(valueType.isString()) {
+			converter = v -> v;
+		} else if(valueType.isDate()) {
+			converter = v -> LocalDateTime.parse(v, Value.LOCAL_DATE_TIME_FORMATTER);
+		} else if(valueType.isBoolean()) {
+			converter = Boolean::valueOf;
+		} else if(valueType.isByte()) {
+			converter = Byte::valueOf;
+		} else if(valueType.isShort()) {
+			converter = Short::valueOf;
+		} else if(valueType.isInteger()) {
+			converter = Integer::valueOf;
+		} else if(valueType.isLong()) {
+			converter = Long::valueOf;
+		} else if(valueType.isFloat()) {
+			converter = Float::valueOf;
+		} else if(valueType.isDouble()) {
+			converter = Double::valueOf;
+		} else if(valueType.isFloatComplex()) {
+			converter = FloatComplex::valueOf;
+		} else if(valueType.isDoubleComplex()) {
+			converter = DoubleComplex::valueOf;
+		} else {
+			throw new IllegalStateException("String conversion for value type '" + valueType + "' not supported.");
+		}
+
+		return converter;
+	}
+
+	private static final class FileLinkParser {
+
+		private static String LOCAL_MARKER = "LOCALPATH::";
+
+		private static String DESCRIPTION = "descrption";
+		private static String MIMETYPE = "mimetype";
+		private static String PATH = "path";
+		private static Pattern FILE_LINK_PATTERN = Pattern.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
+
+		public static FileLink parse(String value) {
+			Matcher matcher = FILE_LINK_PATTERN.matcher(value);
+			if(!matcher.find()) {
+				throw new IllegalStateException("Unable to restore file link.");
+			}
+			String path = matcher.group(PATH);
+			if(path.startsWith(LOCAL_MARKER)) {
+				try {
+					return FileLink.newLocal(Paths.get(path.replaceFirst(LOCAL_MARKER, "")), matcher.group(DESCRIPTION));
+				} catch (IOException e) {
+					throw new IllegalStateException("Unable to restore local file link.", e);
+				}
+			} else {
+				return FileLink.newRemote(path, new MimeType(matcher.group(MIMETYPE)), matcher.group(DESCRIPTION));
+			}
+		}
+
 	}
 
 }

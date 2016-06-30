@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.AxisType;
 import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Interpolation;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.SequenceRepresentation;
@@ -209,7 +209,7 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 			setScalarType(ScalarType.ENUMERATION);
 			enumerationClassValue.set(enumerationClass.getSimpleName());
 		} else {
-			throw new IllegalArgumentException("Given enumeration class is not supported.");
+			throw new IllegalArgumentException("Enumeration class '" + enumerationClass.getName() + "' is not supported.");
 		}
 	}
 

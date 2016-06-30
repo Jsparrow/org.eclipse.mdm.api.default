@@ -16,15 +16,15 @@ import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.model.StatusAttachable;
 import org.eclipse.mdm.api.base.query.DataAccessException;
+import org.eclipse.mdm.api.dflt.model.EntityFactory;
 import org.eclipse.mdm.api.dflt.model.Status;
 import org.eclipse.mdm.api.dflt.model.Versionable;
 
-public interface EntityManager extends BaseEntityManager {
+public interface EntityManager extends BaseEntityManager<EntityFactory> {
 
 	// ======================================================================
 	// Public methods
 	// ======================================================================
-
 
 	default Optional<Status> loadStatus(Class<? extends StatusAttachable> entityClass, String name) throws DataAccessException {
 		return loadAllStatus(entityClass, name).stream()

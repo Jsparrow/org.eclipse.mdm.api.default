@@ -8,9 +8,11 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.util.function.Predicate;
+
 import org.eclipse.mdm.api.base.model.BaseEntity;
-import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Core;
+import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Sortable;
 
 public final class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable {
@@ -22,6 +24,10 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	public static final String ATTR_DEFAULT_ACTIVE = "DefaultActive";
 	public static final String ATTR_OPTIONAL = "Optional";
 
+	public static final Predicate<TemplateTestStepUsage> IS_OPTIONAL = TemplateTestStepUsage::isOptional;
+	public static final Predicate<TemplateTestStepUsage> IS_MANDATORY = IS_OPTIONAL.negate();
+	public static final Predicate<TemplateTestStepUsage> IS_DEFAULT_ACTIVE = TemplateTestStepUsage::isDefaultActive;
+	public static final Predicate<TemplateTestStepUsage> IS_IMPLICIT_CREATE = IS_DEFAULT_ACTIVE.or(IS_MANDATORY);
 	// ======================================================================
 	// Constructors
 	// ======================================================================

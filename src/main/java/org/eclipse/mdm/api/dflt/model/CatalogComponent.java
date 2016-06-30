@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextType;
+import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Value;
 
 public final class CatalogComponent extends BaseEntity implements Datable, Deletable, Describable {
@@ -45,7 +45,7 @@ public final class CatalogComponent extends BaseEntity implements Datable, Delet
 			}
 		}
 
-		throw new IllegalStateException("Given core is incompatible.");
+		throw new IllegalStateException("Core is incompatible.");
 	}
 
 	// ======================================================================

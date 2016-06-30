@@ -43,7 +43,7 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 			}
 		}
 
-		throw new IllegalStateException("Given core is incompatible.");
+		throw new IllegalStateException("Core is incompatible.");
 	}
 
 	// ======================================================================
@@ -74,10 +74,16 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 		return getCore().getChildrenStore().get(TemplateComponent.class);
 	}
 
+	// TODO search the complete tree!
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
 		if(templateComponent.isPresent()) {
-			getCore().getChildrenStore().remove(templateComponent.get());
+			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
+			if(parentTemplateComponent.isPresent()) {
+				parentTemplateComponent.get().removeTemplateComponent(name);
+			} else {
+				getCore().getChildrenStore().remove(templateComponent.get());
+			}
 			return true;
 		}
 

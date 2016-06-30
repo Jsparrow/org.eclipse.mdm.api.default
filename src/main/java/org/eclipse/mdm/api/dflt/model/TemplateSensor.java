@@ -10,6 +10,7 @@ package org.eclipse.mdm.api.dflt.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.mdm.api.base.model.BaseEntity;
@@ -28,7 +29,6 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	// ======================================================================
 
 	public static final String ATTR_OPTIONAL = "Optional";
-
 	public static final String ATTR_DEFAULT_ACTIVE = "DefaultActive";
 
 	//	public static final String ATTR_MEASRED_VALUES_EDITABLE = "MeaQuantityValuesEditable";
@@ -38,6 +38,11 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	//	public static final String ATTR_MEASRED_VALUES_INDEPENDENT = "MeaQuantityIndependent";
 	//
 	//	public static final String ATTR_MEASRED_VALUES_AXISTYPE = "MeaQuantityAxisType";
+
+	public static final Predicate<TemplateSensor> IS_OPTIONAL = TemplateSensor::isOptional;
+	public static final Predicate<TemplateSensor> IS_MANDATORY = IS_OPTIONAL.negate();
+	public static final Predicate<TemplateSensor> IS_DEFAULT_ACTIVE = TemplateSensor::isDefaultActive;
+	public static final Predicate<TemplateSensor> IS_IMPLICIT_CREATE = IS_DEFAULT_ACTIVE.or(IS_MANDATORY);
 
 	// ======================================================================
 	// Constructors

@@ -58,10 +58,18 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// Public methods
 	// ======================================================================
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Value getDefaultValue() {
 		ValueType valueType = getDefaultValueValueType();
 		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
-		return valueType.create(getName(), defaultValue.isValid() ? parse(defaultValue.extract(), valueType) : null);
+		boolean isValid = defaultValue.isValid();
+		String value = defaultValue.extract();
+		if(valueType.isEnumerationType()) {
+			Class<? extends Enum> enumClass = getCatalogAttribute().getEnumerationClass();
+			return valueType.create(enumClass, getName(), "", isValid, isValid ? Enum.valueOf(enumClass, value) : null);
+		} else {
+			return valueType.create(getName(), isValid ? parse(value, valueType) : null);
+		}
 	}
 
 	public void setDefaultValue(Object input) {
@@ -154,7 +162,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	private ValueType getDefaultValueValueType() {
 		ScalarType scalarType =	getCatalogAttribute().getScalarType();
 		boolean sequence = getCatalogAttribute().isSequence();
-		return sequence ? scalarType.toValueType().toSequenceType() : scalarType.toValueType();
+		return sequence ? scalarType.toValueType() : scalarType.toSingleValueType();
 	}
 
 	private static Object parse(String value, ValueType valueType) {

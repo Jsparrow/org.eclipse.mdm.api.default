@@ -31,7 +31,23 @@ import org.eclipse.mdm.api.base.model.VersionState;
 
 public abstract class EntityFactory extends BaseEntityFactory {
 
-	public Test createTest(String name, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
+	//	@Override
+	//	public Test createTest(String name) {
+	//		throw new UnsupportedOperationException("Test requires a status."); // TODO ...
+	//	}
+	//
+	//	@Override
+	//	public TestStep createTestStep(String name, Test test) {
+	//		throw new UnsupportedOperationException("Test step requires a status."); // TODO ...
+	//	}
+
+	// TODO make a decision: status in or out!
+	public Test createTest(String name, TemplateTest templateTest) {
+		return createTest(name, null, null, templateTest);
+	}
+
+	// TODO make a decision: status in or out!
+	protected Test createTest(String name, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
 		Test test = createTest(name, statusTest);
 
 		// relations
@@ -39,8 +55,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		// create default active and mandatory test steps according to the template
 
-		templateTest.getTemplateTestStepUsages().stream()
-		.filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
+		templateTest.getTemplateTestStepUsages().stream().filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
 		.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> {
 			createTestStep(test, statusTestStep, templateTestStep);
 		});
@@ -48,14 +63,23 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return test;
 	}
 
-	public Test createTest(String name, Status status) {
+	// TODO make a decision: status in or out!
+	protected Test createTest(String name, Status status) {
 		Test test = super.createTest(name);
-		status.assign(test);
+		if(status != null) {
+			status.assign(test);
+		}
 		return test;
 	}
 
+	// TODO make a decision: status in or out!
+	protected TestStep createTestStep(Test test, TemplateTestStep templateTestStep) {
+		return createTestStep(test, null, templateTestStep);
+	}
+
+	// TODO make a decision: status in or out!
 	// TODO renaming is possible using TestStep.setName();
-	public TestStep createTestStep(Test test, Status status, TemplateTestStep templateTestStep) {
+	protected TestStep createTestStep(Test test, Status status, TemplateTestStep templateTestStep) {
 		TemplateTest templateTest = TemplateTest.of(test)
 				.orElseThrow(() -> new IllegalArgumentException("Template test is not available."));
 		if(!templateTest.contains(templateTestStep)) {
@@ -69,15 +93,18 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		// create initial context roots
 		templateTestStep.getTemplateRoots().forEach(templateRoot -> {
-			getMutableStore(testStep).set(createContextRoot(templateRoot));
+			getMutableStore(testStep).set(createContextRoot(templateRoot), templateRoot.getContextType());
 		});
 
 		return testStep;
 	}
 
-	public TestStep createTestStep(String name, Test test, Status status) {
+	// TODO make a decision: status in or out!
+	protected TestStep createTestStep(String name, Test test, Status status) {
 		TestStep testStep = super.createTestStep(name, test);
-		status.assign(testStep);
+		if(status != null) {
+			status.assign(testStep);
+		}
 		return testStep;
 	}
 
@@ -118,12 +145,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 			// create context component if not already done
 			if(!contextRoot.getContextComponent(name).isPresent()) {
-				ContextComponent contextComponent = super.createContextComponent(name, contextRoot);
+				ContextComponent contextComponent = super.createContextComponent(templateComponent.get().getCatalogComponent().getName(), contextRoot);
 
 				// relations
 				getMutableStore(contextComponent).set(templateComponent.get());
 
 				// properties
+				contextComponent.setName(name);
 				hideValues(getCore(contextComponent), templateComponent.get().getTemplateAttributes());
 				templateComponent.get().getTemplateAttributes().forEach(ta -> {
 					contextComponent.getValue(ta.getName()).set(ta.getDefaultValue().extract());
@@ -159,12 +187,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		Optional<TemplateSensor> templateSensor = templateComponent.getTemplateSensor(name);
 		if(templateSensor.isPresent()) {
-			ContextSensor contextSensor = super.createContextSensor(name, contextComponent);
+			ContextSensor contextSensor = super.createContextSensor(templateSensor.get().getCatalogSensor().getName(), contextComponent);
 
 			// relations
 			getMutableStore(contextSensor).set(templateSensor.get());
 
 			// properties
+			contextSensor.setName(name);
 			hideValues(getCore(contextSensor), templateSensor.get().getTemplateAttributes());
 			templateSensor.get().getTemplateAttributes().forEach(ta -> {
 				contextSensor.getValue(ta.getName()).set(ta.getDefaultValue().extract());

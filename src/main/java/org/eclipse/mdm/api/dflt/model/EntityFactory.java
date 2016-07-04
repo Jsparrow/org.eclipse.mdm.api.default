@@ -23,6 +23,7 @@ import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
+import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.TestStep;
@@ -92,9 +93,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		getMutableStore(testStep).set(templateTestStep);
 
 		// create initial context roots
-		templateTestStep.getTemplateRoots().forEach(templateRoot -> {
-			getMutableStore(testStep).set(createContextRoot(templateRoot), templateRoot.getContextType());
-		});
+		templateTestStep.getTemplateRoots().forEach(templateRoot -> createContextRoot(testStep, templateRoot));
 
 		return testStep;
 	}
@@ -109,6 +108,24 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 
 	// ################################## CONTEXTS ##################################
+
+	public ContextRoot createContextRoot(TestStep testStep, TemplateRoot templateRoot) {
+		ContextRoot contextRoot = createContextRoot(templateRoot);
+
+		// relations
+		getMutableStore(testStep).set(contextRoot, templateRoot.getContextType());
+
+		return contextRoot;
+	}
+
+	public ContextRoot createContextRoot(Measurement measurement, TemplateRoot templateRoot) {
+		ContextRoot contextRoot = createContextRoot(templateRoot);
+
+		// relations
+		getMutableStore(measurement).set(contextRoot, templateRoot.getContextType());
+
+		return contextRoot;
+	}
 
 	public ContextRoot createContextRoot(TemplateRoot templateRoot) {
 		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());

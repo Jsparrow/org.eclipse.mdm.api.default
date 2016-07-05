@@ -90,7 +90,12 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 			stringValue = Stream.of(values)
 					.map(fl -> {
 						StringBuilder sb = new StringBuilder();
-						sb.append(fl.getDescription()).append('[').append(fl.getMimeType()).append(',');
+						if(fl.getDescription().isEmpty()) {
+							sb.append(FileLinkParser.NO_DESC_MARKER);
+						} else {
+							sb.append(fl.getDescription());
+						}
+						sb.append('[').append(fl.getMimeType()).append(',');
 						if(fl.isRemote()) {
 							sb.append(fl.getRemotePath());
 						} else if(fl.isLocal()) {
@@ -167,7 +172,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	private static Object parse(String value, ValueType valueType) {
 		if(valueType.isFileLinkType()) {
-			Pattern pattern = Pattern.compile("[^,](.*?)\\[(.*?),(.*?)\\]");
+			Pattern pattern = Pattern.compile("([^,].*?)\\[(.*?),(.*?)\\]");
 			Matcher matcher = pattern.matcher(value);
 			List<FileLink> fileLinks = new ArrayList<>();
 			while(matcher.find()) {
@@ -228,9 +233,10 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	private static final class FileLinkParser {
 
-		private static String LOCAL_MARKER = "LOCALPATH::";
+		private static String NO_DESC_MARKER = "NO_DESC#";
+		private static String LOCAL_MARKER = "LOCALPATH#";
 
-		private static String DESCRIPTION = "descrption";
+		private static String DESCRIPTION = "description";
 		private static String MIMETYPE = "mimetype";
 		private static String PATH = "path";
 		private static Pattern FILE_LINK_PATTERN = Pattern.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
@@ -240,16 +246,21 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 			if(!matcher.find()) {
 				throw new IllegalStateException("Unable to restore file link.");
 			}
+			String description = matcher.group(DESCRIPTION);
 			String path = matcher.group(PATH);
+			FileLink fileLink;
 			if(path.startsWith(LOCAL_MARKER)) {
 				try {
-					return FileLink.newLocal(Paths.get(path.replaceFirst(LOCAL_MARKER, "")), matcher.group(DESCRIPTION));
+					fileLink = FileLink.newLocal(Paths.get(path.replaceFirst(LOCAL_MARKER, "")));
 				} catch (IOException e) {
 					throw new IllegalStateException("Unable to restore local file link.", e);
 				}
 			} else {
-				return FileLink.newRemote(path, new MimeType(matcher.group(MIMETYPE)), matcher.group(DESCRIPTION));
+				fileLink = FileLink.newRemote(path, new MimeType(matcher.group(MIMETYPE)), description);
 			}
+
+			fileLink.setDescription(NO_DESC_MARKER.equals(description) ? null : description);
+			return fileLink;
 		}
 
 	}

@@ -169,6 +169,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 				// properties
 				contextComponent.setName(name);
+				contextComponent.setMimeType(contextComponent.getMimeType().addSubType(templateComponent.get().getName()));
 				hideValues(getCore(contextComponent), templateComponent.get().getTemplateAttributes());
 				templateComponent.get().getTemplateAttributes().forEach(ta -> {
 					contextComponent.getValue(ta.getName()).set(ta.getDefaultValue().extract());

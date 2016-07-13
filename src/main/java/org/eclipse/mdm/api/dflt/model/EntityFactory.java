@@ -42,14 +42,31 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	//		throw new UnsupportedOperationException("Test step requires a status."); // TODO ...
 	//	}
 
+	public Project createProject(String name) {
+		Project project = new Project(createCore(Project.class));
+		project.setName(name);
+		return project;
+	}
+	
+	public Pool createPool(String name, Project project) {
+		Pool pool = new Pool(createCore(Pool.class));
+		
+		getPermanentStore(pool).set(project);
+		getChildrenStore(project).add(pool);
+		
+		pool.setName(name);
+		return pool;
+	}
+	
+	
 	// TODO make a decision: status in or out!
-	public Test createTest(String name, TemplateTest templateTest) {
-		return createTest(name, null, null, templateTest);
+	public Test createTest(String name, Pool pool, TemplateTest templateTest) {
+		return createTest(name, pool, null, null, templateTest);
 	}
 
 	// TODO make a decision: status in or out!
-	protected Test createTest(String name, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
-		Test test = createTest(name, statusTest);
+	protected Test createTest(String name, Pool pool, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
+		Test test = createTest(name, pool, statusTest);
 
 		// relations
 		getMutableStore(test).set(templateTest);
@@ -65,11 +82,16 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 
 	// TODO make a decision: status in or out!
-	protected Test createTest(String name, Status status) {
+	protected Test createTest(String name, Pool pool, Status status) {
 		Test test = super.createTest(name);
+		
+		getPermanentStore(test).set(pool);
+		getChildrenStore(pool).add(test);
+		
 		if(status != null) {
 			status.assign(test);
 		}
+		
 		return test;
 	}
 
@@ -128,7 +150,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 
 	public ContextRoot createContextRoot(TemplateRoot templateRoot) {
-		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());
+		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), 
+			templateRoot.getVersion(), templateRoot.getContextType());
 
 		// relations
 		getMutableStore(contextRoot).set(templateRoot);

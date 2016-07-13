@@ -25,9 +25,11 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	// Class variables
 	// ======================================================================
 
-	//	public static final String ATTR_NAMEHELPER_CLASSNAME = "NameHelperClassname";
-	//	public static final String ATTR_DATASOURCE_PLUGIN_CLASSNAMES = "DataSourcePluginClassnames";
-	//	public static final String ATTR_TESTORDER_ACTION_CLASSNAMES = "TestOrderActionClassnames";
+	public static final String ATTR_NAMEHELPER_CLASSNAME = "NameHelperClassname";
+
+	public static final String ATTR_DATASOURCE_PLUGIN_CLASSNAMES = "DataSourcePluginClassnames";
+
+	public static final String ATTR_TESTORDER_ACTION_CLASSNAMES = "TestOrderActionClassnames";
 
 	// ======================================================================
 	// Constructors
@@ -41,29 +43,29 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	// Public methods
 	// ======================================================================
 
-	//	public String getNameHelperClassname() {
-	//		return getValue(ATTR_NAMEHELPER_CLASSNAME).extract();
-	//	}
-	//
-	//	public void setNameHelperClassname(String nameHelperClassname) {
-	//		getValue(ATTR_NAMEHELPER_CLASSNAME).set(nameHelperClassname);
-	//	}
-	//
-	//	public String[] getDataSourcePluginClassnames() {
-	//		return getValue(ATTR_DATASOURCE_PLUGIN_CLASSNAMES).extract();
-	//	}
-	//
-	//	public void setDataSourceClassnames(String[] dataSourcePluginClassnames) {
-	//		getValue(ATTR_DATASOURCE_PLUGIN_CLASSNAMES).set(dataSourcePluginClassnames);
-	//	}
-	//
-	//	public String[] getTestOrderActionClassnames() {
-	//		return getValue(ATTR_TESTORDER_ACTION_CLASSNAMES).extract();
-	//	}
-	//
-	//	public void setTestOrderActionClassnames(String[] testOrderActionClassnames) {
-	//		getValue(ATTR_TESTORDER_ACTION_CLASSNAMES).set(testOrderActionClassnames);
-	//	}
+	public String getNameHelperClassname() {
+		return getValue(ATTR_NAMEHELPER_CLASSNAME).extract();
+	}
+
+	public void setNameHelperClassname(String nameHelperClassname) {
+		getValue(ATTR_NAMEHELPER_CLASSNAME).set(nameHelperClassname);
+	}
+
+	public String[] getDataSourcePluginClassnames() {
+		return getValue(ATTR_DATASOURCE_PLUGIN_CLASSNAMES).extract();
+	}
+
+	public void setDataSourceClassnames(String[] dataSourcePluginClassnames) {
+		getValue(ATTR_DATASOURCE_PLUGIN_CLASSNAMES).set(dataSourcePluginClassnames);
+	}
+
+	public String[] getTestOrderActionClassnames() {
+		return getValue(ATTR_TESTORDER_ACTION_CLASSNAMES).extract();
+	}
+
+	public void setTestOrderActionClassnames(String[] testOrderActionClassnames) {
+		getValue(ATTR_TESTORDER_ACTION_CLASSNAMES).set(testOrderActionClassnames);
+	}
 
 	public Optional<TemplateTestStepUsage> getTemplateTestStepUsage(String name) {
 		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameMatches(name)).findAny();

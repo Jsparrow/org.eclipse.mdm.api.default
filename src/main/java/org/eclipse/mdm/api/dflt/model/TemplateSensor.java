@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.eclipse.mdm.api.base.model.AxisType;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.Core;
@@ -31,13 +32,13 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	public static final String ATTR_OPTIONAL = "Optional";
 	public static final String ATTR_DEFAULT_ACTIVE = "DefaultActive";
 
-	//	public static final String ATTR_MEASRED_VALUES_EDITABLE = "MeaQuantityValuesEditable";
-	//
-	//	public static final String ATTR_MEASRED_VALUES_GENERATOR_NAME = "MeaQuantityEditorPlugin";
-	//
-	//	public static final String ATTR_MEASRED_VALUES_INDEPENDENT = "MeaQuantityIndependent";
-	//
-	//	public static final String ATTR_MEASRED_VALUES_AXISTYPE = "MeaQuantityAxisType";
+	public static final String ATTR_MEASRED_VALUES_EDITABLE = "MeaQuantityValuesEditable";
+
+	public static final String ATTR_MEASRED_VALUES_GENERATOR_NAME = "MeaQuantityEditorPlugin";
+
+	public static final String ATTR_MEASRED_VALUES_INDEPENDENT = "MeaQuantityIndependent";
+
+	public static final String ATTR_MEASRED_VALUES_AXISTYPE = "MeaQuantityAxisType";
 
 	public static final Predicate<TemplateSensor> IS_OPTIONAL = TemplateSensor::isOptional;
 	public static final Predicate<TemplateSensor> IS_MANDATORY = IS_OPTIONAL.negate();
@@ -56,37 +57,37 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	// Public methods
 	// ======================================================================
 
-	//	public Boolean areMeasuredValuesEditable() {
-	//		return getValue(ATTR_MEASRED_VALUES_EDITABLE).extract();
-	//	}
-	//
-	//	public void setMeasuredValuesEditable(Boolean measuredValuesEditable) {
-	//		getValue(ATTR_MEASRED_VALUES_EDITABLE).set(measuredValuesEditable);
-	//	}
-	//
-	//	public String getMeasuredValuesGeneratorName() {
-	//		return getValue(ATTR_MEASRED_VALUES_GENERATOR_NAME).extract();
-	//	}
-	//
-	//	public void setMeasuredValuesGeneratorName(String measuredValuesGeneratorName) {
-	//		getValue(ATTR_MEASRED_VALUES_GENERATOR_NAME).set(measuredValuesGeneratorName);
-	//	}
-	//
-	//	public Boolean areMeasuredValuesIndependent() {
-	//		return getValue(ATTR_MEASRED_VALUES_INDEPENDENT).extract();
-	//	}
-	//
-	//	public void setMeasuredValuesIndependent(Boolean measuredValuesIndependent) {
-	//		getValue(ATTR_MEASRED_VALUES_INDEPENDENT).set(measuredValuesIndependent);
-	//	}
-	//
-	//	public AxisType getMeasuredValuesAxisType() {
-	//		return getValue(ATTR_MEASRED_VALUES_AXISTYPE).extract();
-	//	}
-	//
-	//	public void setMeasuredValuesAxisType(AxisType axisType) {
-	//		getValue(ATTR_MEASRED_VALUES_AXISTYPE).set(axisType);
-	//	}
+	public Boolean areMeasuredValuesEditable() {
+		return getValue(ATTR_MEASRED_VALUES_EDITABLE).extract();
+	}
+
+	public void setMeasuredValuesEditable(Boolean measuredValuesEditable) {
+		getValue(ATTR_MEASRED_VALUES_EDITABLE).set(measuredValuesEditable);
+	}
+
+	public String getMeasuredValuesGeneratorName() {
+		return getValue(ATTR_MEASRED_VALUES_GENERATOR_NAME).extract();
+	}
+
+	public void setMeasuredValuesGeneratorName(String measuredValuesGeneratorName) {
+		getValue(ATTR_MEASRED_VALUES_GENERATOR_NAME).set(measuredValuesGeneratorName);
+	}
+
+	public Boolean areMeasuredValuesIndependent() {
+		return getValue(ATTR_MEASRED_VALUES_INDEPENDENT).extract();
+	}
+
+	public void setMeasuredValuesIndependent(Boolean measuredValuesIndependent) {
+		getValue(ATTR_MEASRED_VALUES_INDEPENDENT).set(measuredValuesIndependent);
+	}
+
+	public AxisType getMeasuredValuesAxisType() {
+		return getValue(ATTR_MEASRED_VALUES_AXISTYPE).extract();
+	}
+
+	public void setMeasuredValuesAxisType(AxisType axisType) {
+		getValue(ATTR_MEASRED_VALUES_AXISTYPE).set(axisType);
+	}
 
 	public Boolean isOptional() {
 		return getValue(ATTR_OPTIONAL).extract();

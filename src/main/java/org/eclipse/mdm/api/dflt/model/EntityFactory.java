@@ -270,27 +270,6 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return catalogComponent;
 	}
 
-	// TODO some day...
-	//	public CatalogSensor createCatalogSensor(String name, CatalogComponent catalogComponent) {
-	//		validateCatalogName(name);
-	//
-	//		if(catalogComponent.getContextSensor(name).isPresent()) {
-	//			throw new IllegalArgumentException("Sensor with name '" + name + "' already exists.");
-	//		}
-	//		// TODO: check context type of given catalog component!
-	//
-	//		EntityCore entityCore = null;
-	//		CatalogSensor catalogSensor = new CatalogSensor(entityCore);
-	//
-	//		catalogSensor.setName(name);
-	//		catalogSensor.setMimeType(createCatalogMimeType(entityCore));
-	//		catalogSensor.setDateCreated(LocalDateTime.now());
-	//
-	//		catalogComponent.addCatalogSensor(catalogSensor);
-	//
-	//		return catalogSensor;
-	//	}
-
 	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType, CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
 
@@ -338,6 +317,77 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		return catalogAttribute;
 	}
+
+	//	public CatalogSensor createCatalogSensor(String name, CatalogComponent catalogComponent) {
+	//		validateCatalogName(name, false);
+	//
+	//		if(!catalogComponent.getContextType().isTestEquipment()) {
+	//			throw new IllegalArgumentException("Catalog component is not of type 'TESTEQUIPMENT'");
+	//		} else if(catalogComponent.getCatalogSensor(name).isPresent()) {
+	//			throw new IllegalArgumentException("Catalog sensor with name '" + name + "' already exists.");
+	//		}
+	//
+	//		CatalogSensor catalogSensor = new CatalogSensor(createCore(CatalogSensor.class));
+	//
+	//		// relations
+	//		getPermanentStore(catalogSensor).set(catalogComponent);
+	//		getChildrenStore(catalogComponent).add(catalogSensor);
+	//
+	//		// properties
+	//		catalogSensor.setName(name);
+	//		catalogSensor.setDateCreated(LocalDateTime.now());
+	//
+	//		return catalogSensor;
+	//	}
+	//
+	//
+	//	// TODO document allowed or not allowed value types...
+	//	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType, CatalogSensor catalogSensor) {
+	//		validateCatalogName(name, true);
+	//
+	//		if(catalogSensor.getCatalogAttribute(name).isPresent()) {
+	//			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
+	//		} else if(valueType.isEnumerationType() || valueType.isByteStreamType() ||
+	//				valueType.isUnknown() || valueType.isBlob()) {
+	//			throw new IllegalArgumentException("Value type '" + valueType + "' is not allowed.");
+	//		}
+	//
+	//		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class));
+	//
+	//		// relations
+	//		getPermanentStore(catalogAttribute).set(catalogSensor);
+	//		getChildrenStore(catalogSensor).add(catalogAttribute);
+	//
+	//		// properties
+	//		catalogAttribute.setName(name);
+	//		catalogAttribute.setScalarType(ScalarType.valueOf(valueType.toSingleType().name()));
+	//		catalogAttribute.setSequence(valueType.isSequence());
+	//		catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
+	//
+	//		return catalogAttribute;
+	//	}
+	//
+	//	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
+	//			CatalogSensor catalogSensor) {
+	//		validateCatalogName(name, true);
+	//		if(catalogSensor.getCatalogAttribute(name).isPresent()) {
+	//			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
+	//		}
+	//
+	//		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class));
+	//
+	//		// relations
+	//		getPermanentStore(catalogAttribute).set(catalogSensor);
+	//		getChildrenStore(catalogSensor).add(catalogAttribute);
+	//
+	//		// properties
+	//		catalogAttribute.setName(name);
+	//		catalogAttribute.setEnumerationClass(enumerationClass);
+	//		catalogAttribute.setSequence(false);
+	//		catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
+	//
+	//		return catalogAttribute;
+	//	}
 
 	public TemplateRoot createTemplateRoot(ContextType contextType, String name) {
 		TemplateRoot templateRoot = new TemplateRoot(createCore(TemplateRoot.class, contextType));

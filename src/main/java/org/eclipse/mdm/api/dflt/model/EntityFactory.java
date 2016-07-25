@@ -44,21 +44,27 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 	public Project createProject(String name) {
 		Project project = new Project(createCore(Project.class));
+
+		// properties
 		project.setName(name);
+
 		return project;
 	}
-	
+
 	public Pool createPool(String name, Project project) {
 		Pool pool = new Pool(createCore(Pool.class));
-		
+
+		// relations
 		getPermanentStore(pool).set(project);
 		getChildrenStore(project).add(pool);
-		
+
+		// properties
 		pool.setName(name);
+
 		return pool;
 	}
-	
-	
+
+
 	// TODO make a decision: status in or out!
 	public Test createTest(String name, Pool pool, TemplateTest templateTest) {
 		return createTest(name, pool, null, null, templateTest);
@@ -72,7 +78,6 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		getMutableStore(test).set(templateTest);
 
 		// create default active and mandatory test steps according to the template
-
 		templateTest.getTemplateTestStepUsages().stream().filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
 		.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> {
 			createTestStep(test, statusTestStep, templateTestStep);
@@ -84,14 +89,15 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	// TODO make a decision: status in or out!
 	protected Test createTest(String name, Pool pool, Status status) {
 		Test test = super.createTest(name);
-		
+
+		// relations
 		getPermanentStore(test).set(pool);
 		getChildrenStore(pool).add(test);
-		
+
 		if(status != null) {
 			status.assign(test);
 		}
-		
+
 		return test;
 	}
 
@@ -123,9 +129,11 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	// TODO make a decision: status in or out!
 	protected TestStep createTestStep(String name, Test test, Status status) {
 		TestStep testStep = super.createTestStep(name, test);
+
 		if(status != null) {
 			status.assign(testStep);
 		}
+
 		return testStep;
 	}
 
@@ -150,8 +158,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 
 	public ContextRoot createContextRoot(TemplateRoot templateRoot) {
-		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), 
-			templateRoot.getVersion(), templateRoot.getContextType());
+		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());
 
 		// relations
 		getMutableStore(contextRoot).set(templateRoot);

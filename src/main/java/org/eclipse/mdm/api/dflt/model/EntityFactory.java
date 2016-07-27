@@ -32,11 +32,11 @@ import org.eclipse.mdm.api.base.model.VersionState;
 
 public abstract class EntityFactory extends BaseEntityFactory {
 
-	//	@Override
-	//	public Test createTest(String name) {
-	//		throw new UnsupportedOperationException("Test requires a status."); // TODO ...
-	//	}
-	//
+	@Override
+	public Test createTest(String name) {
+		throw new UnsupportedOperationException("Test requires a parent Pool."); // TODO ...
+	}
+
 	//	@Override
 	//	public TestStep createTestStep(String name, Test test) {
 	//		throw new UnsupportedOperationException("Test step requires a status."); // TODO ...

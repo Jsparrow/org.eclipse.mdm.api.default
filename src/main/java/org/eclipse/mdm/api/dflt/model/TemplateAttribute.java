@@ -184,9 +184,9 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 			Function<String, Object> converter = getParser(valueType);
 			if(valueType.isSequence()) {
 				List<Object> values = Stream.of(value.split(",")).map(converter).collect(Collectors.toList());
-				Object array = Array.newInstance(valueType.type, values.size());
+				Object array = Array.newInstance(valueType.getValueClass().getComponentType(), values.size());
 
-				if(valueType.type.getComponentType().isPrimitive()) {
+				if(valueType.getValueClass().getComponentType().isPrimitive()) {
 					IntStream.range(0, values.size()).forEach(i -> Array.set(array, i, values.get(i)));
 				} else {
 					values.toArray((Object[])array);

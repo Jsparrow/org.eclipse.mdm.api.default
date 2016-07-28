@@ -299,6 +299,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
+		validateEnum(enumerationClass);
 		if(catalogComponent.getCatalogAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
@@ -370,6 +371,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	//	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
 	//			CatalogSensor catalogSensor) {
 	//		validateCatalogName(name, true);
+	//		validateEnum(enumerationClass);
 	//		if(catalogSensor.getCatalogAttribute(name).isPresent()) {
 	//			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 	//		}
@@ -570,6 +572,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		return valueListValue;
 	}
+
+	protected abstract void validateEnum(Class<? extends Enum<?>> enumClass);
 
 	private static void validateCatalogName(String name, boolean isAttributeName) {
 		if(name == null || name.isEmpty() || name.length() > 30) {

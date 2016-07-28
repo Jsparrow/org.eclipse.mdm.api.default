@@ -8,25 +8,18 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.eclipse.mdm.api.base.model.AxisType;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
-import org.eclipse.mdm.api.base.model.Interpolation;
 import org.eclipse.mdm.api.base.model.ScalarType;
-import org.eclipse.mdm.api.base.model.SequenceRepresentation;
 import org.eclipse.mdm.api.base.model.Sortable;
-import org.eclipse.mdm.api.base.model.TypeSpecification;
 import org.eclipse.mdm.api.base.model.Unit;
 import org.eclipse.mdm.api.base.model.Value;
-import org.eclipse.mdm.api.base.model.VersionState;
 
 public final class CatalogAttribute extends BaseEntity implements Deletable, Describable, Sortable {
 
@@ -126,31 +119,17 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 		return sequenceValue.extract();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class<? extends Enum<?>> getEnumerationClass() {
 		if(!getScalarType().isEnumeration()) {
 			throw new IllegalStateException("Catalog attribute is not of type enumeration.");
 		}
 
-		String enumName = enumerationClassValue.extract();
-		Class<? extends Enum<?>> enumClass;
-
-		if(ScalarType.class.getSimpleName().equals(enumName)) {
-			enumClass = ScalarType.class;
-		} else if(VersionState.class.getSimpleName().equals(enumName)) {
-			enumClass = VersionState.class;
-		} else if(AxisType.class.getSimpleName().equals(enumName)) {
-			enumClass = AxisType.class;
-		} else if(SequenceRepresentation.class.getSimpleName().equals(enumName)) {
-			enumClass = SequenceRepresentation.class;
-		} else if(TypeSpecification.class.getSimpleName().equals(enumName)) {
-			enumClass = TypeSpecification.class;
-		} else if(Interpolation.class.getSimpleName().equals(enumName)) {
-			enumClass = Interpolation.class;
-		} else {
-			throw new IllegalStateException("Unable to determine enumeration class.");
+		try {
+			return (Class<? extends Enum<?>>) Class.forName(enumerationClassValue.extract());
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException("Unable to load enum class due to: " + e.getMessage(), e);
 		}
-
-		return enumClass;
 	}
 
 	public Optional<Unit> getUnit() {
@@ -201,16 +180,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 
 	// TODO once entity is written this is a read only property! (URI.getID > 0)
 	void setEnumerationClass(Class<? extends Enum<?>> enumerationClass) {
-		List<Class<? extends Enum<?>>> allowedEnumerationClasses = Arrays.asList(ScalarType.class,
-				VersionState.class, Interpolation.class, AxisType.class, SequenceRepresentation.class,
-				TypeSpecification.class);
-
-		if(allowedEnumerationClasses.contains(enumerationClass)) {
-			setScalarType(ScalarType.ENUMERATION);
-			enumerationClassValue.set(enumerationClass.getSimpleName());
-		} else {
-			throw new IllegalArgumentException("Enumeration class '" + enumerationClass.getName() + "' is not supported.");
-		}
+		setScalarType(ScalarType.ENUMERATION);
+		enumerationClassValue.set(enumerationClass.getName());
 	}
 
 }

@@ -233,13 +233,13 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	private static final class FileLinkParser {
 
-		private final static String NO_DESC_MARKER = "NO_DESC#";
-		private final static String LOCAL_MARKER = "LOCALPATH#";
+		private static final String NO_DESC_MARKER = "NO_DESC#";
+		private static final String LOCAL_MARKER = "LOCALPATH#";
 
-		private final static String DESCRIPTION = "description";
-		private final static String MIMETYPE = "mimetype";
-		private final static String PATH = "path";
-		private final static Pattern FILE_LINK_PATTERN =
+		private static final String DESCRIPTION = "description";
+		private static final String MIMETYPE = "mimetype";
+		private static final String PATH = "path";
+		private static final Pattern FILE_LINK_PATTERN =
 				Pattern.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
 
 		public static FileLink parse(String value) {

@@ -35,6 +35,7 @@ import org.eclipse.mdm.api.base.model.TestStep;
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  * @see TemplateRoot
+ * @see Versionable
  */
 public final class TemplateTestStep extends BaseEntity implements Deletable, Describable, Versionable {
 

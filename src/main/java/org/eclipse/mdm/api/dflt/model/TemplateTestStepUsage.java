@@ -20,6 +20,11 @@ import org.eclipse.mdm.api.base.model.TestStep;
 /**
  * Implementation of the template test step usage entity type. A template test
  * relates a {@link TemplateTestStep} with a parent {@link TemplateTest} (n:m).
+ *
+ * @since 1.0.0
+ * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ * @see TemplateTest
+ * @see TemplateTestStep
  */
 public final class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable {
 

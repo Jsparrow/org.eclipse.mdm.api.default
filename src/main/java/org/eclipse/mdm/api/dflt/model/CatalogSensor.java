@@ -32,6 +32,8 @@ import org.eclipse.mdm.api.base.model.Value;
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ * @see CatalogComponent
+ * @see CatalogComponent
  */
 public final class CatalogSensor extends BaseEntity implements Datable, Deletable, Describable {
 

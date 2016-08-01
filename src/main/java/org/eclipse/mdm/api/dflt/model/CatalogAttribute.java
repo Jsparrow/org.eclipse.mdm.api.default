@@ -25,8 +25,9 @@ import org.eclipse.mdm.api.base.model.ValueType;
 /**
  * Implementation of the catalog attribute entity type. A catalog attribute is
  * a generic attribute description to store context data ("as measured", "as
- * ordered"). It always belongs to a catalog component or a catalog sensor. Its
- * name has to be unique within the parent and may not be changed, once written.
+ * ordered"). It always belongs to a {@link CatalogComponent} or a {@link
+ * CatalogSensor}. Its name has to be unique within the parent and may not be
+ * changed, once written.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH

@@ -132,6 +132,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 *
 	 * @param <T> The desired type.
 	 * @param entityClass Type of the returned entity.
+	 * @param contextType The {@code ContextType}.
 	 * @param name The exact name of the requested entity.
 	 * @return Optional is empty if no such entity was found
 	 * @throws DataAccessException Thrown if unable to retrieve the entity.

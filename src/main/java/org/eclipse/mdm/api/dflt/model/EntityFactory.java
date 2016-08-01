@@ -30,6 +30,12 @@ import org.eclipse.mdm.api.base.model.TestStep;
 import org.eclipse.mdm.api.base.model.ValueType;
 import org.eclipse.mdm.api.base.model.VersionState;
 
+/**
+ * Creates new entities of the default application model.
+ *
+ * @since 1.0.0
+ * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ */
 public abstract class EntityFactory extends BaseEntityFactory {
 
 	@Override
@@ -289,8 +295,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setScalarType(ScalarType.valueOf(valueType.toSingleType().name()));
-		catalogAttribute.setSequence(valueType.isSequence());
+		catalogAttribute.setValueType(valueType);
 		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
@@ -313,7 +318,6 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		// properties
 		catalogAttribute.setName(name);
 		catalogAttribute.setEnumerationClass(enumerationClass);
-		catalogAttribute.setSequence(false);
 		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;

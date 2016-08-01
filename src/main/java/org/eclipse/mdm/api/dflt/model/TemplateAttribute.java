@@ -30,7 +30,6 @@ import org.eclipse.mdm.api.base.model.DoubleComplex;
 import org.eclipse.mdm.api.base.model.FileLink;
 import org.eclipse.mdm.api.base.model.FloatComplex;
 import org.eclipse.mdm.api.base.model.MimeType;
-import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Value;
 import org.eclipse.mdm.api.base.model.ValueType;
 
@@ -165,9 +164,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	}
 
 	private ValueType getDefaultValueValueType() {
-		ScalarType scalarType =	getCatalogAttribute().getScalarType();
-		boolean sequence = getCatalogAttribute().isSequence();
-		return sequence ? scalarType.toValueType() : scalarType.toSingleValueType();
+		return getCatalogAttribute().getValueType();
 	}
 
 	private static Object parse(String value, ValueType valueType) {

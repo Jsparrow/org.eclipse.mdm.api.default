@@ -180,7 +180,7 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new measured values {@link AxisType} for this template sensor.
 	 *
-	 * @param measuredValuesIndependent The measured values {@code AxisType}.
+	 * @param axisType The measured values {@code AxisType}.
 	 */
 	public void setMeasuredValuesAxisType(AxisType axisType) {
 		getValue(ATTR_MEASRED_VALUES_AXISTYPE).set(axisType);

@@ -28,7 +28,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * and hence has a version and a state. As long as {@link #isEditable()}
  * returns {@code true} any part of that template root is allowed to be
  * modified. Once a template root is set to be valid ({@link #isValid()} ==
- * {@code true}) may be used to compose a {@link TemplateTestStep} and then
+ * {@code true}) it may be used to compose a {@link TemplateTestStep} and then
  * is no longer allowed to be modified in any way. If a valid template root
  * needs to be modified, then a deep copy with a unique name and version
  * combination has to be created (deep copy means new instances).
@@ -36,6 +36,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  * @see TemplateComponent
+ * @see Versionable
  */
 public final class TemplateRoot extends BaseEntity implements Deletable, Versionable {
 

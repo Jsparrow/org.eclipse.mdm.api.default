@@ -13,6 +13,8 @@ import org.eclipse.mdm.api.base.model.Test;
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ * @see Project
+ * @see Test
  */
 public final class Pool extends BaseEntity implements Deletable {
 

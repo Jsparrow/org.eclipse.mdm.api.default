@@ -191,8 +191,8 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	 * Returns the {@link TemplateComponent} the given {@link ContextComponent}
 	 * is derived from.
 	 *
-	 * @param contextComponent The {@code ContextComponent} whose {@code
-	 * 		TemplateComponent} is requested.
+	 * @param test The {@code ContextComponent} whose {@code TemplateComponent}
+	 * 		is requested.
 	 * @return {@code Optional} is empty if the given {@code ContextComponent}
 	 * 		is not derived from a template, which is data source specific.
 	 */

@@ -33,22 +33,54 @@ import org.eclipse.mdm.api.base.model.MimeType;
 import org.eclipse.mdm.api.base.model.Value;
 import org.eclipse.mdm.api.base.model.ValueType;
 
+/**
+ * Implementation of the template attribute entity type. A template attribute
+ * adds meta data to a {@link CatalogAttribute} it is associated with. It
+ * always belongs to a {@link TemplateComponent} or a {@link TemplateSensor}.
+ * Its name is the same as the name of the associated {@code CatalogAttribute}
+ * and is not allowed to be modified at all.
+ *
+ * @since 1.0.0
+ * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ * @see TemplateComponent
+ * @see TemplateSensor
+ */
 public final class TemplateAttribute extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables
 	// ======================================================================
 
+	/**
+	 * This {@code Comparator} compares {@link TemplateAttribute}s by the sort
+	 * index of their corresponding {@link CatalogAttribute} in ascending order.
+	 */
 	public static final Comparator<TemplateAttribute> COMPARATOR = Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
 
+	/**
+	 * The 'DefaultValue' attribute name.
+	 */
 	public static final String ATTR_DEFAULT_VALUE = "DefaultValue";
+
+	/**
+	 * The 'ValueReadOnly' attribute name.
+	 */
 	public static final String ATTR_VALUE_READONLY = "ValueReadonly";
+
+	/**
+	 * The 'Optional' attribute name.
+	 */
 	public static final String ATTR_OPTIONAL = "Obligatory";
 
 	// ======================================================================
 	// Constructors
 	// ======================================================================
 
+	/**
+	 * Constructor.
+	 *
+	 * @param core The {@link Core}.
+	 */
 	TemplateAttribute(Core core) {
 		super(core);
 	}
@@ -57,9 +89,14 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// Public methods
 	// ======================================================================
 
+	/**
+	 * Returns the default {@link Value} of this template attribute.
+	 *
+	 * @return The default {@code Value} is returned.
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Value getDefaultValue() {
-		ValueType valueType = getDefaultValueValueType();
+		ValueType valueType = getCatalogAttribute().getValueType();
 		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
 		boolean isValid = defaultValue.isValid();
 		String value = defaultValue.extract();
@@ -71,13 +108,19 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		}
 	}
 
+	/**
+	 * Sets a new default value for this template attribute. Given input will
+	 * be stored in its {@link String} representation.
+	 *
+	 * @param input The new default value.
+	 */
 	public void setDefaultValue(Object input) {
 		if(input == null) {
 			getValue(ATTR_DEFAULT_VALUE).set(null);
 			return;
 		}
 
-		ValueType valueType = getDefaultValueValueType();
+		ValueType valueType = getCatalogAttribute().getValueType();
 		boolean sequence = valueType.isSequence();
 
 		// if this passes -> input is valid
@@ -122,27 +165,60 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		getValue(ATTR_DEFAULT_VALUE).set(stringValue);
 	}
 
+	/**
+	 * Returns the value read only flag of this template attribute.
+	 *
+	 * @return Returns {@code true} if it is not allowed to modify {@link
+	 * 		Value}s derived from this template attribute.
+	 */
 	public Boolean isValueReadOnly() {
 		return getValue(ATTR_VALUE_READONLY).extract();
 	}
 
+	/**
+	 * Sets a new value read only flag for this template attribute.
+	 *
+	 * @param valueReadOnly The new value read only flag.
+	 */
 	public void setValueReadOnly(Boolean valueReadOnly) {
 		getValue(ATTR_VALUE_READONLY).set(valueReadOnly);
 	}
 
+	/**
+	 * Returns the optional flag of this template attribute.
+	 *
+	 * @return Returns {@code true} if it is allowed to omit a {@link Value}
+	 * 		derived from this template attribute.
+	 */
 	public Boolean isOptional() {
 		boolean mandatory = getValue(ATTR_OPTIONAL).extract();
 		return mandatory ? Boolean.FALSE : Boolean.TRUE;
 	}
 
+	/**
+	 * Sets a new optional flag for this template attribute.
+	 *
+	 * @param optional The new optional flag.
+	 */
 	public void setOptional(Boolean optional) {
 		getValue(ATTR_OPTIONAL).set(optional ? Boolean.FALSE : Boolean.TRUE);
 	}
 
+	/**
+	 * Returns the {@link CatalogAttribute} this template attribute is
+	 * associated with.
+	 *
+	 * @return The associated {@code CatalogAttribute} is returned.
+	 */
 	public CatalogAttribute getCatalogAttribute() {
 		return getCore().getMutableStore().get(CatalogAttribute.class);
 	}
 
+	/**
+	 * Returns the {@link TemplateRoot} this template attribute belongs to.
+	 *
+	 * @return The {@code TemplateRoot} is returned.
+	 */
 	public TemplateRoot getTemplateRoot() {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent();
 		Optional<TemplateSensor> templateSensor = getTemplateSensor();
@@ -155,18 +231,40 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		}
 	}
 
+	/**
+	 * Returns the parent {@link TemplateComponent} of this template attribute.
+	 *
+	 * @return {@code Optional} is empty if a {@link TemplateSensor} is parent
+	 * 		of this template attribute.
+	 * @see #getTemplateSensor()
+	 */
 	public Optional<TemplateComponent> getTemplateComponent() {
 		return Optional.ofNullable(getCore().getPermanentStore().get(TemplateComponent.class));
 	}
 
+	/**
+	 * Returns the parent {@link TemplateSensor} of this template attribute.
+	 *
+	 * @return {@code Optional} is empty if a {@link TemplateComponent} is parent
+	 * 		of this template attribute.
+	 * @see #getTemplateComponent()
+	 */
 	public Optional<TemplateSensor> getTemplateSensor() {
 		return Optional.ofNullable(getCore().getPermanentStore().get(TemplateSensor.class));
 	}
 
-	private ValueType getDefaultValueValueType() {
-		return getCatalogAttribute().getValueType();
-	}
+	// ======================================================================
+	// Private methods
+	// ======================================================================
 
+	/**
+	 * Parses given {@code String} to the corresponding type of given {@link
+	 * ValueType}.
+	 *
+	 * @param value The {@code String} value.
+	 * @param valueType Used to resolve the corresponding converter.
+	 * @return The parsed object is returned.
+	 */
 	private static Object parse(String value, ValueType valueType) {
 		if(valueType.isFileLinkType()) {
 			Pattern pattern = Pattern.compile("([^,].*?)\\[(.*?),(.*?)\\]");
@@ -196,6 +294,14 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		}
 	}
 
+	/**
+	 * Returns the {@code String} conversion function for given {@link ValueType}.
+	 *
+	 * @param valueType Used as identifier.
+	 * @return The {@code String} conversion {@code Function} is returned.
+	 * @throws IllegalArgumentException Thrown if a corresponding {@code String}
+	 * 		is not supported.
+	 */
 	private static Function<String, Object> getParser(ValueType valueType) {
 		Function<String, Object> converter;
 
@@ -222,23 +328,48 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		} else if(valueType.isDoubleComplex()) {
 			converter = DoubleComplex::valueOf;
 		} else {
-			throw new IllegalStateException("String conversion for value type '" + valueType + "' not supported.");
+			throw new IllegalArgumentException("String conversion for value type '" + valueType + "' not supported.");
 		}
 
 		return converter;
 	}
 
+	// ======================================================================
+	// Inner classes
+	// ======================================================================
+
+	/**
+	 * Utility class restore a {@link FileLink} from given {@code String}.
+	 */
 	private static final class FileLinkParser {
 
+		// ======================================================================
+		// Class variables
+		// ======================================================================
+
+		// markers
 		private static final String NO_DESC_MARKER = "NO_DESC#";
 		private static final String LOCAL_MARKER = "LOCALPATH#";
 
+		// pattern group names
 		private static final String DESCRIPTION = "description";
 		private static final String MIMETYPE = "mimetype";
 		private static final String PATH = "path";
+
+		// pattern
 		private static final Pattern FILE_LINK_PATTERN =
 				Pattern.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
 
+		// ======================================================================
+		// Public methods
+		// ======================================================================
+
+		/**
+		 * Parses given {@code String} and returns it as {@link FileLink}.
+		 *
+		 * @param value The {@code String} value which will be parsed.
+		 * @return The corresponding {@code FileLink} is returned.
+		 */
 		public static FileLink parse(String value) {
 			Matcher matcher = FILE_LINK_PATTERN.matcher(value);
 			if(!matcher.find()) {

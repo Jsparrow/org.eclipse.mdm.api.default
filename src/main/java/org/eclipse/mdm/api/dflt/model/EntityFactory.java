@@ -190,14 +190,17 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 			// create context component if not already done
 			if(!contextRoot.getContextComponent(name).isPresent()) {
-				ContextComponent contextComponent = super.createContextComponent(templateComponent.get().getCatalogComponent().getName(), contextRoot);
+				ContextComponent contextComponent =
+						super.createContextComponent(templateComponent.get().getCatalogComponent().getName(),
+								contextRoot);
 
 				// relations
 				getMutableStore(contextComponent).set(templateComponent.get());
 
 				// properties
 				contextComponent.setName(name);
-				contextComponent.setMimeType(contextComponent.getMimeType().addSubType(templateComponent.get().getName()));
+				contextComponent.setMimeType(contextComponent.getMimeType()
+						.addSubType(templateComponent.get().getName()));
 				hideValues(getCore(contextComponent), templateComponent.get().getTemplateAttributes());
 				templateComponent.get().getTemplateAttributes().forEach(ta -> {
 					contextComponent.getValue(ta.getName()).set(ta.getDefaultValue().extract());
@@ -236,7 +239,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		Optional<TemplateSensor> templateSensor = templateComponent.getTemplateSensor(name);
 		if(templateSensor.isPresent()) {
-			ContextSensor contextSensor = super.createContextSensor(templateSensor.get().getCatalogSensor().getName(), contextComponent);
+			ContextSensor contextSensor = super.createContextSensor(templateSensor.get().getCatalogSensor().getName(),
+					contextComponent);
 
 			// relations
 			getMutableStore(contextSensor).set(templateSensor.get());
@@ -314,7 +318,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * @throws IllegalArgumentException Thrown if given name is already in use
 	 * 		or not allowed or given {@code ValueType} is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType, CatalogComponent catalogComponent) {
+	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType,
+			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
 
 		if(catalogComponent.getCatalogAttribute(name).isPresent()) {
@@ -324,7 +329,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Value type '" + valueType + "' is not allowed.");
 		}
 
-		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class, catalogComponent.getContextType()));
+		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class,
+				catalogComponent.getContextType()));
 
 		// relations
 		getPermanentStore(catalogAttribute).set(catalogComponent);
@@ -356,7 +362,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
 
-		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class, catalogComponent.getContextType()));
+		CatalogAttribute catalogAttribute = new CatalogAttribute(createCore(CatalogAttribute.class,
+				catalogComponent.getContextType()));
 
 		// relations
 		getPermanentStore(catalogAttribute).set(catalogComponent);
@@ -521,14 +528,16 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * 		TemplateRoot} and {@code CatalogComponent} do not match or given
 	 * 		name is already in use.
 	 */
-	public TemplateComponent createTemplateComponent(String name, TemplateRoot templateRoot, CatalogComponent catalogComponent) {
+	public TemplateComponent createTemplateComponent(String name, TemplateRoot templateRoot,
+			CatalogComponent catalogComponent) {
 		if(!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
 			throw new IllegalArgumentException("Context type of template root and catalog component do not match.");
 		} else if(templateRoot.getTemplateComponent(name).isPresent()) {
 			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
 		}
 
-		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class, templateRoot.getContextType()));
+		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class,
+				templateRoot.getContextType()));
 
 		// relations
 		getPermanentStore(templateComponent).set(templateRoot);
@@ -560,7 +569,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * 		TemplateComponent} and {@code CatalogComponent} do not match or
 	 * 		given name is already in use.
 	 */
-	public TemplateComponent createTemplateComponent(String name, TemplateComponent partentComponentTemplate, CatalogComponent catalogComponent) {
+	public TemplateComponent createTemplateComponent(String name, TemplateComponent partentComponentTemplate,
+			CatalogComponent catalogComponent) {
 		TemplateRoot templateRoot = partentComponentTemplate.getTemplateRoot();
 		if(!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
 			throw new IllegalArgumentException("Context type of template root and catalog component do not match.");
@@ -568,7 +578,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
 		}
 
-		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class, templateRoot.getContextType()));
+		TemplateComponent templateComponent = new TemplateComponent(createCore(TemplateComponent.class,
+				templateRoot.getContextType()));
 
 		// relations
 		getPermanentStore(templateComponent).set(partentComponentTemplate);
@@ -604,7 +615,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		CatalogComponent catalogComponent = templateComponent.getCatalogComponent();
 		Optional<CatalogAttribute> catalogAttribute = catalogComponent.getCatalogAttribute(name);
 		if(catalogAttribute.isPresent()) {
-			TemplateAttribute templateAttribute = new TemplateAttribute(createCore(TemplateAttribute.class, catalogComponent.getContextType()));
+			TemplateAttribute templateAttribute = new TemplateAttribute(createCore(TemplateAttribute.class,
+					catalogComponent.getContextType()));
 
 			// relations
 			getPermanentStore(templateAttribute).set(templateComponent);
@@ -669,12 +681,14 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * @param templateTestStep The related {@link TemplateTestStep}.
 	 * @return The created {@code TemplateTestStepUsage} is returned.
 	 */
-	public TemplateTestStepUsage createTemplateTestStepUsage(String name, TemplateTest templateTest, TemplateTestStep templateTestStep) {
+	public TemplateTestStepUsage createTemplateTestStepUsage(String name, TemplateTest templateTest,
+			TemplateTestStep templateTestStep) {
 		if(templateTest.getTemplateTestStepUsage(name).isPresent()) {
 			throw new IllegalArgumentException("Template test step usage with name '" + name + "' already exists.");
 		}
 
-		TemplateTestStepUsage templateTestStepUsage = new TemplateTestStepUsage(createCore(TemplateTestStepUsage.class));
+		TemplateTestStepUsage templateTestStepUsage =
+				new TemplateTestStepUsage(createCore(TemplateTestStepUsage.class));
 
 		// relations
 		getPermanentStore(templateTestStepUsage).set(templateTest);
@@ -753,7 +767,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * @return The created {@code Test} is returned.
 	 */
 	// TODO make a decision: status in or out!
-	protected Test createTest(String name, Pool pool, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
+	protected Test createTest(String name, Pool pool, Status statusTest, Status statusTestStep,
+			TemplateTest templateTest) {
 		Test test = createTest(name, pool, statusTest);
 
 		// relations
@@ -876,11 +891,14 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 */
 	private static void validateCatalogName(String name, boolean isAttributeName) {
 		if(name == null || name.isEmpty() || name.length() > 30) {
-			throw new IllegalArgumentException("A catalog name is not allowed to be empty and must not exceed 30 characters.");
+			throw new IllegalArgumentException("A catalog name is not allowed to be empty and "
+					+ "must not exceed 30 characters.");
 		} else if(name.toLowerCase(Locale.ROOT).startsWith("ao")) {
-			throw new IllegalArgumentException("A catalog name is not allowed to start with 'ao' (case ignored).");
+			throw new IllegalArgumentException("A catalog name is not allowed to "
+					+ "start with 'ao' (case ignored).");
 		} else if(!name.matches("^[\\w]+$")) {
-			throw new IllegalArgumentException("A calatog name may only constists of the following characters: a-z, A-Z, 0-9 or _.");
+			throw new IllegalArgumentException("A calatog name may only constists of the "
+					+ "following characters: a-z, A-Z, 0-9 or _.");
 		} else if(isAttributeName && Arrays.asList("id", "name", "mimetype").contains(name.toLowerCase(Locale.ROOT))) {
 			throw new IllegalArgumentException("A catalog attribute name is not allowed to be "
 					+ "'id', 'name' or 'mimetype' (case ignored).");

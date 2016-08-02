@@ -189,7 +189,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	public TemplateRoot getTemplateRoot() {
 		TemplateRoot templateRoot = getCore().getPermanentStore().get(TemplateRoot.class);
 		if(templateRoot == null) {
-			return getParentTemplateComponent().orElseThrow(() -> new IllegalStateException("Parent entity is unknown.")).getTemplateRoot();
+			return getParentTemplateComponent()
+					.orElseThrow(() -> new IllegalStateException("Parent entity is unknown.")).getTemplateRoot();
 		}
 
 		return templateRoot;
@@ -261,12 +262,14 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
+		Optional<TemplateComponent> templateComponent =
+				templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
 		if(templateComponent.isPresent()) {
 			return templateComponent;
 		}
 
-		return templateComponents.stream().map(ct -> ct.getTemplateComponent(name)).filter(Optional::isPresent).map(Optional::get).findAny();
+		return templateComponents.stream().map(ct -> ct.getTemplateComponent(name))
+				.filter(Optional::isPresent).map(Optional::get).findAny();
 	}
 
 	/**

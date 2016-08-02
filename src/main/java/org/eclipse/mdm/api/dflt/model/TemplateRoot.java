@@ -98,12 +98,14 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
+		Optional<TemplateComponent> templateComponent = templateComponents.stream()
+				.filter(tc -> tc.nameMatches(name)).findAny();
 		if(templateComponent.isPresent()) {
 			return templateComponent;
 		}
 
-		return templateComponents.stream().map(tc -> tc.getTemplateComponent(name)).filter(Optional::isPresent).map(Optional::get).findAny();
+		return templateComponents.stream().map(tc -> tc.getTemplateComponent(name))
+				.filter(Optional::isPresent).map(Optional::get).findAny();
 	}
 
 	/**

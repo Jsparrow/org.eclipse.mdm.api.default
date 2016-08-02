@@ -55,7 +55,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 * This {@code Comparator} compares {@link TemplateAttribute}s by the sort
 	 * index of their corresponding {@link CatalogAttribute} in ascending order.
 	 */
-	public static final Comparator<TemplateAttribute> COMPARATOR = Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
+	public static final Comparator<TemplateAttribute> COMPARATOR =
+			Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
 
 	/**
 	 * The 'DefaultValue' attribute name.

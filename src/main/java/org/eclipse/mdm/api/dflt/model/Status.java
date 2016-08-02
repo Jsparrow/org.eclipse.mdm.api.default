@@ -48,6 +48,7 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Assigns this status to given {@link StatusAttachable}s.
 	 *
+	 * @param <T> The status attachable type.
 	 * @param statusAttachables This status will be assigned to all of them.
 	 */
 	public <T extends StatusAttachable> void assign(List<T> statusAttachables) {
@@ -57,6 +58,7 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Assigns this status to given {@link StatusAttachable}.
 	 *
+	 * @param <T> The status attachable type.
 	 * @param statusAttachable This status will be assigned to it.
 	 */
 	public <T extends StatusAttachable> void assign(T statusAttachable) {

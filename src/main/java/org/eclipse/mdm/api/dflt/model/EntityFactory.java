@@ -307,7 +307,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * 	<li>{@link ValueType#DOUBLE_COMPLEX}</li>
 	 * 	<li>{@link ValueType#DOUBLE_COMPLEX_SEQUENCE}</li>
 	 * 	<li>{@link ValueType#FILE_LINK}</li>
-	 * 	<li>{@link ValueType#FILE_LINK_SEQUENCE_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#FILE_LINK_SEQUENCE}</li>
 	 * </ul>
 	 *
 	 *

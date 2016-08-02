@@ -27,6 +27,7 @@ import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.TestStep;
+import org.eclipse.mdm.api.base.model.Value;
 import org.eclipse.mdm.api.base.model.ValueType;
 import org.eclipse.mdm.api.base.model.VersionState;
 
@@ -38,16 +39,32 @@ import org.eclipse.mdm.api.base.model.VersionState;
  */
 public abstract class EntityFactory extends BaseEntityFactory {
 
+	// ======================================================================
+	// Public methods
+	// ======================================================================
+
+	/**
+	 * Always throws an UnsupportedOperationException since in a default model
+	 * each {@link Test} has a parent {@link Pool}.
+	 *
+	 * @throws UnsupportedOperationException Is always thrown.
+	 */
 	@Override
 	public Test createTest(String name) {
-		throw new UnsupportedOperationException("Test requires a parent Pool."); // TODO ...
+		throw new UnsupportedOperationException("Test requires a parent Pool.");
 	}
 
 	//	@Override
 	//	public TestStep createTestStep(String name, Test test) {
-	//		throw new UnsupportedOperationException("Test step requires a status."); // TODO ...
+	//		throw new UnsupportedOperationException("Test step requires a status.");
 	//	}
 
+	/**
+	 * Creates a new {@link Project}.
+	 *
+	 * @param name Name of the created {@code Project}.
+	 * @return The created {@code Project} is returned.
+	 */
 	public Project createProject(String name) {
 		Project project = new Project(createCore(Project.class));
 
@@ -57,6 +74,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return project;
 	}
 
+	/**
+	 * Creates a new {@link Pool} for given {@link Project}.
+	 *
+	 * @param name Name of the created {@code Pool}.
+	 * @param project The parent {@code Project}.
+	 * @return The created {@code Pool} is returned.
+	 */
 	public Pool createPool(String name, Project project) {
 		Pool pool = new Pool(createCore(Pool.class));
 
@@ -70,81 +94,30 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return pool;
 	}
 
-
+	/**
+	 * Creates a new {@link Test} for given {@link Pool} using given {@link
+	 * TemplateTest}.
+	 *
+	 * @param name Name of the created {@code Test}.
+	 * @param pool The parent {@code Pool}.
+	 * @param templateTest The template the returned {@code Test} will be
+	 * 		derived from.
+	 * @return The created {@code Test} is returned.
+	 */
 	// TODO make a decision: status in or out!
 	public Test createTest(String name, Pool pool, TemplateTest templateTest) {
 		return createTest(name, pool, null, null, templateTest);
 	}
 
-	// TODO make a decision: status in or out!
-	protected Test createTest(String name, Pool pool, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
-		Test test = createTest(name, pool, statusTest);
-
-		// relations
-		getMutableStore(test).set(templateTest);
-
-		// create default active and mandatory test steps according to the template
-		templateTest.getTemplateTestStepUsages().stream().filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
-		.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> {
-			createTestStep(test, statusTestStep, templateTestStep);
-		});
-
-		return test;
-	}
-
-	// TODO make a decision: status in or out!
-	protected Test createTest(String name, Pool pool, Status status) {
-		Test test = super.createTest(name);
-
-		// relations
-		getPermanentStore(test).set(pool);
-		getChildrenStore(pool).add(test);
-
-		if(status != null) {
-			status.assign(test);
-		}
-
-		return test;
-	}
-
-	// TODO make a decision: status in or out!
-	protected TestStep createTestStep(Test test, TemplateTestStep templateTestStep) {
-		return createTestStep(test, null, templateTestStep);
-	}
-
-	// TODO make a decision: status in or out!
-	// TODO renaming is possible using TestStep.setName();
-	protected TestStep createTestStep(Test test, Status status, TemplateTestStep templateTestStep) {
-		TemplateTest templateTest = TemplateTest.of(test)
-				.orElseThrow(() -> new IllegalArgumentException("Template test is not available."));
-		if(!templateTest.contains(templateTestStep)) {
-			throw new IllegalArgumentException("Template test step is part of the test template.");
-		}
-
-		TestStep testStep = createTestStep(templateTestStep.getName(), test, status);
-
-		// relations
-		getMutableStore(testStep).set(templateTestStep);
-
-		// create initial context roots
-		templateTestStep.getTemplateRoots().forEach(templateRoot -> createContextRoot(testStep, templateRoot));
-
-		return testStep;
-	}
-
-	// TODO make a decision: status in or out!
-	protected TestStep createTestStep(String name, Test test, Status status) {
-		TestStep testStep = super.createTestStep(name, test);
-
-		if(status != null) {
-			status.assign(testStep);
-		}
-
-		return testStep;
-	}
-
-	// ################################## CONTEXTS ##################################
-
+	/**
+	 * Creates a new {@link ContextRoot} for given {@link TestStep} using
+	 * given {@link TemplateRoot}.
+	 *
+	 * @param testStep The parent {@code TestStep}.
+	 * @param templateRoot The template the returned {@code ContextRoot} will
+	 * 		be derived from.
+	 * @return The created {@code ContextRoot} is returned.
+	 */
 	public ContextRoot createContextRoot(TestStep testStep, TemplateRoot templateRoot) {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
@@ -154,6 +127,15 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return contextRoot;
 	}
 
+	/**
+	 * Creates a new {@link ContextRoot} for given {@link Measurement} using
+	 * given {@link TemplateRoot}.
+	 *
+	 * @param measurement The parent {@code Measurement}.
+	 * @param templateRoot The template the returned {@code ContextRoot} will
+	 * 		be derived from.
+	 * @return The created {@code ContextRoot} is returned.
+	 */
 	public ContextRoot createContextRoot(Measurement measurement, TemplateRoot templateRoot) {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
@@ -163,6 +145,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return contextRoot;
 	}
 
+	/**
+	 * Creates a new {@link ContextRoot} using given {@link TemplateRoot}.
+	 *
+	 * @param templateRoot The template the returned {@code ContextRoot} will
+	 * 		be derived from.
+	 * @return The created {@code ContextRoot} is returned.
+	 */
 	public ContextRoot createContextRoot(TemplateRoot templateRoot) {
 		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());
 
@@ -179,7 +168,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return contextRoot;
 	}
 
-	// TODO: name is name of the template component!
+	/**
+	 * @throws IllegalArgumentException Thrown if given name is already in use
+	 * 		or {@link TemplateComponent} with given name does not exist.
+	 */
 	@Override
 	public ContextComponent createContextComponent(String name, ContextRoot contextRoot) {
 		if(contextRoot.getContextComponent(name).isPresent()) {
@@ -230,6 +222,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		throw new IllegalArgumentException("Template component with name '" + name + "' does not exist.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ContextSensor createContextSensor(String name, ContextComponent contextComponent) {
 		if(contextComponent.getContextSensor(name).isPresent()) {
@@ -257,10 +252,14 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		throw new IllegalArgumentException("Template sensor with name '" + name + "' does not exist.");
 	}
 
-	// ################################## CONTEXTS ##################################
-
-	// administrative stuff
-
+	/**
+	 * Creates a new {@link CatalogComponent} with given {@link ContextType} and name.
+	 *
+	 * @param contextType The {@code ContextType}.
+	 * @param name Name of the created {@code CatalogComponent}.
+	 * @return The created {@code CatalogComponent} is returned.
+	 * @throws IllegalArgumentException Thrown if name is not allowed.
+	 */
 	public CatalogComponent createCatalogComponent(ContextType contextType, String name) {
 		validateCatalogName(name, false);
 
@@ -269,17 +268,55 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		// properties
 		catalogComponent.setName(name);
 		catalogComponent.setDateCreated(LocalDateTime.now());
-
-		// TODO we should check whether this property exists (seems to be a deprecated one..)
 		catalogComponent.getValue("ValidFlag").set(VersionState.VALID);
 
 		return catalogComponent;
 	}
 
+	/**
+	 * Creates a new {@link CatalogAttribute} for given {@link CatalogComponent}.
+	 * The {@link ValueType} may be one of the following:
+	 *
+	 * <ul>
+	 * 	<li>{@link ValueType#STRING}</li>
+	 * 	<li>{@link ValueType#STRING_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#DATE}</li>
+	 * 	<li>{@link ValueType#DATE_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#BOOLEAN}</li>
+	 * 	<li>{@link ValueType#BOOLEAN_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#BYTE}</li>
+	 * 	<li>{@link ValueType#BYTE_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#SHORT}</li>
+	 * 	<li>{@link ValueType#SHORT_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#INTEGER}</li>
+	 * 	<li>{@link ValueType#INTEGER_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#LONG}</li>
+	 * 	<li>{@link ValueType#LONG_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#FLOAT}</li>
+	 * 	<li>{@link ValueType#FLOAT_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#DOUBLE}</li>
+	 * 	<li>{@link ValueType#DOUBLE_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#BYTE_STREAM}</li>
+	 * 	<li>{@link ValueType#BYTE_STREAM_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#FLOAT_COMPLEX}</li>
+	 * 	<li>{@link ValueType#FLOAT_COMPLEX_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#DOUBLE_COMPLEX}</li>
+	 * 	<li>{@link ValueType#DOUBLE_COMPLEX_SEQUENCE}</li>
+	 * 	<li>{@link ValueType#FILE_LINK}</li>
+	 * 	<li>{@link ValueType#FILE_LINK_SEQUENCE_SEQUENCE}</li>
+	 * </ul>
+	 *
+	 *
+	 * @param name Name of the created {@code CatalogAttribute}.
+	 * @param valueType The {@code ValueType}.
+	 * @param catalogComponent The parent {@code CatalogComponent}.
+	 * @return The created {@code CatalogAttribute} is returned.
+	 * @throws IllegalArgumentException Thrown if given name is already in use
+	 * 		or not allowed or given {@code ValueType} is not supported.
+	 */
 	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType, CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
 
-		// TODO document allowed or not allowed value types...
 		if(catalogComponent.getCatalogAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		} else if(valueType.isEnumerationType() || valueType.isByteStreamType() ||
@@ -301,6 +338,16 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return catalogAttribute;
 	}
 
+	/**
+	 * Creates a new {@link CatalogAttribute} for given {@link CatalogComponent}.
+	 *
+	 * @param name Name of the created {@code CatalogAttribute}.
+	 * @param enumerationClass The enumeration class.
+	 * @param catalogComponent The parent {@code CatalogComponent}.
+	 * @return The created {@code CatalogAttribute} is returned.
+	 * @throws IllegalArgumentException Thrown if given name is already in use
+	 * 		or not allowed or given enumeration class is not supported.
+	 */
 	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
@@ -346,7 +393,47 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	//	}
 	//
 	//
-	//	// TODO document allowed or not allowed value types...
+	//	/**
+	//	 * Creates a new {@link CatalogAttribute} for given {@link CatalogComponent}.
+	//	 * The {@link ValueType} may be one of the following:
+	//	 *
+	//	 * <ul>
+	//	 * 	<li>{@link ValueType#STRING}</li>
+	//	 * 	<li>{@link ValueType#STRING_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#DATE}</li>
+	//	 * 	<li>{@link ValueType#DATE_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#BOOLEAN}</li>
+	//	 * 	<li>{@link ValueType#BOOLEAN_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#BYTE}</li>
+	//	 * 	<li>{@link ValueType#BYTE_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#SHORT}</li>
+	//	 * 	<li>{@link ValueType#SHORT_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#INTEGER}</li>
+	//	 * 	<li>{@link ValueType#INTEGER_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#LONG}</li>
+	//	 * 	<li>{@link ValueType#LONG_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#FLOAT}</li>
+	//	 * 	<li>{@link ValueType#FLOAT_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#DOUBLE}</li>
+	//	 * 	<li>{@link ValueType#DOUBLE_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#BYTE_STREAM}</li>
+	//	 * 	<li>{@link ValueType#BYTE_STREAM_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#FLOAT_COMPLEX}</li>
+	//	 * 	<li>{@link ValueType#FLOAT_COMPLEX_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#DOUBLE_COMPLEX}</li>
+	//	 * 	<li>{@link ValueType#DOUBLE_COMPLEX_SEQUENCE}</li>
+	//	 * 	<li>{@link ValueType#FILE_LINK}</li>
+	//	 * 	<li>{@link ValueType#FILE_LINK_SEQUENCE_SEQUENCE}</li>
+	//	 * </ul>
+	//	 *
+	//	 *
+	//	 * @param name Name of the created {@code CatalogAttribute}.
+	//	 * @param valueType The {@code ValueType}.
+	//	 * @param catalogSensor The parent {@code CatalogSensor}.
+	//	 * @return The created {@code CatalogAttribute} is returned.
+	//	 * @throws IllegalArgumentException Thrown if given name is already in use
+	//	 * 		or given {@code ValueType} is not supported.
+	//	 */
 	//	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType, CatalogSensor catalogSensor) {
 	//		validateCatalogName(name, true);
 	//
@@ -365,13 +452,22 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	//
 	//		// properties
 	//		catalogAttribute.setName(name);
-	//		catalogAttribute.setScalarType(ScalarType.valueOf(valueType.toSingleType().name()));
-	//		catalogAttribute.setSequence(valueType.isSequence());
+	//		catalogAttribute.setValueType(valueType);
 	//		catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
 	//
 	//		return catalogAttribute;
 	//	}
 	//
+	//	/**
+	//	 * Creates a new {@link CatalogAttribute} for given {@link CatalogComponent}.
+	//	 *
+	//	 * @param name Name of the created {@code CatalogAttribute}.
+	//	 * @param enumerationClass The enumeration class.
+	//	 * @param catalogSensor The parent {@code CatalogSensor}.
+	//	 * @return The created {@code CatalogAttribute} is returned.
+	//	 * @throws IllegalArgumentException Thrown if given name is already in use
+	//	 * 		or not allowed or given enumeration class is not supported.
+	//	 */
 	//	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
 	//			CatalogSensor catalogSensor) {
 	//		validateCatalogName(name, true);
@@ -389,18 +485,20 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	//		// properties
 	//		catalogAttribute.setName(name);
 	//		catalogAttribute.setEnumerationClass(enumerationClass);
-	//		catalogAttribute.setSequence(false);
 	//		catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
 	//
 	//		return catalogAttribute;
 	//	}
 
+	/**
+	 * Creates a new {@link TemplateRoot} with given {@link ContextType} and name.
+	 *
+	 * @param contextType The {@code ContextType}.
+	 * @param name Name of the created {@code TemplateRoot}.
+	 * @return The created {@code TemplateRoot} is returned.
+	 */
 	public TemplateRoot createTemplateRoot(ContextType contextType, String name) {
 		TemplateRoot templateRoot = new TemplateRoot(createCore(TemplateRoot.class, contextType));
-
-		// TODO: name and version have to be a unique combination!!!
-		// => find a way to check this prior creating a new instance
-		// ==> InsertStatement or Transaction.create
 
 		// properties
 		templateRoot.setName(name);
@@ -411,6 +509,18 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateRoot;
 	}
 
+	/**
+	 * Creates a new {@link TemplateComponent} for given {@link TemplateRoot}
+	 * using given {@link CatalogComponent}.
+	 *
+	 * @param name Name of the created {@code TemplateComponent}.
+	 * @param templateRoot The parent {@code TemplateRoot}.
+	 * @param catalogComponent The associated {@link CatalogComponent}.
+	 * @return The created {@code TemplateComponent} is returned.
+	 * @throws IllegalArgumentException Thrown if {@code ContextType} of {@code
+	 * 		TemplateRoot} and {@code CatalogComponent} do not match or given
+	 * 		name is already in use.
+	 */
 	public TemplateComponent createTemplateComponent(String name, TemplateRoot templateRoot, CatalogComponent catalogComponent) {
 		if(!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
 			throw new IllegalArgumentException("Context type of template root and catalog component do not match.");
@@ -438,6 +548,18 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateComponent;
 	}
 
+	/**
+	 * Creates a new {@link TemplateComponent} for given {@link TemplateComponent}
+	 * using given {@link CatalogComponent}.
+	 *
+	 * @param name Name of the created {@code TemplateComponent}.
+	 * @param partentComponentTemplate The parent {@code TemplateComponent}.
+	 * @param catalogComponent The associated {@link CatalogComponent}.
+	 * @return The created {@code TemplateComponent} is returned.
+	 * @throws IllegalArgumentException Thrown if {@code ContextType} of {@code
+	 * 		TemplateComponent} and {@code CatalogComponent} do not match or
+	 * 		given name is already in use.
+	 */
 	public TemplateComponent createTemplateComponent(String name, TemplateComponent partentComponentTemplate, CatalogComponent catalogComponent) {
 		TemplateRoot templateRoot = partentComponentTemplate.getTemplateRoot();
 		if(!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
@@ -466,7 +588,14 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateComponent;
 	}
 
-	// TODO name must be one of the catalog componetn's attributes given template component is bound to
+	/**
+	 * Creates a new {@link TemplateAttribute} for given {@link TemplateComponent}.
+	 *
+	 * @param name Name of the created {@code TemplateAttribute}.
+	 * @param templateComponent The parent {@code TemplateComponent}.
+	 * @return The created {@code TemplateAttribute} is returned.
+	 * @throws IllegalArgumentException Thrown if given name is already in use.
+	 */
 	public TemplateAttribute createTemplateAttribute(String name, TemplateComponent templateComponent) {
 		if(templateComponent.getTemplateAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Template attribute with name '" + name + "' already exists.");
@@ -493,12 +622,16 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		throw new IllegalArgumentException("Catalog attribute with name '" + name + "' does not exists.");
 	}
 
+	// TODO create templateSensors...
+
+	/**
+	 * Creates a new {@link TemplateTestStep}.
+	 *
+	 * @param name Name of the created {@code TemplateTestStep}.
+	 * @return The created {@code TemplateTestStep} is returned.
+	 */
 	public TemplateTestStep createTemplateTestStep(String name) {
 		TemplateTestStep templateTestStep = new TemplateTestStep(createCore(TemplateTestStep.class));
-
-		// TODO: name and version have to be a unique combination!!!
-		// => find a way to check this prior creating a new instance
-		// ==> InsertStatement or Transaction.create
 
 		// properties
 		templateTestStep.setName(name);
@@ -509,12 +642,14 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateTestStep;
 	}
 
+	/**
+	 * Creates a new {@link TemplateTest}.
+	 *
+	 * @param name Name of the created {@code TemplateTest}.
+	 * @return The created {@code TemplateTest} is returned.
+	 */
 	public TemplateTest createTemplateTest(String name) {
 		TemplateTest templateTest = new TemplateTest(createCore(TemplateTest.class));
-
-		// TODO: name and version have to be a unique combination!!!
-		// => find a way to check this prior creating a new instance
-		// ==> InsertStatement or Transaction.create
 
 		// properties
 		templateTest.setName(name);
@@ -525,6 +660,15 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateTest;
 	}
 
+	/**
+	 * Creates a new {@link TemplateTestStepUsage} for given {@link
+	 * TemplateTest} using given {@link TemplateTestStep}.
+	 *
+	 * @param name Name of the created {@code TemplateTestStepUsage}.
+	 * @param templateTest The parent {@link TemplateTest}.
+	 * @param templateTestStep The related {@link TemplateTestStep}.
+	 * @return The created {@code TemplateTestStepUsage} is returned.
+	 */
 	public TemplateTestStepUsage createTemplateTestStepUsage(String name, TemplateTest templateTest, TemplateTestStep templateTestStep) {
 		if(templateTest.getTemplateTestStepUsage(name).isPresent()) {
 			throw new IllegalArgumentException("Template test step usage with name '" + name + "' already exists.");
@@ -546,6 +690,12 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return templateTestStepUsage;
 	}
 
+	/**
+	 * Creates a new {@link ValueList}.
+	 *
+	 * @param name Name of the created {@code ValueList}.
+	 * @return The created {@code ValueList} is returned.
+	 */
 	public ValueList createValueList(String name) {
 		ValueList valueList = new ValueList(createCore(ValueList.class));
 
@@ -556,6 +706,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return valueList;
 	}
 
+	/**
+	 * Creates a new {@link ValueListValue} for given {@link ValueList}.
+	 *
+	 * @param name Name of the created {@code ValueListValue}.
+	 * @param valueList The parent {@code ValueList}.
+	 * @return The created {@code ValueListValue} is returned.
+	 */
 	public ValueListValue createValueListValue(String name, ValueList valueList) {
 		if(valueList.getValueListValue(name).isPresent()) {
 			throw new IllegalArgumentException("Value list value with name '" + name + "' already exists.");
@@ -577,8 +734,146 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return valueListValue;
 	}
 
+	// ======================================================================
+	// Protected methods
+	// ======================================================================
+
+	/**
+	 * Creates a new {@link Test} for given {@link Pool} using given {@link
+	 * TemplateTest}.
+	 *
+	 * @param name Name of the created {@code Test}.
+	 * @param pool The parent {@code Pool}.
+	 * @param statusTest The related {@link Status} of the created {@code
+	 * 		Test}.
+	 * @param statusTestStep The related {@link Status} of the created {@code
+	 * 		TestStep}.
+	 * @param templateTest The template the returned {@code Test} will be
+	 * 		derived from.
+	 * @return The created {@code Test} is returned.
+	 */
+	// TODO make a decision: status in or out!
+	protected Test createTest(String name, Pool pool, Status statusTest, Status statusTestStep, TemplateTest templateTest) {
+		Test test = createTest(name, pool, statusTest);
+
+		// relations
+		getMutableStore(test).set(templateTest);
+
+		// create default active and mandatory test steps according to the template
+		templateTest.getTemplateTestStepUsages().stream().filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
+		.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> {
+			createTestStep(test, statusTestStep, templateTestStep);
+		});
+
+		return test;
+	}
+
+	/**
+	 * Creates a new {@link Test} for given {@link Pool}.
+	 *
+	 * @param name Name of the created {@code Test}.
+	 * @param pool The parent {@code Pool}.
+	 * @param status The related {@link Status}.
+	 * @return The created {@code Test} is returned.
+	 */
+	// TODO make a decision: status in or out!
+	protected Test createTest(String name, Pool pool, Status status) {
+		Test test = super.createTest(name);
+
+		// relations
+		getPermanentStore(test).set(pool);
+		getChildrenStore(pool).add(test);
+
+		if(status != null) {
+			status.assign(test);
+		}
+
+		return test;
+	}
+
+	/**
+	 * Creates a new {@link TestStep} for given {@link Test} using given {@link
+	 * TemplateTestStep}.
+	 *
+	 * @param test The parent {@code Test}.
+	 * @param templateTestStep The template the returned {@code TestStep} will
+	 * 		be derived from.
+	 * @return The created {@code TestStep} is returned.
+	 */
+	protected TestStep createTestStep(Test test, TemplateTestStep templateTestStep) {
+		return createTestStep(test, null, templateTestStep);
+	}
+
+	/**
+	 * Creates a new {@link TestStep} for given {@link Test} using given {@link
+	 * TemplateTestStep}.
+	 *
+	 * @param test The parent {@code Test}.
+	 * @param status The related {@link Status}.
+	 * @param templateTestStep The template the returned {@code TestStep} will
+	 * 		be derived from.
+	 * @return The created {@code TestStep} is returned.
+	 */
+	// TODO make a decision: status in or out!
+	protected TestStep createTestStep(Test test, Status status, TemplateTestStep templateTestStep) {
+		TemplateTest templateTest = TemplateTest.of(test)
+				.orElseThrow(() -> new IllegalArgumentException("Template test is not available."));
+		if(!templateTest.contains(templateTestStep)) {
+			throw new IllegalArgumentException("Template test step is part of the test template.");
+		}
+
+		TestStep testStep = createTestStep(templateTestStep.getName(), test, status);
+
+		// relations
+		getMutableStore(testStep).set(templateTestStep);
+
+		// create initial context roots
+		templateTestStep.getTemplateRoots().forEach(templateRoot -> createContextRoot(testStep, templateRoot));
+
+		return testStep;
+	}
+
+	/**
+	 * Creates a new {@link TestStep} for given {@link Test}.
+	 *
+	 * @param name Name of the created {@code Test}.
+	 * @param test The parent {@code Test}.
+	 * @param status The related {@link Status}.
+	 * @return The created {@code TestStep} is returned.
+	 */
+	// TODO make a decision: status in or out!
+	protected TestStep createTestStep(String name, Test test, Status status) {
+		TestStep testStep = super.createTestStep(name, test);
+
+		if(status != null) {
+			status.assign(testStep);
+		}
+
+		return testStep;
+	}
+
+	/**
+	 * Checks whether given enumeration class is defined in the application
+	 * model or not.
+	 *
+	 * @param enumClass The checked enumeration class.
+	 * @throws IllegalArgumentException Thrown if given enumeration class is
+	 * 		not supported.
+	 */
 	protected abstract void validateEnum(Class<? extends Enum<?>> enumClass);
 
+	// ======================================================================
+	// Private methods
+	// ======================================================================
+
+	/**
+	 * Checks whether given catalog name is allowed or not.
+	 *
+	 * @param name The checked name.
+	 * @param isAttributeName Flag indicates whether given name is for a
+	 * 		catalog attribute.
+	 * @throws IllegalArgumentException Thrown if given name is not allowed.
+	 */
 	private static void validateCatalogName(String name, boolean isAttributeName) {
 		if(name == null || name.isEmpty() || name.length() > 30) {
 			throw new IllegalArgumentException("A catalog name is not allowed to be empty and must not exceed 30 characters.");
@@ -592,6 +887,12 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		}
 	}
 
+	/**
+	 * Hides {@link Value} containers missing in the templates.
+	 *
+	 * @param contextCore The {@link ContextComponent} {@link Core}.
+	 * @param templateAttributes The {@link TemplateAttribute}s of the template.
+	 */
 	private static void hideValues(Core contextCore, List<TemplateAttribute> templateAttributes) {
 		Set<String> names = new HashSet<>(contextCore.getValues().keySet());
 		names.remove(Entity.ATTR_NAME);

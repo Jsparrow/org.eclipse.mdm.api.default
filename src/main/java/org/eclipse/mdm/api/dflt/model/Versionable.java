@@ -13,13 +13,23 @@ import java.util.Comparator;
 import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.VersionState;
 
+/**
+ * This interface extends the {@link Datable} interface and provides getter
+ * and setter methods for the 'Version' and 'VersionState' fields of an entity.
+ *
+ * @since 1.0.0
+ * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
+ */
 public interface Versionable extends Datable {
 
 	// ======================================================================
 	// Class variables
 	// ======================================================================
 
-	// TODO: first by name (ASC) then by version (DESC)
+	/**
+	 * This {@code Comparator} compares {@link Versionable}s by their name (in
+	 * ascending order) and version (in descending order).
+	 */
 	static final Comparator<Versionable> COMPARATOR = Comparator.comparing(Versionable::getName)
 			.thenComparing(Comparator.comparing(Versionable::getVersion).reversed());
 
@@ -73,33 +83,30 @@ public interface Versionable extends Datable {
 		getValue(ATTR_VERSION_STATE).set(versionState);
 	}
 
-	//	@Override
-	//	// TODO javadoc: by Name (ASC) Version (DESC)
-	//	default int compareTo(T other) {
-	//		int nameCompare = getName().compareTo(other.getName());
-	//		return nameCompare == 0 ? other.getVersion().compareTo(getVersion()) : nameCompare;
-	//	}
-
+	/**
+	 * Checks whether parts of this versionable are allowed to be modified.
+	 *
+	 * @return Returns {@code true} if modifications are allowed.
+	 */
 	default boolean isEditable() {
-		/*
-		 * TODO
-		 * editable if:
-		 *  - oldVersionState == EDITBALE
-		 *  - newVersionState == EDITBALE
-		 *
-		 *  ==> getValue(ATTR_VERSION_STATE).getInitialValue().isEditable();
-		 *
-		 *  ==> maybe it makes more sense to check here only the current
-		 *  value and leave checking of the initial value to the insert
-		 *  / update statements?!
-		 */
 		return getVersionState().isEditable();
 	}
 
+	/**
+	 * Checks whether this versionable is valid and therefore is no longer
+	 * allowed to be modified.
+	 *
+	 * @return Returns {@code true} if this versionable is valid.
+	 */
 	default boolean isValid() {
 		return getVersionState().isValid();
 	}
 
+	/**
+	 * Checks whether this versionable is archived.
+	 *
+	 * @return Returns {@code true} if this versionable is archived.
+	 */
 	default boolean isArchived() {
 		return getVersionState().isArchived();
 	}

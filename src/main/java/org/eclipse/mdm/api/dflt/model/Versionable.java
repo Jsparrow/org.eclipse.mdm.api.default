@@ -14,8 +14,8 @@ import org.eclipse.mdm.api.base.model.Datable;
 import org.eclipse.mdm.api.base.model.VersionState;
 
 /**
- * This interface extends the {@link Datable} interface and provides getter
- * and setter methods for the 'Version' and 'VersionState' fields of an entity.
+ * This interface extends the {@link Datable} interface and provides getter and
+ * setter methods for the 'Version' and 'VersionState' fields of an entity.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -59,7 +59,8 @@ public interface Versionable extends Datable {
 	/**
 	 * Sets new version for this entity.
 	 *
-	 * @param version The new version.
+	 * @param version
+	 *            The new version.
 	 */
 	default void setVersion(Integer version) {
 		getValue(ATTR_VERSION).set(version.toString());
@@ -77,7 +78,8 @@ public interface Versionable extends Datable {
 	/**
 	 * Sets new {@link VersionState} for this entity.
 	 *
-	 * @param versionState The new {@code VersionState}.
+	 * @param versionState
+	 *            The new {@code VersionState}.
 	 */
 	default void setVersionState(VersionState versionState) {
 		getValue(ATTR_VERSION_STATE).set(versionState);

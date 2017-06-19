@@ -23,15 +23,16 @@ import org.eclipse.mdm.api.base.model.Value;
 /**
  * Implementation of the template attribute entity type. A template root defines
  * a tree of {@code TemplateComponent}s. Such a tree forms a hierarchical
- * template structure which is used to describe the composition of a {@link
- * ContextRoot}. A template root implements the {@link Versionable} interface
- * and hence has a version and a state. As long as {@link #isEditable()}
- * returns {@code true} any part of that template root is allowed to be
- * modified. Once a template root is set to be valid ({@link #isValid()} ==
- * {@code true}) it may be used to compose a {@link TemplateTestStep} and then
- * is no longer allowed to be modified in any way. If a valid template root
- * needs to be modified, then a deep copy with a unique name and version
- * combination has to be created (deep copy means new instances).
+ * template structure which is used to describe the composition of a
+ * {@link ContextRoot}. A template root implements the {@link Versionable}
+ * interface and hence has a version and a state. As long as
+ * {@link #isEditable()} returns {@code true} any part of that template root is
+ * allowed to be modified. Once a template root is set to be valid
+ * ({@link #isValid()} == {@code true}) it may be used to compose a
+ * {@link TemplateTestStep} and then is no longer allowed to be modified in any
+ * way. If a valid template root needs to be modified, then a deep copy with a
+ * unique name and version combination has to be created (deep copy means new
+ * instances).
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -53,14 +54,15 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateRoot(Core core) {
 		super(core);
 
 		String typeName = core.getTypeName().toUpperCase(Locale.ROOT);
-		for(ContextType contextTypeCandidate : ContextType.values()) {
-			if(typeName.contains(contextTypeCandidate.name())) {
+		for (ContextType contextTypeCandidate : ContextType.values()) {
+			if (typeName.contains(contextTypeCandidate.name())) {
 				contextType = contextTypeCandidate;
 				return;
 			}
@@ -85,32 +87,34 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	/**
 	 * Returns the {@link TemplateComponent} identified by given name.
 	 *
-	 * <p><b>NOTE:</b> The names of <u>all</u> {@code TemplateComponent}s
-	 * belonging to the same template root must have unique names (no matter
-	 * they are immediate children or not). Therefore, if this template root
-	 * does not have an immediate {@code TemplateComponent} with the given
-	 * name, this lookup request is recursively delegated to all of its child
+	 * <p>
+	 * <b>NOTE:</b> The names of <u>all</u> {@code TemplateComponent}s belonging
+	 * to the same template root must have unique names (no matter they are
+	 * immediate children or not). Therefore, if this template root does not
+	 * have an immediate {@code TemplateComponent} with the given name, this
+	 * lookup request is recursively delegated to all of its child
 	 * {@code TemplateComponent}s.
 	 *
-	 * @param name The name of the {@code TemplateComponent}.
+	 * @param name
+	 *            The name of the {@code TemplateComponent}.
 	 * @return The {@code Optional} is empty if a {@code TemplateComponent} with
-	 * 		given name does not exist at all within this template root.
+	 *         given name does not exist at all within this template root.
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream()
-				.filter(tc -> tc.nameMatches(name)).findAny();
-		if(templateComponent.isPresent()) {
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name))
+				.findAny();
+		if (templateComponent.isPresent()) {
 			return templateComponent;
 		}
 
-		return templateComponents.stream().map(tc -> tc.getTemplateComponent(name))
-				.filter(Optional::isPresent).map(Optional::get).findAny();
+		return templateComponents.stream().map(tc -> tc.getTemplateComponent(name)).filter(Optional::isPresent)
+				.map(Optional::get).findAny();
 	}
 
 	/**
-	 * Returns all immediate {@link TemplateComponent}s related to this
-	 * template component.
+	 * Returns all immediate {@link TemplateComponent}s related to this template
+	 * component.
 	 *
 	 * @return The returned {@code List} is unmodifiable.
 	 */
@@ -121,22 +125,24 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	/**
 	 * Removes the {@link TemplateComponent} identified by given name.
 	 *
-	 * <p><b>NOTE:</b> The names of <u>all</u> {@code TemplateComponent}s
-	 * belonging to the same template roots must have unique names (no matter
-	 * they are immediate children or not). Therefore, if this template root
-	 * does not have an immediate {@code TemplateComponent} with the given
-	 * name, this remove request is recursively delegated to all of its child
+	 * <p>
+	 * <b>NOTE:</b> The names of <u>all</u> {@code TemplateComponent}s belonging
+	 * to the same template roots must have unique names (no matter they are
+	 * immediate children or not). Therefore, if this template root does not
+	 * have an immediate {@code TemplateComponent} with the given name, this
+	 * remove request is recursively delegated to all of its child
 	 * {@code TemplateComponent}s.
 	 *
-	 * @param name Name of the {@code TemplateComponent} that has to be removed.
+	 * @param name
+	 *            Name of the {@code TemplateComponent} that has to be removed.
 	 * @return Returns {@code true} if the {@code TemplateComponent} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
-		if(templateComponent.isPresent()) {
+		if (templateComponent.isPresent()) {
 			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
-			if(parentTemplateComponent.isPresent()) {
+			if (parentTemplateComponent.isPresent()) {
 				parentTemplateComponent.get().removeTemplateComponent(name);
 			} else {
 				getCore().getChildrenStore().remove(templateComponent.get());
@@ -157,7 +163,7 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		if(!templateComponents.isEmpty()) {
+		if (!templateComponents.isEmpty()) {
 			sb.append(", TemplateComponents = ").append(templateComponents);
 		}
 
@@ -165,13 +171,14 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	}
 
 	/**
-	 * Returns the {@link TemplateRoot} the given {@link ContextRoot}
-	 * is derived from.
+	 * Returns the {@link TemplateRoot} the given {@link ContextRoot} is derived
+	 * from.
 	 *
-	 * @param contextRoot The {@code ContextRoot} whose {@code TemplateRoot} is
-	 * 		requested.
-	 * @return {@code Optional} is empty if the given {@code ContextRoot}
-	 * 		is not derived from a template, which is data source specific.
+	 * @param contextRoot
+	 *            The {@code ContextRoot} whose {@code TemplateRoot} is
+	 *            requested.
+	 * @return {@code Optional} is empty if the given {@code ContextRoot} is not
+	 *         derived from a template, which is data source specific.
 	 */
 	public static Optional<TemplateRoot> of(ContextRoot contextRoot) {
 		return Optional.ofNullable(getCore(contextRoot).getMutableStore().get(TemplateRoot.class));

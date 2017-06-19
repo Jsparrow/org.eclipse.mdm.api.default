@@ -31,7 +31,8 @@ public final class Project extends BaseEntity implements Deletable {
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	Project(Core core) {
 		super(core);

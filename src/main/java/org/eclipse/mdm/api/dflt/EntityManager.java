@@ -31,46 +31,61 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	// Public methods
 	// ======================================================================
 
-	//	default Optional<Status> loadStatus(Class<? extends StatusAttachable> entityClass, String name)
-	//			throws DataAccessException {
-	//		return loadAllStatus(entityClass, name).stream()
-	//				.filter(s -> s.nameMatches(name))
-	//				.findAny();
-	//	}
+	// default Optional<Status> loadStatus(Class<? extends StatusAttachable>
+	// entityClass, String name)
+	// throws DataAccessException {
+	// return loadAllStatus(entityClass, name).stream()
+	// .filter(s -> s.nameMatches(name))
+	// .findAny();
+	// }
 
 	/**
 	 * Loads the entity identified by given entity class, {@link ContextType}
 	 * and its instance ID.
 	 *
-	 * @param <T>  The desired type.
-	 * @param entityClass Type of the returned entity.
-	 * @param contextType The {@link ContextType}.
-	 * @param instanceID The instance ID.
+	 * @param <T>
+	 *            The desired type.
+	 * @param entityClass
+	 *            Type of the returned entity.
+	 * @param contextType
+	 *            The {@link ContextType}.
+	 * @param instanceID
+	 *            The instance ID.
 	 * @return The entity with given instance ID is returned.
-	 * @throws DataAccessException Thrown if unable to retrieve the entity.
+	 * @throws DataAccessException
+	 *             Thrown if unable to retrieve the entity.
 	 */
 	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, Long instanceID)
 			throws DataAccessException;
 
-	//	default List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass) throws DataAccessException {
-	//		return loadAllStatus(entityClass, "*");
-	//	}
+	// default List<Status> loadAllStatus(Class<? extends StatusAttachable>
+	// entityClass) throws DataAccessException {
+	// return loadAllStatus(entityClass, "*");
+	// }
 
-	//	List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass, String pattern)
-	//			throws DataAccessException;
+	// List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass,
+	// String pattern)
+	// throws DataAccessException;
 
 	/**
 	 * Loads all available entities of given type.
 	 *
-	 * <pre>{@code
-	 * List<CatalogComponent> catalogComponents = entityManager.loadAll(CatalogComponent.class, UNITUNDERTEST);
-	 * }</pre>
+	 * <pre>
+	 * {
+	 * 	&#64;code
+	 * 	List<CatalogComponent> catalogComponents = entityManager.loadAll(CatalogComponent.class, UNITUNDERTEST);
+	 * }
+	 * </pre>
 	 *
-	 * @param <T> The desired type.
-	 * @param entityClass Type of the returned entities.
-	 * @param contextType The {@link ContextType}.
+	 * @param <T>
+	 *            The desired type.
+	 * @param entityClass
+	 *            Type of the returned entities.
+	 * @param contextType
+	 *            The {@link ContextType}.
 	 * @return Entities are returned in a {@code List}.
-	 * @throws DataAccessException Thrown if unable to retrieve the entities.
+	 * @throws DataAccessException
+	 *             Thrown if unable to retrieve the entities.
 	 * @see #loadAll(Class, ContextType, String)
 	 */
 	default <T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType)
@@ -78,79 +93,95 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 		return loadAll(entityClass, contextType, "*");
 	}
 
-	//	default <T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status status)
-	//			throws DataAccessException {
-	//		return loadAll(entityClass, status, "*");
-	//	}
+	// default <T extends StatusAttachable> List<T> loadAll(Class<T>
+	// entityClass, Status status)
+	// throws DataAccessException {
+	// return loadAll(entityClass, status, "*");
+	// }
 
-	//	<T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status status, String pattern)
-	//			throws DataAccessException;
+	// <T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status
+	// status, String pattern)
+	// throws DataAccessException;
 
 	/**
 	 * Loads all available entities of given type whose name fulfills the given
 	 * pattern.
 	 *
-	 * <pre>{@code
-	 * // retrieve all template roots whose name starts with 'Example'
-	 * List<TemplateRoot> templateRoots = entityManager.loadAll(TemplateRoot.class, UNITUNDERTEST, "Example*");
-	 * }</pre>
+	 * <pre>
+	 * {
+	 * 	&#64;code
+	 * 	// retrieve all template roots whose name starts with 'Example'
+	 * 	List<TemplateRoot> templateRoots = entityManager.loadAll(TemplateRoot.class, UNITUNDERTEST, "Example*");
+	 * }
+	 * </pre>
 	 *
-	 * @param <T> The desired type.
-	 * @param entityClass Type of the returned entities.
-	 * @param contextType The {@link ContextType}.
-	 * @param pattern Is always case sensitive and may contain wildcard
-	 * 		characters as follows: "?" for one matching character and "*"
-	 * 		for a sequence of matching characters.
+	 * @param <T>
+	 *            The desired type.
+	 * @param entityClass
+	 *            Type of the returned entities.
+	 * @param contextType
+	 *            The {@link ContextType}.
+	 * @param pattern
+	 *            Is always case sensitive and may contain wildcard characters
+	 *            as follows: "?" for one matching character and "*" for a
+	 *            sequence of matching characters.
 	 * @return Matched entities are returned in a {@code List}.
-	 * @throws DataAccessException Thrown if unable to retrieve the entities.
+	 * @throws DataAccessException
+	 *             Thrown if unable to retrieve the entities.
 	 * @see #loadAll(Class)
 	 */
 	<T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType, String pattern)
 			throws DataAccessException;
 
 	/**
-	 * Loads the latest valid {@link Versionable} entity of given type and
-	 * name.
+	 * Loads the latest valid {@link Versionable} entity of given type and name.
 	 *
-	 * @param <T> The desired type.
-	 * @param entityClass Type of the returned entity.
-	 * @param name The exact name of the requested entity.
+	 * @param <T>
+	 *            The desired type.
+	 * @param entityClass
+	 *            Type of the returned entity.
+	 * @param name
+	 *            The exact name of the requested entity.
 	 * @return Optional is empty if no such entity was found
-	 * @throws DataAccessException Thrown if unable to retrieve the entity.
+	 * @throws DataAccessException
+	 *             Thrown if unable to retrieve the entity.
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name)
 			throws DataAccessException {
-		return loadAll(entityClass, name).stream()
-				.filter(v -> v.nameMatches(name))
-				.filter(Versionable::isValid)
+		return loadAll(entityClass, name).stream().filter(v -> v.nameMatches(name)).filter(Versionable::isValid)
 				.max(Versionable.COMPARATOR);
 	}
 
 	/**
-	 * Loads the latest valid {@link Versionable} entity of given type, {@link
-	 * ContextType} and name.
+	 * Loads the latest valid {@link Versionable} entity of given type,
+	 * {@link ContextType} and name.
 	 *
-	 * @param <T> The desired type.
-	 * @param entityClass Type of the returned entity.
-	 * @param contextType The {@code ContextType}.
-	 * @param name The exact name of the requested entity.
+	 * @param <T>
+	 *            The desired type.
+	 * @param entityClass
+	 *            Type of the returned entity.
+	 * @param contextType
+	 *            The {@code ContextType}.
+	 * @param name
+	 *            The exact name of the requested entity.
 	 * @return Optional is empty if no such entity was found
-	 * @throws DataAccessException Thrown if unable to retrieve the entity.
+	 * @throws DataAccessException
+	 *             Thrown if unable to retrieve the entity.
 	 */
-	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass,
-			ContextType contextType, String name) throws DataAccessException {
-		return loadAll(entityClass, contextType, name).stream()
-				.filter(v -> v.nameMatches(name))
-				.filter(Versionable::isValid)
-				.max(Versionable.COMPARATOR);
+	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, ContextType contextType,
+			String name) throws DataAccessException {
+		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameMatches(name))
+				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}
 
-	//	default <T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> entityClass,
-	//			Status status) throws DataAccessException {
-	//		return loadChildren(parent, entityClass, status, "*");
-	//	}
+	// default <T extends StatusAttachable> List<T> loadChildren(Entity parent,
+	// Class<T> entityClass,
+	// Status status) throws DataAccessException {
+	// return loadChildren(parent, entityClass, status, "*");
+	// }
 
-	//	<T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T> entityClass,
-	//			Status status, String pattern) throws DataAccessException;
+	// <T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T>
+	// entityClass,
+	// Status status, String pattern) throws DataAccessException;
 
 }

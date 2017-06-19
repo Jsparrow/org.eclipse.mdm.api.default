@@ -19,9 +19,9 @@ import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.TestStep;
 
 /**
- * Implementation of the status entity type. A status may be attached to {@link
- * StatusAttachable} entities like {@link Test} or {@link TestStep} to indicate
- * they have a state in a complete workflow.
+ * Implementation of the status entity type. A status may be attached to
+ * {@link StatusAttachable} entities like {@link Test} or {@link TestStep} to
+ * indicate they have a state in a complete workflow.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -35,7 +35,8 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	Status(Core core) {
 		super(core);
@@ -48,8 +49,10 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Assigns this status to given {@link StatusAttachable}s.
 	 *
-	 * @param <T> The status attachable type.
-	 * @param statusAttachables This status will be assigned to all of them.
+	 * @param <T>
+	 *            The status attachable type.
+	 * @param statusAttachables
+	 *            This status will be assigned to all of them.
 	 */
 	public <T extends StatusAttachable> void assign(List<T> statusAttachables) {
 		statusAttachables.forEach(this::assign);
@@ -58,8 +61,10 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Assigns this status to given {@link StatusAttachable}.
 	 *
-	 * @param <T> The status attachable type.
-	 * @param statusAttachable This status will be assigned to it.
+	 * @param <T>
+	 *            The status attachable type.
+	 * @param statusAttachable
+	 *            This status will be assigned to it.
 	 */
 	public <T extends StatusAttachable> void assign(T statusAttachable) {
 		getCore(statusAttachable).getMutableStore().set(this);
@@ -68,7 +73,8 @@ public final class Status extends BaseEntity implements Describable {
 	/**
 	 * Returns the {@link Status} attached to given {@link StatusAttachable}.
 	 *
-	 * @param statusAttachable The {@code StatusAttachable}.
+	 * @param statusAttachable
+	 *            The {@code StatusAttachable}.
 	 * @return Optional is empty if no {@code Status} is attached.
 	 */
 	public static Optional<Status> of(StatusAttachable statusAttachable) {

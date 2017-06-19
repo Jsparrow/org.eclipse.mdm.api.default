@@ -39,7 +39,8 @@ public final class Pool extends BaseEntity implements Deletable {
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	Pool(Core core) {
 		super(core);

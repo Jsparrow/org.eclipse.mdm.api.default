@@ -27,6 +27,7 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.DoubleComplex;
+import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.FileLink;
 import org.eclipse.mdm.api.base.model.FloatComplex;
 import org.eclipse.mdm.api.base.model.MimeType;
@@ -96,15 +97,15 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 *
 	 * @return The default {@code Value} is returned.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	public Value getDefaultValue() {
 		ValueType valueType = getCatalogAttribute().getValueType();
 		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
 		boolean isValid = defaultValue.isValid();
 		String value = defaultValue.extract();
 		if (valueType.isEnumerationType()) {
-			Class<? extends Enum> enumClass = getCatalogAttribute().getEnumerationClass();
-			return valueType.create(enumClass, getName(), "", isValid, isValid ? Enum.valueOf(enumClass, value) : null);
+			Enumeration enumObject = getCatalogAttribute().getEnumerationObject();
+			return valueType.create(enumObject, getName(), "", isValid, isValid ? enumObject.valueOf(value) : null, enumObject.getName());
 		} else {
 			return valueType.create(getName(), isValid ? parse(value, valueType) : null);
 		}

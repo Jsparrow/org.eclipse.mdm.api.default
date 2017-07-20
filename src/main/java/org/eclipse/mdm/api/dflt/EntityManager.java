@@ -55,7 +55,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 * @throws DataAccessException
 	 *             Thrown if unable to retrieve the entity.
 	 */
-	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, Long instanceID)
+	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
 			throws DataAccessException;
 
 	// default List<Status> loadAllStatus(Class<? extends StatusAttachable>

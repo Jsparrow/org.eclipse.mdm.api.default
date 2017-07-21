@@ -23,11 +23,11 @@ import org.eclipse.mdm.api.base.model.Value;
 import org.eclipse.mdm.api.base.model.ValueType;
 
 /**
- * Implementation of the catalog attribute entity type. A catalog attribute is
- * a generic attribute description to store context data ("as measured", "as
- * ordered"). It always belongs to a {@link CatalogComponent} or a {@link
- * CatalogSensor}. Its name has to be unique within the parent and may not be
- * changed, once written.
+ * Implementation of the catalog attribute entity type. A catalog attribute is a
+ * generic attribute description to store context data ("as measured", "as
+ * ordered"). It always belongs to a {@link CatalogComponent} or a
+ * {@link CatalogSensor}. Its name has to be unique within the parent and may
+ * not be changed, once written.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -87,7 +87,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	CatalogAttribute(Core core) {
 		super(core);
@@ -101,7 +102,6 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 		core.getMutableStore().remove(Unit.class);
 	}
 
-
 	// ======================================================================
 	// Public methods
 	// ======================================================================
@@ -111,7 +111,7 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	 * related {@link ValueList}.
 	 *
 	 * @return Returns {@code false} if it is allowed to store other values then
-	 * 		those provided.
+	 *         those provided.
 	 */
 	public Boolean isValueListReference() {
 		boolean valueListReference = getValue(ATTR_VALUE_LIST_REFERENCE).extract();
@@ -121,15 +121,16 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets a new value reference flag for this catalog attribute.
 	 *
-	 * @param valueListReference The new value list reference flag.
+	 * @param valueListReference
+	 *            The new value list reference flag.
 	 */
 	public void setValueListReference(Boolean valueListReference) {
 		getValue(ATTR_VALUE_LIST_REFERENCE).set(valueListReference);
 	}
 
 	/**
-	 * Checks whether it is allowed to copy the contained value in case of
-	 * an associated descriptive component is copied.
+	 * Checks whether it is allowed to copy the contained value in case of an
+	 * associated descriptive component is copied.
 	 *
 	 * @return Returns {@code true} if it allowed to copy a contained value.
 	 */
@@ -140,7 +141,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets a new value copyable flag for this catalog attribute.
 	 *
-	 * @param valueCopyable The new value copyable flag.
+	 * @param valueCopyable
+	 *            The new value copyable flag.
 	 */
 	public void setValueCopyable(Boolean valueCopyable) {
 		getValue(ATTR_VALUE_COPYABLE).set(valueCopyable);
@@ -158,7 +160,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets a new action request class name for this attribute.
 	 *
-	 * @param actionRequestClassname The new action request class name.
+	 * @param actionRequestClassname
+	 *            The new action request class name.
 	 */
 	public void setActionRequestClassname(String actionRequestClassname) {
 		getValue(ATTR_ACTION_REQUEST_CLASSNAME).set(actionRequestClassname);
@@ -176,10 +179,11 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Replaces current {@link ValueList} relation with the given one.
 	 *
-	 * @param valueList The new {@code ValueList} may be null.
+	 * @param valueList
+	 *            The new {@code ValueList} may be null.
 	 */
 	public void setValueList(ValueList valueList) {
-		if(valueList == null) {
+		if (valueList == null) {
 			getCore().getMutableStore().remove(ValueList.class);
 			setValueListReference(Boolean.FALSE);
 		} else {
@@ -188,10 +192,10 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	}
 
 	/**
-	 *  Returns the parent {@link CatalogComponent}.
+	 * Returns the parent {@link CatalogComponent}.
 	 *
-	 * @return {@code Optional} is empty if a {@link CatalogSensor} is parent
-	 * 		of this catalog attribute.
+	 * @return {@code Optional} is empty if a {@link CatalogSensor} is parent of
+	 *         this catalog attribute.
 	 * @see #getCatalogSensor()
 	 */
 	public Optional<CatalogComponent> getCatalogComponent() {
@@ -201,8 +205,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Returns the parent {@link CatalogSensor}.
 	 *
-	 * @return {@code Optional} is empty if a {@link CatalogComponent} is
-	 * 		parent of this catalog attribute.
+	 * @return {@code Optional} is empty if a {@link CatalogComponent} is parent
+	 *         of this catalog attribute.
 	 * @see #getCatalogComponent()
 	 */
 	public Optional<CatalogSensor> getCatalogSensor() {
@@ -226,13 +230,14 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	 * attribute.
 	 *
 	 * @return The enumeration class is returned.
-	 * @throws IllegalStateException Thrown if this catalog attribute's {@link
-	 * 		ValueType} returns {@code true} when {@link
-	 * 		ValueType#isEnumerationType()} is called.
+	 * @throws IllegalStateException
+	 *             Thrown if this catalog attribute's {@link ValueType} returns
+	 *             {@code true} when {@link ValueType#isEnumerationType()} is
+	 *             called.
 	 */
 	@SuppressWarnings("unchecked")
 	public Class<? extends Enum<?>> getEnumerationClass() {
-		if(!getValueType().isEnumerationType()) {
+		if (!getValueType().isEnumerationType()) {
 			throw new IllegalStateException("Catalog attribute is not of type enumeration.");
 		}
 
@@ -255,7 +260,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets a new {@link Unit} for this catalog attribute.
 	 *
-	 * @param unit The new {@code Unit} may be null.
+	 * @param unit
+	 *            The new {@code Unit} may be null.
 	 */
 	public void setUnit(Unit unit) {
 		this.unit = unit;
@@ -270,14 +276,14 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 
 		ScalarType scalarType = scalarTypeValue.extract();
 		sb.append("ScalarType = ").append(scalarType);
-		if(scalarType.isEnumeration()) {
+		if (scalarType.isEnumeration()) {
 			sb.append(", EnumerationClass = ").append(getEnumerationClass());
 		}
 
 		sb.append(", Sequence = ").append((boolean) sequenceValue.extract());
 
 		Optional<Unit> unit = getUnit();
-		if(unit.isPresent()) {
+		if (unit.isPresent()) {
 			sb.append(", Unit = ").append(unit.get());
 		}
 
@@ -293,7 +299,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets {@link ValueType} of this catalog attribute.
 	 *
-	 * @param valueType The {@link ValueType}.
+	 * @param valueType
+	 *            The {@link ValueType}.
 	 */
 	void setValueType(ValueType valueType) {
 		scalarTypeValue.set(ScalarType.valueOf(valueType.toSingleType().name()));
@@ -303,7 +310,8 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	/**
 	 * Sets enumeration class of this catalog attribute.
 	 *
-	 * @param enumerationClass The enumeration class.
+	 * @param enumerationClass
+	 *            The enumeration class.
 	 */
 	void setEnumerationClass(Class<? extends Enum<?>> enumerationClass) {
 		setValueType(ValueType.ENUMERATION);

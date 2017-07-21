@@ -22,13 +22,13 @@ import org.eclipse.mdm.api.base.model.Value;
 
 /**
  * Implementation of the template test entity type. A template test consists of
- * {@link TemplateTestStepUsage}s with unique names. It describes a template
- * for a test run and provides meta data to resolve hooks and data sources for
+ * {@link TemplateTestStepUsage}s with unique names. It describes a template for
+ * a test run and provides meta data to resolve hooks and data sources for
  * naming, property validation, resolution and other purposes. A template test
  * implements the {@link Versionable} interface and hence has a version and a
- * state. As long as {@link #isEditable()} returns {@code true} any part of
- * that template test is allowed to be modified. Once a template test is set to
- * be valid ({@link #isValid()} == {@code true}) it may be used to define a test
+ * state. As long as {@link #isEditable()} returns {@code true} any part of that
+ * template test is allowed to be modified. Once a template test is set to be
+ * valid ({@link #isValid()} == {@code true}) it may be used to define a test
  * run therefore is no longer allowed to be modified in any way. If a valid
  * template test needs to be modified, then a deep copy with a unique name and
  * version combination has to be created (deep copy means new instances).
@@ -66,7 +66,8 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateTest(Core core) {
 		super(core);
@@ -88,7 +89,8 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Sets a new name helper class name for this template test.
 	 *
-	 * @param nameHelperClassname The new name helper class name.
+	 * @param nameHelperClassname
+	 *            The new name helper class name.
 	 */
 	public void setNameHelperClassname(String nameHelperClassname) {
 		getValue(ATTR_NAMEHELPER_CLASSNAME).set(nameHelperClassname);
@@ -106,8 +108,8 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Sets new data source plug-in class names for this template test.
 	 *
-	 * @param dataSourcePluginClassnames The new data source plug-in class
-	 * 		names.
+	 * @param dataSourcePluginClassnames
+	 *            The new data source plug-in class names.
 	 */
 	public void setDataSourceClassnames(String[] dataSourcePluginClassnames) {
 		getValue(ATTR_DATASOURCE_PLUGIN_CLASSNAMES).set(dataSourcePluginClassnames);
@@ -125,8 +127,8 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Sets new test order action class names for this template test.
 	 *
-	 * @param testOrderActionClassnames The new test order action class
-	 * 		names.
+	 * @param testOrderActionClassnames
+	 *            The new test order action class names.
 	 */
 	public void setTestOrderActionClassnames(String[] testOrderActionClassnames) {
 		getValue(ATTR_TEST_ORDER_ACTION_CLASSNAMES).set(testOrderActionClassnames);
@@ -135,9 +137,10 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Returns the {@link TemplateTestStepUsage} identified by given name.
 	 *
-	 * @param name The name of the {@code TemplateTestStepUsage}.
-	 * @return The {@code Optional} is empty if a {@code TemplateTestStepUsage} with
-	 * 		given name does not exist.
+	 * @param name
+	 *            The name of the {@code TemplateTestStepUsage}.
+	 * @return The {@code Optional} is empty if a {@code TemplateTestStepUsage}
+	 *         with given name does not exist.
 	 */
 	public Optional<TemplateTestStepUsage> getTemplateTestStepUsage(String name) {
 		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameMatches(name)).findAny();
@@ -156,14 +159,15 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	/**
 	 * Removes the {@link TemplateTestStepUsage} identified by given name.
 	 *
-	 * @param name Name of the {@code TemplateTestStepUsage} that has to be
-	 * 		removed.
+	 * @param name
+	 *            Name of the {@code TemplateTestStepUsage} that has to be
+	 *            removed.
 	 * @return Returns {@code true} if the {@code TemplateTestStepUsage} with
-	 * 		given name has been removed.
+	 *         given name has been removed.
 	 */
 	public boolean removeTemplateTestStepUsage(String name) {
 		Optional<TemplateTestStepUsage> templateTestStepUsage = getTemplateTestStepUsage(name);
-		if(templateTestStepUsage.isPresent()) {
+		if (templateTestStepUsage.isPresent()) {
 			getCore().getChildrenStore().remove(templateTestStepUsage.get());
 			return true;
 		}
@@ -180,7 +184,7 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		List<TemplateTestStepUsage> templateTestStepUsages = getTemplateTestStepUsages();
-		if(!templateTestStepUsages.isEmpty()) {
+		if (!templateTestStepUsages.isEmpty()) {
 			sb.append(", TemplateTestStepUsages = ").append(templateTestStepUsages);
 		}
 
@@ -191,10 +195,11 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	 * Returns the {@link TemplateComponent} the given {@link ContextComponent}
 	 * is derived from.
 	 *
-	 * @param test The {@code ContextComponent} whose {@code TemplateComponent}
-	 * 		is requested.
+	 * @param test
+	 *            The {@code ContextComponent} whose {@code TemplateComponent}
+	 *            is requested.
 	 * @return {@code Optional} is empty if the given {@code ContextComponent}
-	 * 		is not derived from a template, which is data source specific.
+	 *         is not derived from a template, which is data source specific.
 	 */
 	public static Optional<TemplateTest> of(Test test) {
 		return Optional.ofNullable(getCore(test).getMutableStore().get(TemplateTest.class));
@@ -208,15 +213,15 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	 * Checks whether given {@link TemplateTestStepUsage} is contained in this
 	 * template test.
 	 *
-	 * @param templateTestStep The {@code TemplateTestStepUsage}.
+	 * @param templateTestStep
+	 *            The {@code TemplateTestStepUsage}.
 	 * @return Returns {@code true} if given {@code TemplateTestStepUsage} is
-	 * 		contained in this template test.
+	 *         contained in this template test.
 	 */
 	boolean contains(TemplateTestStep templateTestStep) {
 		return getTemplateTestStepUsages().stream().map(TemplateTestStepUsage::getTemplateTestStep)
 				.filter(tts -> tts.getName().equals(templateTestStep.getName()))
-				.filter(tts -> tts.getVersion().equals(templateTestStep.getVersion()))
-				.findFirst().isPresent();
+				.filter(tts -> tts.getVersion().equals(templateTestStep.getVersion())).findFirst().isPresent();
 	}
 
 }

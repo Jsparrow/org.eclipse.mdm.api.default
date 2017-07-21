@@ -51,8 +51,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	public static final Predicate<TemplateSensor> IS_OPTIONAL = TemplateSensor::isOptional;
 
 	/**
-	 * The mandatory flag {@code Predicate}. This is the inversion of {@link
-	 * #IS_OPTIONAL} {@code Predicate}.
+	 * The mandatory flag {@code Predicate}. This is the inversion of
+	 * {@link #IS_OPTIONAL} {@code Predicate}.
 	 */
 	public static final Predicate<TemplateSensor> IS_MANDATORY = IS_OPTIONAL.negate();
 
@@ -104,7 +104,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateSensor(Core core) {
 		super(core);
@@ -126,7 +127,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new measured values editable flag for this template sensor.
 	 *
-	 * @param measuredValuesEditable The measured values editable flag.
+	 * @param measuredValuesEditable
+	 *            The measured values editable flag.
 	 */
 	public void setMeasuredValuesEditable(Boolean measuredValuesEditable) {
 		getValue(ATTR_MEASRED_VALUES_EDITABLE).set(measuredValuesEditable);
@@ -144,7 +146,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new measured values generator name for this template sensor.
 	 *
-	 * @param measuredValuesGeneratorName The measured values generator name.
+	 * @param measuredValuesGeneratorName
+	 *            The measured values generator name.
 	 */
 	public void setMeasuredValuesGeneratorName(String measuredValuesGeneratorName) {
 		getValue(ATTR_MEASRED_VALUES_GENERATOR_NAME).set(measuredValuesGeneratorName);
@@ -162,7 +165,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new measured values independent flag for this template sensor.
 	 *
-	 * @param measuredValuesIndependent The measured values independent flag.
+	 * @param measuredValuesIndependent
+	 *            The measured values independent flag.
 	 */
 	public void setMeasuredValuesIndependent(Boolean measuredValuesIndependent) {
 		getValue(ATTR_MEASRED_VALUES_INDEPENDENT).set(measuredValuesIndependent);
@@ -180,7 +184,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new measured values {@link AxisType} for this template sensor.
 	 *
-	 * @param axisType The measured values {@code AxisType}.
+	 * @param axisType
+	 *            The measured values {@code AxisType}.
 	 */
 	public void setMeasuredValuesAxisType(AxisType axisType) {
 		getValue(ATTR_MEASRED_VALUES_AXISTYPE).set(axisType);
@@ -189,8 +194,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Returns the optional flag of this template sensor.
 	 *
-	 * @return Returns {@code true} if it is allowed to omit a {@link
-	 * 		ContextSensor} derived from this template sensor.
+	 * @return Returns {@code true} if it is allowed to omit a
+	 *         {@link ContextSensor} derived from this template sensor.
 	 */
 	public Boolean isOptional() {
 		return getValue(ATTR_OPTIONAL).extract();
@@ -199,7 +204,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new optional flag for this template sensor.
 	 *
-	 * @param optional The new optional flag.
+	 * @param optional
+	 *            The new optional flag.
 	 */
 	public void setOptional(Boolean optional) {
 		getValue(ATTR_OPTIONAL).set(optional);
@@ -208,10 +214,10 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Returns the default active flag of this template sensor.
 	 *
-	 * @return Returns {@code true} if a {@link ContextSensor} has to be
-	 * 		created automatically each time a new {@link ContextComponent} is
-	 * 		derived from the {@link TemplateComponent} this template sensor
-	 * 		belongs to.
+	 * @return Returns {@code true} if a {@link ContextSensor} has to be created
+	 *         automatically each time a new {@link ContextComponent} is derived
+	 *         from the {@link TemplateComponent} this template sensor belongs
+	 *         to.
 	 */
 	public Boolean isDefaultActive() {
 		return getValue(ATTR_DEFAULT_ACTIVE).extract();
@@ -220,7 +226,8 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Sets a new default active flag for this template sensor.
 	 *
-	 * @param defaultActive The new default active flag.
+	 * @param defaultActive
+	 *            The new default active flag.
 	 */
 	public void setDefaultActive(Boolean defaultActive) {
 		getValue(ATTR_DEFAULT_ACTIVE).set(defaultActive);
@@ -266,17 +273,18 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Returns the {@link TemplateAttribute} identified by given name.
 	 *
-	 * @param name The name of the {@code TemplateAttribute}.
+	 * @param name
+	 *            The name of the {@code TemplateAttribute}.
 	 * @return The {@code Optional} is empty if a {@code TemplateAttribute} with
-	 * 		given name does not exist.
+	 *         given name does not exist.
 	 */
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
 		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
 	}
 
 	/**
-	 * Returns all available {@link TemplateAttribute}s related to this
-	 * template sensor.
+	 * Returns all available {@link TemplateAttribute}s related to this template
+	 * sensor.
 	 *
 	 * @return The returned {@code List} is unmodifiable.
 	 */
@@ -287,13 +295,14 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	/**
 	 * Removes the {@link TemplateAttribute} identified by given name.
 	 *
-	 * @param name Name of the {@code TemplateAttribute} that has to be removed.
+	 * @param name
+	 *            Name of the {@code TemplateAttribute} that has to be removed.
 	 * @return Returns {@code true} if the {@code TemplateAttribute} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeTemplateAttribute(String name) {
 		Optional<TemplateAttribute> templateAttribute = getTemplateAttribute(name);
-		if(templateAttribute.isPresent()) {
+		if (templateAttribute.isPresent()) {
 			getCore().getChildrenStore().remove(templateAttribute.get());
 			return true;
 		}
@@ -310,7 +319,7 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		List<TemplateAttribute> templateAttributes = getTemplateAttributes();
-		if(!templateAttributes.isEmpty()) {
+		if (!templateAttributes.isEmpty()) {
 			sb.append(", TemplateAttributes = ").append(templateAttributes);
 		}
 
@@ -321,10 +330,11 @@ public final class TemplateSensor extends BaseEntity implements Deletable, Descr
 	 * Returns the {@link TemplateSensor} the given {@link ContextSensor} is
 	 * derived from.
 	 *
-	 * @param contextSensor The {@code ContextSensor} whose {@code
+	 * @param contextSensor
+	 *            The {@code ContextSensor} whose {@code
 	 * 		TemplateSensor} is requested.
-	 * @return {@code Optional} is empty if the given {@code ContextSensor}
-	 * 		is not derived from a template, which is data source specific.
+	 * @return {@code Optional} is empty if the given {@code ContextSensor} is
+	 *         not derived from a template, which is data source specific.
 	 */
 	public static Optional<TemplateSensor> of(ContextSensor contextSensor) {
 		return Optional.ofNullable(getCore(contextSensor).getMutableStore().get(TemplateSensor.class));

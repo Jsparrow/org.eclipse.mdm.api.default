@@ -38,8 +38,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	public static final Predicate<TemplateTestStepUsage> IS_OPTIONAL = TemplateTestStepUsage::isOptional;
 
 	/**
-	 * The mandatory flag {@code Predicate}. This is the inversion of {@link
-	 * #IS_OPTIONAL} {@code Predicate}.
+	 * The mandatory flag {@code Predicate}. This is the inversion of
+	 * {@link #IS_OPTIONAL} {@code Predicate}.
 	 */
 	public static final Predicate<TemplateTestStepUsage> IS_MANDATORY = IS_OPTIONAL.negate();
 
@@ -71,7 +71,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateTestStepUsage(Core core) {
 		super(core);
@@ -85,8 +86,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	 * Returns the default active flag of this template test step usage.
 	 *
 	 * @return Returns {@code true} if a {@link TestStep} has to be created
-	 * 		automatically each time a new {@link Test} is derived from the
-	 * 		{@link TemplateTest} this template test step usage belongs to.
+	 *         automatically each time a new {@link Test} is derived from the
+	 *         {@link TemplateTest} this template test step usage belongs to.
 	 */
 	public Boolean isDefaultActive() {
 		return getValue(ATTR_DEFAULT_ACTIVE).extract();
@@ -95,7 +96,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	/**
 	 * Sets a new default active flag for this template test step usage.
 	 *
-	 * @param defaultActive The new default active flag.
+	 * @param defaultActive
+	 *            The new default active flag.
 	 */
 	public void setDefaultActive(Boolean defaultActive) {
 		getValue(ATTR_DEFAULT_ACTIVE).set(defaultActive);
@@ -104,8 +106,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	/**
 	 * Returns the optional flag of this template test step.
 	 *
-	 * @return Returns {@code true} if it is allowed to omit a {@link
-	 * 		TestStep} derived from this template test step usage.
+	 * @return Returns {@code true} if it is allowed to omit a {@link TestStep}
+	 *         derived from this template test step usage.
 	 */
 	public Boolean isOptional() {
 		return getValue(ATTR_OPTIONAL).extract();
@@ -114,7 +116,8 @@ public final class TemplateTestStepUsage extends BaseEntity implements Deletable
 	/**
 	 * Sets a new optional flag for this template test step usage.
 	 *
-	 * @param optional The new optional flag.
+	 * @param optional
+	 *            The new optional flag.
 	 */
 	public void setOptional(Boolean optional) {
 		getValue(ATTR_OPTIONAL).set(optional);

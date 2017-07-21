@@ -35,10 +35,10 @@ import org.eclipse.mdm.api.base.model.ValueType;
 
 /**
  * Implementation of the template attribute entity type. A template attribute
- * adds meta data to a {@link CatalogAttribute} it is associated with. It
- * always belongs to a {@link TemplateComponent} or a {@link TemplateSensor}.
- * Its name is the same as the name of the associated {@code CatalogAttribute}
- * and is not allowed to be modified at all.
+ * adds meta data to a {@link CatalogAttribute} it is associated with. It always
+ * belongs to a {@link TemplateComponent} or a {@link TemplateSensor}. Its name
+ * is the same as the name of the associated {@code CatalogAttribute} and is not
+ * allowed to be modified at all.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -55,8 +55,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 * This {@code Comparator} compares {@link TemplateAttribute}s by the sort
 	 * index of their corresponding {@link CatalogAttribute} in ascending order.
 	 */
-	public static final Comparator<TemplateAttribute> COMPARATOR =
-			Comparator.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
+	public static final Comparator<TemplateAttribute> COMPARATOR = Comparator
+			.comparing(ta -> ta.getCatalogAttribute().getSortIndex());
 
 	/**
 	 * The 'DefaultValue' attribute name.
@@ -80,7 +80,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateAttribute(Core core) {
 		super(core);
@@ -101,7 +102,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
 		boolean isValid = defaultValue.isValid();
 		String value = defaultValue.extract();
-		if(valueType.isEnumerationType()) {
+		if (valueType.isEnumerationType()) {
 			Class<? extends Enum> enumClass = getCatalogAttribute().getEnumerationClass();
 			return valueType.create(enumClass, getName(), "", isValid, isValid ? Enum.valueOf(enumClass, value) : null);
 		} else {
@@ -110,13 +111,14 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	}
 
 	/**
-	 * Sets a new default value for this template attribute. Given input will
-	 * be stored in its {@link String} representation.
+	 * Sets a new default value for this template attribute. Given input will be
+	 * stored in its {@link String} representation.
 	 *
-	 * @param input The new default value.
+	 * @param input
+	 *            The new default value.
 	 */
 	public void setDefaultValue(Object input) {
-		if(input == null) {
+		if (input == null) {
 			getValue(ATTR_DEFAULT_VALUE).set(null);
 			return;
 		}
@@ -128,35 +130,33 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		Value value = valueType.create("notRelevant", input);
 
 		String stringValue;
-		if(valueType.isFileLinkType()) {
+		if (valueType.isFileLinkType()) {
 			FileLink[] values = sequence ? value.extract() : new FileLink[] { value.extract() };
-			stringValue = Stream.of(values)
-					.map(fl -> {
-						StringBuilder sb = new StringBuilder();
-						if(fl.getDescription().isEmpty()) {
-							sb.append(FileLinkParser.NO_DESC_MARKER);
-						} else {
-							sb.append(fl.getDescription());
-						}
-						sb.append('[').append(fl.getMimeType()).append(',');
-						if(fl.isRemote()) {
-							sb.append(fl.getRemotePath());
-						} else if(fl.isLocal()) {
-							sb.append(FileLinkParser.LOCAL_MARKER).append(fl.getLocalPath());
-						} else {
-							throw new IllegalStateException("File link is neither in local nor remote state: " + fl);
-						}
+			stringValue = Stream.of(values).map(fl -> {
+				StringBuilder sb = new StringBuilder();
+				if (fl.getDescription().isEmpty()) {
+					sb.append(FileLinkParser.NO_DESC_MARKER);
+				} else {
+					sb.append(fl.getDescription());
+				}
+				sb.append('[').append(fl.getMimeType()).append(',');
+				if (fl.isRemote()) {
+					sb.append(fl.getRemotePath());
+				} else if (fl.isLocal()) {
+					sb.append(FileLinkParser.LOCAL_MARKER).append(fl.getLocalPath());
+				} else {
+					throw new IllegalStateException("File link is neither in local nor remote state: " + fl);
+				}
 
-						return sb.append(']');
-					}).collect(Collectors.joining(","));
-		} else if(valueType.isDateType()) {
+				return sb.append(']');
+			}).collect(Collectors.joining(","));
+		} else if (valueType.isDateType()) {
 			LocalDateTime[] values = sequence ? value.extract() : new LocalDateTime[] { value.extract() };
 			stringValue = Stream.of(values).map(ldt -> ldt.format(Value.LOCAL_DATE_TIME_FORMATTER))
 					.collect(Collectors.joining(","));
 		} else {
-			if(input.getClass().isArray()) {
-				stringValue = IntStream.range(0, Array.getLength(input))
-						.mapToObj(i -> Array.get(input, i).toString())
+			if (input.getClass().isArray()) {
+				stringValue = IntStream.range(0, Array.getLength(input)).mapToObj(i -> Array.get(input, i).toString())
 						.collect(Collectors.joining(","));
 			} else {
 				stringValue = value.extract().toString();
@@ -169,8 +169,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	/**
 	 * Returns the value read only flag of this template attribute.
 	 *
-	 * @return Returns {@code true} if it is not allowed to modify {@link
-	 * 		Value}s derived from this template attribute.
+	 * @return Returns {@code true} if it is not allowed to modify
+	 *         {@link Value}s derived from this template attribute.
 	 */
 	public Boolean isValueReadOnly() {
 		return getValue(ATTR_VALUE_READONLY).extract();
@@ -179,7 +179,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	/**
 	 * Sets a new value read only flag for this template attribute.
 	 *
-	 * @param valueReadOnly The new value read only flag.
+	 * @param valueReadOnly
+	 *            The new value read only flag.
 	 */
 	public void setValueReadOnly(Boolean valueReadOnly) {
 		getValue(ATTR_VALUE_READONLY).set(valueReadOnly);
@@ -189,7 +190,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 * Returns the optional flag of this template attribute.
 	 *
 	 * @return Returns {@code true} if it is allowed to omit a {@link Value}
-	 * 		derived from this template attribute.
+	 *         derived from this template attribute.
 	 */
 	public Boolean isOptional() {
 		boolean mandatory = getValue(ATTR_OPTIONAL).extract();
@@ -199,7 +200,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	/**
 	 * Sets a new optional flag for this template attribute.
 	 *
-	 * @param optional The new optional flag.
+	 * @param optional
+	 *            The new optional flag.
 	 */
 	public void setOptional(Boolean optional) {
 		getValue(ATTR_OPTIONAL).set(optional ? Boolean.FALSE : Boolean.TRUE);
@@ -223,9 +225,9 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	public TemplateRoot getTemplateRoot() {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent();
 		Optional<TemplateSensor> templateSensor = getTemplateSensor();
-		if(templateComponent.isPresent()) {
+		if (templateComponent.isPresent()) {
 			return templateComponent.get().getTemplateRoot();
-		} else if(templateSensor.isPresent()) {
+		} else if (templateSensor.isPresent()) {
 			return templateSensor.get().getTemplateRoot();
 		} else {
 			throw new IllegalStateException("Parent entity is unknown.");
@@ -236,7 +238,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 * Returns the parent {@link TemplateComponent} of this template attribute.
 	 *
 	 * @return {@code Optional} is empty if a {@link TemplateSensor} is parent
-	 * 		of this template attribute.
+	 *         of this template attribute.
 	 * @see #getTemplateSensor()
 	 */
 	public Optional<TemplateComponent> getTemplateComponent() {
@@ -246,8 +248,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	/**
 	 * Returns the parent {@link TemplateSensor} of this template attribute.
 	 *
-	 * @return {@code Optional} is empty if a {@link TemplateComponent} is parent
-	 * 		of this template attribute.
+	 * @return {@code Optional} is empty if a {@link TemplateComponent} is
+	 *         parent of this template attribute.
 	 * @see #getTemplateComponent()
 	 */
 	public Optional<TemplateSensor> getTemplateSensor() {
@@ -259,33 +261,35 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	// ======================================================================
 
 	/**
-	 * Parses given {@code String} to the corresponding type of given {@link
-	 * ValueType}.
+	 * Parses given {@code String} to the corresponding type of given
+	 * {@link ValueType}.
 	 *
-	 * @param value The {@code String} value.
-	 * @param valueType Used to resolve the corresponding converter.
+	 * @param value
+	 *            The {@code String} value.
+	 * @param valueType
+	 *            Used to resolve the corresponding converter.
 	 * @return The parsed object is returned.
 	 */
 	private static Object parse(String value, ValueType valueType) {
-		if(valueType.isFileLinkType()) {
+		if (valueType.isFileLinkType()) {
 			Pattern pattern = Pattern.compile("([^,].*?)\\[(.*?),(.*?)\\]");
 			Matcher matcher = pattern.matcher(value);
 			List<FileLink> fileLinks = new ArrayList<>();
-			while(matcher.find()) {
+			while (matcher.find()) {
 				fileLinks.add(FileLinkParser.parse(matcher.group()));
 			}
 
 			return valueType.isSequence() ? fileLinks.toArray(new FileLink[fileLinks.size()]) : fileLinks.get(0);
 		} else {
 			Function<String, Object> converter = getParser(valueType);
-			if(valueType.isSequence()) {
+			if (valueType.isSequence()) {
 				List<Object> values = Stream.of(value.split(",")).map(converter).collect(Collectors.toList());
 				Object array = Array.newInstance(valueType.getValueClass().getComponentType(), values.size());
 
-				if(valueType.getValueClass().getComponentType().isPrimitive()) {
+				if (valueType.getValueClass().getComponentType().isPrimitive()) {
 					IntStream.range(0, values.size()).forEach(i -> Array.set(array, i, values.get(i)));
 				} else {
-					values.toArray((Object[])array);
+					values.toArray((Object[]) array);
 				}
 
 				return array;
@@ -296,37 +300,39 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	}
 
 	/**
-	 * Returns the {@code String} conversion function for given {@link ValueType}.
+	 * Returns the {@code String} conversion function for given
+	 * {@link ValueType}.
 	 *
-	 * @param valueType Used as identifier.
+	 * @param valueType
+	 *            Used as identifier.
 	 * @return The {@code String} conversion {@code Function} is returned.
-	 * @throws IllegalArgumentException Thrown if a corresponding {@code String}
-	 * 		is not supported.
+	 * @throws IllegalArgumentException
+	 *             Thrown if a corresponding {@code String} is not supported.
 	 */
 	private static Function<String, Object> getParser(ValueType valueType) {
 		Function<String, Object> converter;
 
-		if(valueType.isString()) {
+		if (valueType.isString()) {
 			converter = v -> v;
-		} else if(valueType.isDate()) {
+		} else if (valueType.isDate()) {
 			converter = v -> LocalDateTime.parse(v, Value.LOCAL_DATE_TIME_FORMATTER);
-		} else if(valueType.isBoolean()) {
+		} else if (valueType.isBoolean()) {
 			converter = Boolean::valueOf;
-		} else if(valueType.isByte()) {
+		} else if (valueType.isByte()) {
 			converter = Byte::valueOf;
-		} else if(valueType.isShort()) {
+		} else if (valueType.isShort()) {
 			converter = Short::valueOf;
-		} else if(valueType.isInteger()) {
+		} else if (valueType.isInteger()) {
 			converter = Integer::valueOf;
-		} else if(valueType.isLong()) {
+		} else if (valueType.isLong()) {
 			converter = Long::valueOf;
-		} else if(valueType.isFloat()) {
+		} else if (valueType.isFloat()) {
 			converter = Float::valueOf;
-		} else if(valueType.isDouble()) {
+		} else if (valueType.isDouble()) {
 			converter = Double::valueOf;
-		} else if(valueType.isFloatComplex()) {
+		} else if (valueType.isFloatComplex()) {
 			converter = FloatComplex::valueOf;
-		} else if(valueType.isDoubleComplex()) {
+		} else if (valueType.isDoubleComplex()) {
 			converter = DoubleComplex::valueOf;
 		} else {
 			throw new IllegalArgumentException("String conversion for value type '" + valueType + "' not supported.");
@@ -358,8 +364,8 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		private static final String PATH = "path";
 
 		// pattern
-		private static final Pattern FILE_LINK_PATTERN =
-				Pattern.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
+		private static final Pattern FILE_LINK_PATTERN = Pattern
+				.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
 
 		// ======================================================================
 		// Public methods
@@ -368,18 +374,19 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 		/**
 		 * Parses given {@code String} and returns it as {@link FileLink}.
 		 *
-		 * @param value The {@code String} value which will be parsed.
+		 * @param value
+		 *            The {@code String} value which will be parsed.
 		 * @return The corresponding {@code FileLink} is returned.
 		 */
 		public static FileLink parse(String value) {
 			Matcher matcher = FILE_LINK_PATTERN.matcher(value);
-			if(!matcher.find()) {
+			if (!matcher.find()) {
 				throw new IllegalStateException("Unable to restore file link.");
 			}
 			String description = matcher.group(DESCRIPTION);
 			String path = matcher.group(PATH);
 			FileLink fileLink;
-			if(path.startsWith(LOCAL_MARKER)) {
+			if (path.startsWith(LOCAL_MARKER)) {
 				try {
 					fileLink = FileLink.newLocal(Paths.get(path.replaceFirst(LOCAL_MARKER, "")));
 				} catch (IOException e) {

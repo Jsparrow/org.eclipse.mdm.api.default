@@ -46,7 +46,8 @@ public final class ValueListValue extends BaseEntity implements Deletable, Descr
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	ValueListValue(Core core) {
 		super(core);

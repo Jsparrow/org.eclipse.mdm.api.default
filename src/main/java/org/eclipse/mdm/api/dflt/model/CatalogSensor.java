@@ -21,14 +21,14 @@ import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.Value;
 
 /**
- * Implementation of the catalog sensor entity type. A catalog sensor acts as
- * a container to store sensor context data ("as measured", "as ordered"). It
- * always belongs to a {@link CatalogComponent} of type {@link
- * ContextType#TESTEQUIPMENT}. Each catalog sensor has a corresponding entity
- * type whose name is equal to the name of the catalog sensor. Therefore the
- * name of a catalog sensor has to be unique and is not allowed to be modified,
- * once written. A catalog sensor consists of {@link CatalogAttribute} which
- * describe the attributes of this container.
+ * Implementation of the catalog sensor entity type. A catalog sensor acts as a
+ * container to store sensor context data ("as measured", "as ordered"). It
+ * always belongs to a {@link CatalogComponent} of type
+ * {@link ContextType#TESTEQUIPMENT}. Each catalog sensor has a corresponding
+ * entity type whose name is equal to the name of the catalog sensor. Therefore
+ * the name of a catalog sensor has to be unique and is not allowed to be
+ * modified, once written. A catalog sensor consists of {@link CatalogAttribute}
+ * which describe the attributes of this container.
  *
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
@@ -44,7 +44,8 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	CatalogSensor(Core core) {
 		super(core);
@@ -66,9 +67,10 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 	/**
 	 * Returns the {@link CatalogAttribute} identified by given name.
 	 *
-	 * @param name The name of the {@code CatalogAttribute}.
+	 * @param name
+	 *            The name of the {@code CatalogAttribute}.
 	 * @return The {@code Optional} is empty if a {@code CatalogAttribute} with
-	 * 		given name does not exist.
+	 *         given name does not exist.
 	 */
 	public Optional<CatalogAttribute> getCatalogAttribute(String name) {
 		return getCatalogAttributes().stream().filter(ca -> ca.nameMatches(name)).findAny();
@@ -87,13 +89,14 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 	/**
 	 * Removes the {@link CatalogAttribute} identified by given name.
 	 *
-	 * @param name Name of the {@code CatalogAttribute} that has to be removed.
+	 * @param name
+	 *            Name of the {@code CatalogAttribute} that has to be removed.
 	 * @return Returns {@code true} if the {@code CatalogAttribute} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeCatalogAttribute(String name) {
 		Optional<CatalogAttribute> catalogAttribute = getCatalogAttribute(name);
-		if(catalogAttribute.isPresent()) {
+		if (catalogAttribute.isPresent()) {
 			getCore().getChildrenStore().remove(catalogAttribute.get());
 			return true;
 		}
@@ -110,7 +113,7 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		List<CatalogAttribute> catalogAttributes = getCatalogAttributes();
-		if(!catalogAttributes.isEmpty()) {
+		if (!catalogAttributes.isEmpty()) {
 			sb.append(", CatalogAttributes = ").append(catalogAttributes);
 		}
 

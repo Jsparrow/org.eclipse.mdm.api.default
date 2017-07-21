@@ -25,11 +25,11 @@ import org.eclipse.mdm.api.base.model.Value;
 
 /**
  * Implementation of the template component entity type. A template attribute
- * adds meta data to a {@link CatalogComponent} it is associated with. It
- * always belongs to a template root or another template component. Its name
- * has to be unique within all template components belonging to the same {@link
- * TemplateRoot}. A template component may define {@link TemplateSensor}s where
- * each extends a {@link CatalogSensor} provided by the associated {@code
+ * adds meta data to a {@link CatalogComponent} it is associated with. It always
+ * belongs to a template root or another template component. Its name has to be
+ * unique within all template components belonging to the same
+ * {@link TemplateRoot}. A template component may define {@link TemplateSensor}s
+ * where each extends a {@link CatalogSensor} provided by the associated {@code
  * CatalogComponent}. It may define {@link TemplateAttribute}s where each
  * uniquely extends a {@link CatalogAttribute} provided by the associated
  * {@code CatalogComponent}.
@@ -53,8 +53,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	public static final Predicate<TemplateComponent> IS_OPTIONAL = TemplateComponent::isOptional;
 
 	/**
-	 * The mandatory flag {@code Predicate}. This is the inversion of {@link
-	 * #IS_OPTIONAL} {@code Predicate}.
+	 * The mandatory flag {@code Predicate}. This is the inversion of
+	 * {@link #IS_OPTIONAL} {@code Predicate}.
 	 */
 	public static final Predicate<TemplateComponent> IS_MANDATORY = IS_OPTIONAL.negate();
 
@@ -102,7 +102,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Constructor.
 	 *
-	 * @param core The {@link Core}.
+	 * @param core
+	 *            The {@link Core}.
 	 */
 	TemplateComponent(Core core) {
 		super(core);
@@ -115,8 +116,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Returns the optional flag of this template component.
 	 *
-	 * @return Returns {@code true} if it is allowed to omit a {@link
-	 * 		ContextComponent} derived from this template component.
+	 * @return Returns {@code true} if it is allowed to omit a
+	 *         {@link ContextComponent} derived from this template component.
 	 */
 	public Boolean isOptional() {
 		return getValue(ATTR_OPTIONAL).extract();
@@ -125,7 +126,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Sets a new optional flag for this template component.
 	 *
-	 * @param optional The new optional flag.
+	 * @param optional
+	 *            The new optional flag.
 	 */
 	public void setOptional(Boolean optional) {
 		getValue(ATTR_OPTIONAL).set(optional);
@@ -135,9 +137,9 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	 * Returns the default active flag of this template component.
 	 *
 	 * @return Returns {@code true} if a {@link ContextComponent} has to be
-	 * 		created automatically each time a new {@link ContextRoot} is
-	 * 		derived from the {@link TemplateRoot} this template component
-	 * 		belongs to.
+	 *         created automatically each time a new {@link ContextRoot} is
+	 *         derived from the {@link TemplateRoot} this template component
+	 *         belongs to.
 	 */
 	public Boolean isDefaultActive() {
 		return getValue(ATTR_DEFAULT_ACTIVE).extract();
@@ -146,7 +148,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Sets a new default active flag for this template component.
 	 *
-	 * @param defaultActive The new default active flag.
+	 * @param defaultActive
+	 *            The new default active flag.
 	 */
 	public void setDefaultActive(Boolean defaultActive) {
 		getValue(ATTR_DEFAULT_ACTIVE).set(defaultActive);
@@ -155,8 +158,9 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Returns the series constant flag of this template component.
 	 *
-	 * @return Returns {@code true} if the {@link ContextComponent}'s {@link
-	 * 		Value}s across {@link TestStep} siblings contain the same values.
+	 * @return Returns {@code true} if the {@link ContextComponent}'s
+	 *         {@link Value}s across {@link TestStep} siblings contain the same
+	 *         values.
 	 */
 	public Boolean isSeriesConstant() {
 		return getValue(ATTR_SERIES_CONSTANT).extract();
@@ -165,7 +169,8 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Sets a new series constant flag for this template component.
 	 *
-	 * @param seriesConstant The new series constant flag.
+	 * @param seriesConstant
+	 *            The new series constant flag.
 	 */
 	public void setSeriesConstant(Boolean seriesConstant) {
 		getValue(ATTR_SERIES_CONSTANT).set(seriesConstant);
@@ -188,7 +193,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	 */
 	public TemplateRoot getTemplateRoot() {
 		TemplateRoot templateRoot = getCore().getPermanentStore().get(TemplateRoot.class);
-		if(templateRoot == null) {
+		if (templateRoot == null) {
 			return getParentTemplateComponent()
 					.orElseThrow(() -> new IllegalStateException("Parent entity is unknown.")).getTemplateRoot();
 		}
@@ -200,7 +205,7 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	 * Returns the parent {@link TemplateComponent} of this template component.
 	 *
 	 * @return {@code Optional} is empty if this template component is an
-	 * 		immediate child of the {@link TemplateRoot}.
+	 *         immediate child of the {@link TemplateRoot}.
 	 * @see #getTemplateRoot()
 	 */
 	public Optional<TemplateComponent> getParentTemplateComponent() {
@@ -210,17 +215,18 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Returns the {@link TemplateAttribute} identified by given name.
 	 *
-	 * @param name The name of the {@code TemplateAttribute}.
+	 * @param name
+	 *            The name of the {@code TemplateAttribute}.
 	 * @return The {@code Optional} is empty if a {@code TemplateAttribute} with
-	 * 		given name does not exist.
+	 *         given name does not exist.
 	 */
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
 		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
 	}
 
 	/**
-	 * Returns all available {@link TemplateAttribute}s related to this
-	 * template component.
+	 * Returns all available {@link TemplateAttribute}s related to this template
+	 * component.
 	 *
 	 * @return The returned {@code List} is unmodifiable.
 	 */
@@ -231,13 +237,14 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Removes the {@link TemplateAttribute} identified by given name.
 	 *
-	 * @param name Name of the {@code TemplateAttribute} that has to be removed.
+	 * @param name
+	 *            Name of the {@code TemplateAttribute} that has to be removed.
 	 * @return Returns {@code true} if the {@code TemplateAttribute} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeTemplateAttribute(String name) {
 		Optional<TemplateAttribute> templateAttribute = getTemplateAttribute(name);
-		if(templateAttribute.isPresent()) {
+		if (templateAttribute.isPresent()) {
 			getCore().getChildrenStore().remove(templateAttribute.get());
 			return true;
 		}
@@ -248,33 +255,34 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Returns the {@link TemplateComponent} identified by given name.
 	 *
-	 * <p><b>NOTE:</b> The names of <u>all</u> template components belonging to
-	 * the same {@link TemplateRoot} must have unique names (no matter they are
+	 * <p>
+	 * <b>NOTE:</b> The names of <u>all</u> template components belonging to the
+	 * same {@link TemplateRoot} must have unique names (no matter they are
 	 * immediate children or not). Therefore, if this template component does
-	 * not have an immediate template component with the given name, this
-	 * lookup request is recursively delegated to all of its child template
-	 * components.
+	 * not have an immediate template component with the given name, this lookup
+	 * request is recursively delegated to all of its child template components.
 	 *
-	 * @param name The name of the {@code TemplateComponent}.
+	 * @param name
+	 *            The name of the {@code TemplateComponent}.
 	 * @return The {@code Optional} is empty if a {@code TemplateComponent} with
-	 * 		given name does not exist (neither this template component nor one of
-	 * 		its children has a template component with given name).
+	 *         given name does not exist (neither this template component nor
+	 *         one of its children has a template component with given name).
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent =
-				templateComponents.stream().filter(tc -> tc.nameMatches(name)).findAny();
-		if(templateComponent.isPresent()) {
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name))
+				.findAny();
+		if (templateComponent.isPresent()) {
 			return templateComponent;
 		}
 
-		return templateComponents.stream().map(ct -> ct.getTemplateComponent(name))
-				.filter(Optional::isPresent).map(Optional::get).findAny();
+		return templateComponents.stream().map(ct -> ct.getTemplateComponent(name)).filter(Optional::isPresent)
+				.map(Optional::get).findAny();
 	}
 
 	/**
-	 * Returns all immediate {@link TemplateComponent}s related to this
-	 * template component.
+	 * Returns all immediate {@link TemplateComponent}s related to this template
+	 * component.
 	 *
 	 * @return The returned {@code List} is unmodifiable.
 	 */
@@ -285,22 +293,23 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Removes the {@link TemplateComponent} identified by given name.
 	 *
-	 * <p><b>NOTE:</b> The names of <u>all</u> template components belonging to
-	 * the same {@link TemplateRoot} must have unique names (no matter they are
+	 * <p>
+	 * <b>NOTE:</b> The names of <u>all</u> template components belonging to the
+	 * same {@link TemplateRoot} must have unique names (no matter they are
 	 * immediate children or not). Therefore, if this template component does
-	 * not have an immediate template component with the given name, this
-	 * remove request is recursively delegated to all of its child template
-	 * components.
+	 * not have an immediate template component with the given name, this remove
+	 * request is recursively delegated to all of its child template components.
 	 *
-	 * @param name Name of the {@code TemplateComponent} that has to be removed.
+	 * @param name
+	 *            Name of the {@code TemplateComponent} that has to be removed.
 	 * @return Returns {@code true} if the {@code TemplateComponent} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
-		if(templateComponent.isPresent()) {
+		if (templateComponent.isPresent()) {
 			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
-			if(parentTemplateComponent.isPresent()) {
+			if (parentTemplateComponent.isPresent()) {
 				parentTemplateComponent.get().removeTemplateComponent(name);
 			} else {
 				getCore().getChildrenStore().remove(templateComponent.get());
@@ -314,22 +323,23 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Returns the {@link TemplateSensor} identified by given name.
 	 *
-	 * @param name The name of the {@code TemplateSensor}.
+	 * @param name
+	 *            The name of the {@code TemplateSensor}.
 	 * @return The {@code Optional} is empty if a {@code TemplateSensor} with
-	 * 		given name does not exist.
+	 *         given name does not exist.
 	 */
 	public Optional<TemplateSensor> getTemplateSensor(String name) {
 		return getTemplateSensors().stream().filter(ts -> ts.nameMatches(name)).findAny();
 	}
 
 	/**
-	 * Returns all available {@link TemplateSensor}s related to this
-	 * template component.
+	 * Returns all available {@link TemplateSensor}s related to this template
+	 * component.
 	 *
 	 * @return The returned {@code List} is unmodifiable.
 	 */
 	public List<TemplateSensor> getTemplateSensors() {
-		if(getCatalogComponent().getContextType().isTestEquipment()) {
+		if (getCatalogComponent().getContextType().isTestEquipment()) {
 			return getCore().getChildrenStore().get(TemplateSensor.class);
 		}
 
@@ -339,13 +349,14 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	/**
 	 * Removes the {@link TemplateSensor} identified by given name.
 	 *
-	 * @param name Name of the {@code TemplateSensor} that has to be removed.
+	 * @param name
+	 *            Name of the {@code TemplateSensor} that has to be removed.
 	 * @return Returns {@code true} if the {@code TemplateSensor} with given
-	 * 		name has been removed.
+	 *         name has been removed.
 	 */
 	public boolean removeTemplateSensor(String name) {
 		Optional<TemplateSensor> templateSensor = getTemplateSensor(name);
-		if(templateSensor.isPresent()) {
+		if (templateSensor.isPresent()) {
 			getCore().getChildrenStore().remove(templateSensor.get());
 			return true;
 		}
@@ -362,17 +373,17 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 		sb.append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 
 		List<TemplateAttribute> templateAttributes = getTemplateAttributes();
-		if(!templateAttributes.isEmpty()) {
+		if (!templateAttributes.isEmpty()) {
 			sb.append(", TemplateAttributes = ").append(templateAttributes);
 		}
 
 		List<TemplateSensor> templateSensors = getTemplateSensors();
-		if(!templateSensors.isEmpty()) {
+		if (!templateSensors.isEmpty()) {
 			sb.append(", TemplateSensors = ").append(templateSensors);
 		}
 
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		if(!templateComponents.isEmpty()) {
+		if (!templateComponents.isEmpty()) {
 			sb.append(", TemplateComponents = ").append(templateComponents);
 		}
 
@@ -383,10 +394,11 @@ public final class TemplateComponent extends BaseEntity implements Deletable, So
 	 * Returns the {@link TemplateComponent} the given {@link ContextComponent}
 	 * is derived from.
 	 *
-	 * @param contextComponent The {@code ContextComponent} whose {@code
+	 * @param contextComponent
+	 *            The {@code ContextComponent} whose {@code
 	 * 		TemplateComponent} is requested.
 	 * @return {@code Optional} is empty if the given {@code ContextComponent}
-	 * 		is not derived from a template, which is data source specific.
+	 *         is not derived from a template, which is data source specific.
 	 */
 	public static Optional<TemplateComponent> of(ContextComponent contextComponent) {
 		return Optional.ofNullable(getCore(contextComponent).getMutableStore().get(TemplateComponent.class));

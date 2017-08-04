@@ -8,6 +8,8 @@
 
 package org.eclipse.mdm.api.dflt;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,9 +57,19 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 * @throws DataAccessException
 	 *             Thrown if unable to retrieve the entity.
 	 */
-	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
-			throws DataAccessException;
+	default <T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
+			throws DataAccessException {
+		List<T> entities = load(entityClass, contextType, Collections.singletonList(instanceID));
+		if (entities.size() != 1) {
+			throw new DataAccessException("Failed to load entity by instance ID.");
+		}
+		return entities.get(0);
+		
+	}
 
+	<T extends Entity> List<T> load(Class<T> entityClass, ContextType contextType, Collection<String> instanceIDs)
+			throws DataAccessException;
+	
 	// default List<Status> loadAllStatus(Class<? extends StatusAttachable>
 	// entityClass) throws DataAccessException {
 	// return loadAllStatus(entityClass, "*");

@@ -37,7 +37,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see CatalogAttribute
  * @see CatalogSensor
  */
-public final class CatalogComponent extends BaseEntity implements Datable, Deletable, Describable {
+public class CatalogComponent extends BaseEntity implements Datable, Deletable, Describable {
 
 	// ======================================================================
 	// Instance variables

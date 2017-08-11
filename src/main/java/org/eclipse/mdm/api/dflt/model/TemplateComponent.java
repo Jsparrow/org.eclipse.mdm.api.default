@@ -41,7 +41,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see TemplateAttribute
  * @see TemplateSensor
  */
-public final class TemplateComponent extends BaseEntity implements Deletable, Sortable {
+public class TemplateComponent extends BaseEntity implements Deletable, Sortable {
 
 	// ======================================================================
 	// Class variables

@@ -16,7 +16,7 @@ import org.eclipse.mdm.api.base.model.Test;
  * @see Project
  * @see Test
  */
-public final class Pool extends BaseEntity implements Deletable {
+public class Pool extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables

@@ -38,7 +38,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see TemplateTestStepUsage
  * @see Versionable
  */
-public final class TemplateTest extends BaseEntity implements Deletable, Describable, Versionable {
+public class TemplateTest extends BaseEntity implements Deletable, Describable, Versionable {
 
 	// ======================================================================
 	// Class variables

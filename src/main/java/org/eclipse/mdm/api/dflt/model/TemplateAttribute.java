@@ -46,7 +46,7 @@ import org.eclipse.mdm.api.base.model.ValueType;
  * @see TemplateComponent
  * @see TemplateSensor
  */
-public final class TemplateAttribute extends BaseEntity implements Deletable {
+public class TemplateAttribute extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables

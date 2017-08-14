@@ -26,7 +26,7 @@ import org.eclipse.mdm.api.base.model.TestStep;
  * @see TemplateTest
  * @see TemplateTestStep
  */
-public final class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable {
+public class TemplateTestStepUsage extends BaseEntity implements Deletable, Sortable {
 
 	// ======================================================================
 	// Class variables

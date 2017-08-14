@@ -39,7 +39,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see TemplateComponent
  * @see Versionable
  */
-public final class TemplateRoot extends BaseEntity implements Deletable, Versionable {
+public class TemplateRoot extends BaseEntity implements Deletable, Versionable {
 
 	// ======================================================================
 	// Instance variables

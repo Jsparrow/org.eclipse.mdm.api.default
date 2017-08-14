@@ -26,7 +26,7 @@ import org.eclipse.mdm.api.base.model.TestStep;
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  */
-public final class Status extends BaseEntity implements Describable {
+public class Status extends BaseEntity implements Describable {
 
 	// ======================================================================
 	// Constructors

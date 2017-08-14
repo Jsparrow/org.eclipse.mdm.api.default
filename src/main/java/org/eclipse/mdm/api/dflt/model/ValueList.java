@@ -29,7 +29,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see ValueListValue
  * @see CatalogAttribute
  */
-public final class ValueList extends BaseEntity implements Datable, Describable, Deletable {
+public class ValueList extends BaseEntity implements Datable, Describable, Deletable {
 
 	// ======================================================================
 	// Constructors

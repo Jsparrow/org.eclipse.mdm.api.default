@@ -37,7 +37,7 @@ import org.eclipse.mdm.api.base.model.TestStep;
  * @see TemplateRoot
  * @see Versionable
  */
-public final class TemplateTestStep extends BaseEntity implements Deletable, Describable, Versionable {
+public class TemplateTestStep extends BaseEntity implements Deletable, Describable, Versionable {
 
 	// ======================================================================
 	// Constructors

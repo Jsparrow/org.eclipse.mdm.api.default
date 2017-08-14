@@ -13,7 +13,7 @@ import org.eclipse.mdm.api.base.model.Deletable;
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  * @see Pool
  */
-public final class Project extends BaseEntity implements Deletable {
+public class Project extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables

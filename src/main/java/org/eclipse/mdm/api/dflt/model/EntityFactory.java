@@ -263,6 +263,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			templateSensor.get().getTemplateAttributes().forEach(ta -> {
 				contextSensor.getValue(ta.getName()).set(ta.getDefaultValue().extract());
 			});
+			
+			return contextSensor;
 		}
 
 		throw new IllegalArgumentException("Template sensor with name '" + name + "' does not exist.");

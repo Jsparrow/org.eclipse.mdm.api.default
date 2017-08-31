@@ -341,7 +341,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is already in use or not allowed or
 	 *             given {@code ValueType} is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType,
+	public CatalogAttribute createCatalogAttribute(String name, ValueType<?> valueType,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
 

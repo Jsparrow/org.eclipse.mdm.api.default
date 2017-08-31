@@ -105,7 +105,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 		String value = defaultValue.extract();
 		if (valueType.isEnumerationType()) {
 			Enumeration enumObject = getCatalogAttribute().getEnumerationObject();
-			return valueType.create(enumObject, getName(), "", isValid, isValid ? enumObject.valueOf(value) : null, enumObject.getName());
+			return valueType.create(getName(), "", isValid, isValid ? enumObject.valueOf(value) : null, enumObject.getName());
 		} else {
 			return valueType.create(getName(), isValid ? parse(value, valueType) : null);
 		}
@@ -124,7 +124,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 			return;
 		}
 
-		ValueType valueType = getCatalogAttribute().getValueType();
+		ValueType<?> valueType = getCatalogAttribute().getValueType();
 		boolean sequence = valueType.isSequence();
 
 		// if this passes -> input is valid
@@ -271,7 +271,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 	 *            Used to resolve the corresponding converter.
 	 * @return The parsed object is returned.
 	 */
-	private static Object parse(String value, ValueType valueType) {
+	private static Object parse(String value, ValueType<?> valueType) {
 		if (valueType.isFileLinkType()) {
 			Pattern pattern = Pattern.compile("([^,].*?)\\[(.*?),(.*?)\\]");
 			Matcher matcher = pattern.matcher(value);
@@ -310,7 +310,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 	 * @throws IllegalArgumentException
 	 *             Thrown if a corresponding {@code String} is not supported.
 	 */
-	private static Function<String, Object> getParser(ValueType valueType) {
+	private static Function<String, Object> getParser(ValueType<?> valueType) {
 		Function<String, Object> converter;
 
 		if (valueType.isString()) {

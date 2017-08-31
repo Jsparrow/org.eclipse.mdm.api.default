@@ -222,7 +222,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 	 *
 	 * @return The {@code ValueType} is returned.
 	 */
-	public ValueType getValueType() {
+	public ValueType<?> getValueType() {
 		ScalarType scalarType = scalarTypeValue.extract();
 		Boolean sequence = sequenceValue.extract();
 		return sequence.booleanValue() ? scalarType.toValueType() : scalarType.toSingleValueType();
@@ -244,7 +244,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 			throw new IllegalStateException("Catalog attribute is not of type enumeration.");
 		}
 
-		return EnumRegistry.getInstance().get(enumerationClassValue.extract());
+		return EnumRegistry.getInstance().get(enumerationClassValue.extract(ValueType.ENUMERATION).name());
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 	 * @param valueType
 	 *            The {@link ValueType}.
 	 */
-	void setValueType(ValueType valueType) {
+	void setValueType(ValueType<?> valueType) {
 		Enumeration<?> scalarTypeEnum = EnumRegistry.getInstance().get(EnumRegistry.SCALAR_TYPE);
 		scalarTypeValue.set(scalarTypeEnum.valueOf(valueType.toSingleType().name()));
 		sequenceValue.set(valueType.isSequence());

@@ -143,7 +143,7 @@ public class TemplateTest extends BaseEntity implements Deletable, Describable, 
 	 *         with given name does not exist.
 	 */
 	public Optional<TemplateTestStepUsage> getTemplateTestStepUsage(String name) {
-		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameMatches(name)).findAny();
+		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameEquals(name)).findAny();
 	}
 
 	/**

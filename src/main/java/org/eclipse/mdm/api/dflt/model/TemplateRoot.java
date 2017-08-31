@@ -102,7 +102,7 @@ public class TemplateRoot extends BaseEntity implements Deletable, Versionable {
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name))
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameEquals(name))
 				.findAny();
 		if (templateComponent.isPresent()) {
 			return templateComponent;

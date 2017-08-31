@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Gigatronik Ingolstadt GmbH
+ * Copyright (c) 2016 Gigatronik Ingolstadt GmbH and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,7 +160,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name)
 			throws DataAccessException {
-		return loadAll(entityClass, name).stream().filter(v -> v.nameMatches(name)).filter(Versionable::isValid)
+		return loadAll(entityClass, name).stream().filter(v -> v.nameEquals(name)).filter(Versionable::isValid)
 				.max(Versionable.COMPARATOR);
 	}
 
@@ -182,7 +182,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, ContextType contextType,
 			String name) throws DataAccessException {
-		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameMatches(name))
+		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameEquals(name))
 				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}
 

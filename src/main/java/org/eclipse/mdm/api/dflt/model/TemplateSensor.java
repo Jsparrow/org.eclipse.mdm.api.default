@@ -279,7 +279,7 @@ public class TemplateSensor extends BaseEntity implements Deletable, Describable
 	 *         given name does not exist.
 	 */
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
-		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
+		return getTemplateAttributes().stream().filter(ta -> ta.nameEquals(name)).findAny();
 	}
 
 	/**

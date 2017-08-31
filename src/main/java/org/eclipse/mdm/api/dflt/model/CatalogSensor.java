@@ -73,7 +73,7 @@ public class CatalogSensor extends BaseEntity implements Datable, Deletable, Des
 	 *         given name does not exist.
 	 */
 	public Optional<CatalogAttribute> getCatalogAttribute(String name) {
-		return getCatalogAttributes().stream().filter(ca -> ca.nameMatches(name)).findAny();
+		return getCatalogAttributes().stream().filter(ca -> ca.nameEquals(name)).findAny();
 	}
 
 	/**

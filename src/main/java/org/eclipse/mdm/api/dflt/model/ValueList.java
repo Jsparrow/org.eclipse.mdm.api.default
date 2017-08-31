@@ -58,7 +58,7 @@ public class ValueList extends BaseEntity implements Datable, Describable, Delet
 	 *         given name does not exist.
 	 */
 	public Optional<ValueListValue> getValueListValue(String name) {
-		return getValueListValues().stream().filter(vlv -> vlv.nameMatches(name)).findAny();
+		return getValueListValues().stream().filter(vlv -> vlv.nameEquals(name)).findAny();
 	}
 
 	/**

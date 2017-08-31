@@ -221,7 +221,7 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 *         given name does not exist.
 	 */
 	public Optional<TemplateAttribute> getTemplateAttribute(String name) {
-		return getTemplateAttributes().stream().filter(ta -> ta.nameMatches(name)).findAny();
+		return getTemplateAttributes().stream().filter(ta -> ta.nameEquals(name)).findAny();
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name))
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameEquals(name))
 				.findAny();
 		if (templateComponent.isPresent()) {
 			return templateComponent;
@@ -329,7 +329,7 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 *         given name does not exist.
 	 */
 	public Optional<TemplateSensor> getTemplateSensor(String name) {
-		return getTemplateSensors().stream().filter(ts -> ts.nameMatches(name)).findAny();
+		return getTemplateSensors().stream().filter(ts -> ts.nameEquals(name)).findAny();
 	}
 
 	/**

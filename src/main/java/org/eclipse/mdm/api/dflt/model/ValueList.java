@@ -29,7 +29,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see ValueListValue
  * @see CatalogAttribute
  */
-public final class ValueList extends BaseEntity implements Datable, Describable, Deletable {
+public class ValueList extends BaseEntity implements Datable, Describable, Deletable {
 
 	// ======================================================================
 	// Constructors
@@ -58,7 +58,7 @@ public final class ValueList extends BaseEntity implements Datable, Describable,
 	 *         given name does not exist.
 	 */
 	public Optional<ValueListValue> getValueListValue(String name) {
-		return getValueListValues().stream().filter(vlv -> vlv.nameMatches(name)).findAny();
+		return getValueListValues().stream().filter(vlv -> vlv.nameEquals(name)).findAny();
 	}
 
 	/**

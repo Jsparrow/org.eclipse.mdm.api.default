@@ -39,7 +39,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see TemplateComponent
  * @see Versionable
  */
-public final class TemplateRoot extends BaseEntity implements Deletable, Versionable {
+public class TemplateRoot extends BaseEntity implements Deletable, Versionable {
 
 	// ======================================================================
 	// Instance variables
@@ -102,7 +102,7 @@ public final class TemplateRoot extends BaseEntity implements Deletable, Version
 	 */
 	public Optional<TemplateComponent> getTemplateComponent(String name) {
 		List<TemplateComponent> templateComponents = getTemplateComponents();
-		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameMatches(name))
+		Optional<TemplateComponent> templateComponent = templateComponents.stream().filter(tc -> tc.nameEquals(name))
 				.findAny();
 		if (templateComponent.isPresent()) {
 			return templateComponent;

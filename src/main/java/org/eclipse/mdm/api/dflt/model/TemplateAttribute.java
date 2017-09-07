@@ -27,6 +27,7 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.DoubleComplex;
+import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.FileLink;
 import org.eclipse.mdm.api.base.model.FloatComplex;
 import org.eclipse.mdm.api.base.model.MimeType;
@@ -45,7 +46,7 @@ import org.eclipse.mdm.api.base.model.ValueType;
  * @see TemplateComponent
  * @see TemplateSensor
  */
-public final class TemplateAttribute extends BaseEntity implements Deletable {
+public class TemplateAttribute extends BaseEntity implements Deletable {
 
 	// ======================================================================
 	// Class variables
@@ -96,15 +97,15 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 *
 	 * @return The default {@code Value} is returned.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	public Value getDefaultValue() {
 		ValueType valueType = getCatalogAttribute().getValueType();
 		Value defaultValue = getValue(ATTR_DEFAULT_VALUE);
 		boolean isValid = defaultValue.isValid();
 		String value = defaultValue.extract();
 		if (valueType.isEnumerationType()) {
-			Class<? extends Enum> enumClass = getCatalogAttribute().getEnumerationClass();
-			return valueType.create(enumClass, getName(), "", isValid, isValid ? Enum.valueOf(enumClass, value) : null);
+			Enumeration enumObject = getCatalogAttribute().getEnumerationObject();
+			return valueType.create(getName(), "", isValid, isValid ? enumObject.valueOf(value) : null, enumObject.getName());
 		} else {
 			return valueType.create(getName(), isValid ? parse(value, valueType) : null);
 		}
@@ -123,7 +124,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 			return;
 		}
 
-		ValueType valueType = getCatalogAttribute().getValueType();
+		ValueType<?> valueType = getCatalogAttribute().getValueType();
 		boolean sequence = valueType.isSequence();
 
 		// if this passes -> input is valid
@@ -270,7 +271,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 *            Used to resolve the corresponding converter.
 	 * @return The parsed object is returned.
 	 */
-	private static Object parse(String value, ValueType valueType) {
+	private static Object parse(String value, ValueType<?> valueType) {
 		if (valueType.isFileLinkType()) {
 			Pattern pattern = Pattern.compile("([^,].*?)\\[(.*?),(.*?)\\]");
 			Matcher matcher = pattern.matcher(value);
@@ -309,7 +310,7 @@ public final class TemplateAttribute extends BaseEntity implements Deletable {
 	 * @throws IllegalArgumentException
 	 *             Thrown if a corresponding {@code String} is not supported.
 	 */
-	private static Function<String, Object> getParser(ValueType valueType) {
+	private static Function<String, Object> getParser(ValueType<?> valueType) {
 		Function<String, Object> converter;
 
 		if (valueType.isString()) {

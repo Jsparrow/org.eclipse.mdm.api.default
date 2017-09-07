@@ -23,6 +23,7 @@ import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
+import org.eclipse.mdm.api.base.model.EnumerationValue;
 import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;
@@ -262,6 +263,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			templateSensor.get().getTemplateAttributes().forEach(ta -> {
 				contextSensor.getValue(ta.getName()).set(ta.getDefaultValue().extract());
 			});
+			
+			return contextSensor;
 		}
 
 		throw new IllegalArgumentException("Template sensor with name '" + name + "' does not exist.");
@@ -338,7 +341,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is already in use or not allowed or
 	 *             given {@code ValueType} is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, ValueType valueType,
+	public CatalogAttribute createCatalogAttribute(String name, ValueType<?> valueType,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
 
@@ -370,7 +373,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *
 	 * @param name
 	 *            Name of the created {@code CatalogAttribute}.
-	 * @param enumerationClass
+	 * @param enumerationValueClass
 	 *            The enumeration class.
 	 * @param catalogComponent
 	 *            The parent {@code CatalogComponent}.
@@ -379,10 +382,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is already in use or not allowed or
 	 *             given enumeration class is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, Class<? extends Enum<?>> enumerationClass,
+	public CatalogAttribute createCatalogAttribute(String name, Class<? extends EnumerationValue> enumerationValueClass,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
-		validateEnum(enumerationClass);
+		validateEnum(enumerationValueClass);
 		if (catalogComponent.getCatalogAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
@@ -396,7 +399,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setEnumerationClass(enumerationClass);
+		catalogAttribute.setEnumerationValueClass(enumerationValueClass);
 		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
@@ -955,7 +958,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 * @throws IllegalArgumentException
 	 *             Thrown if given enumeration class is not supported.
 	 */
-	protected abstract void validateEnum(Class<? extends Enum<?>> enumClass);
+	protected abstract void validateEnum(Class<? extends EnumerationValue> enumClass);
 
 	// ======================================================================
 	// Private methods

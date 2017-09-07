@@ -35,7 +35,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see CatalogComponent
  * @see CatalogComponent
  */
-public final class CatalogSensor extends BaseEntity implements Datable, Deletable, Describable {
+public class CatalogSensor extends BaseEntity implements Datable, Deletable, Describable {
 
 	// ======================================================================
 	// Constructors
@@ -73,7 +73,7 @@ public final class CatalogSensor extends BaseEntity implements Datable, Deletabl
 	 *         given name does not exist.
 	 */
 	public Optional<CatalogAttribute> getCatalogAttribute(String name) {
-		return getCatalogAttributes().stream().filter(ca -> ca.nameMatches(name)).findAny();
+		return getCatalogAttributes().stream().filter(ca -> ca.nameEquals(name)).findAny();
 	}
 
 	/**

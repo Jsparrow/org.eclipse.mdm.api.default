@@ -23,7 +23,7 @@ import org.eclipse.mdm.api.base.model.Sortable;
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  * @see ValueList
  */
-public final class ValueListValue extends BaseEntity implements Deletable, Describable, Sortable {
+public class ValueListValue extends BaseEntity implements Deletable, Describable, Sortable {
 
 	// ======================================================================
 	// Class variables

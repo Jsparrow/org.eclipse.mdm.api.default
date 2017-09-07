@@ -38,7 +38,7 @@ import org.eclipse.mdm.api.base.model.Value;
  * @see TemplateTestStepUsage
  * @see Versionable
  */
-public final class TemplateTest extends BaseEntity implements Deletable, Describable, Versionable {
+public class TemplateTest extends BaseEntity implements Deletable, Describable, Versionable {
 
 	// ======================================================================
 	// Class variables
@@ -143,7 +143,7 @@ public final class TemplateTest extends BaseEntity implements Deletable, Describ
 	 *         with given name does not exist.
 	 */
 	public Optional<TemplateTestStepUsage> getTemplateTestStepUsage(String name) {
-		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameMatches(name)).findAny();
+		return getTemplateTestStepUsages().stream().filter(ttsu -> ttsu.nameEquals(name)).findAny();
 	}
 
 	/**

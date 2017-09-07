@@ -16,6 +16,9 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
+import org.eclipse.mdm.api.base.model.EnumRegistry;
+import org.eclipse.mdm.api.base.model.EnumerationValue;
+import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Unit;
@@ -34,7 +37,7 @@ import org.eclipse.mdm.api.base.model.ValueType;
  * @see CatalogComponent
  * @see CatalogSensor
  */
-public final class CatalogAttribute extends BaseEntity implements Deletable, Describable, Sortable {
+public class CatalogAttribute extends BaseEntity implements Deletable, Describable, Sortable {
 
 	// ======================================================================
 	// Class variables
@@ -219,7 +222,7 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	 *
 	 * @return The {@code ValueType} is returned.
 	 */
-	public ValueType getValueType() {
+	public ValueType<?> getValueType() {
 		ScalarType scalarType = scalarTypeValue.extract();
 		Boolean sequence = sequenceValue.extract();
 		return sequence.booleanValue() ? scalarType.toValueType() : scalarType.toSingleValueType();
@@ -235,17 +238,13 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	 *             {@code true} when {@link ValueType#isEnumerationType()} is
 	 *             called.
 	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Enum<?>> getEnumerationClass() {
+	@SuppressWarnings("rawtypes")
+	public Enumeration getEnumerationObject() {
 		if (!getValueType().isEnumerationType()) {
 			throw new IllegalStateException("Catalog attribute is not of type enumeration.");
 		}
 
-		try {
-			return (Class<? extends Enum<?>>) Class.forName(enumerationClassValue.extract());
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Unable to load enum class due to: " + e.getMessage(), e);
-		}
+		return EnumRegistry.getInstance().get(enumerationClassValue.extract(ValueType.ENUMERATION).name());
 	}
 
 	/**
@@ -277,7 +276,7 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 		ScalarType scalarType = scalarTypeValue.extract();
 		sb.append("ScalarType = ").append(scalarType);
 		if (scalarType.isEnumeration()) {
-			sb.append(", EnumerationClass = ").append(getEnumerationClass());
+			sb.append(", EnumerationObject = ").append(getEnumerationObject());
 		}
 
 		sb.append(", Sequence = ").append((boolean) sequenceValue.extract());
@@ -302,20 +301,21 @@ public final class CatalogAttribute extends BaseEntity implements Deletable, Des
 	 * @param valueType
 	 *            The {@link ValueType}.
 	 */
-	void setValueType(ValueType valueType) {
-		scalarTypeValue.set(ScalarType.valueOf(valueType.toSingleType().name()));
+	void setValueType(ValueType<?> valueType) {
+		Enumeration<?> scalarTypeEnum = EnumRegistry.getInstance().get(EnumRegistry.SCALAR_TYPE);
+		scalarTypeValue.set(scalarTypeEnum.valueOf(valueType.toSingleType().name()));
 		sequenceValue.set(valueType.isSequence());
 	}
 
 	/**
 	 * Sets enumeration class of this catalog attribute.
 	 *
-	 * @param enumerationClass
+	 * @param enumerationValueClass
 	 *            The enumeration class.
 	 */
-	void setEnumerationClass(Class<? extends Enum<?>> enumerationClass) {
+	void setEnumerationValueClass(Class<? extends EnumerationValue> enumerationValueClass) {
 		setValueType(ValueType.ENUMERATION);
-		enumerationClassValue.set(enumerationClass.getName());
+		enumerationClassValue.set(enumerationValueClass.getName());
 	}
 
 }

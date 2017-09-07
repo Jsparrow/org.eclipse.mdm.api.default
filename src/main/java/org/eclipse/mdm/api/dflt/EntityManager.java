@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Gigatronik Ingolstadt GmbH
+ * Copyright (c) 2016 Gigatronik Ingolstadt GmbH and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,8 @@
 
 package org.eclipse.mdm.api.dflt;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,9 +57,19 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 * @throws DataAccessException
 	 *             Thrown if unable to retrieve the entity.
 	 */
-	<T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
-			throws DataAccessException;
+	default <T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
+			throws DataAccessException {
+		List<T> entities = load(entityClass, contextType, Collections.singletonList(instanceID));
+		if (entities.size() != 1) {
+			throw new DataAccessException("Failed to load entity by instance ID.");
+		}
+		return entities.get(0);
+		
+	}
 
+	<T extends Entity> List<T> load(Class<T> entityClass, ContextType contextType, Collection<String> instanceIDs)
+			throws DataAccessException;
+	
 	// default List<Status> loadAllStatus(Class<? extends StatusAttachable>
 	// entityClass) throws DataAccessException {
 	// return loadAllStatus(entityClass, "*");
@@ -148,7 +160,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name)
 			throws DataAccessException {
-		return loadAll(entityClass, name).stream().filter(v -> v.nameMatches(name)).filter(Versionable::isValid)
+		return loadAll(entityClass, name).stream().filter(v -> v.nameEquals(name)).filter(Versionable::isValid)
 				.max(Versionable.COMPARATOR);
 	}
 
@@ -170,7 +182,7 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, ContextType contextType,
 			String name) throws DataAccessException {
-		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameMatches(name))
+		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameEquals(name))
 				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}
 

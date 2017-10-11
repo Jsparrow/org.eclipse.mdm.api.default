@@ -14,7 +14,9 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -74,6 +76,22 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 	 */
 	public static final String ATTR_OPTIONAL = "Obligatory";
 
+	private static final Map<ValueType<?>, Function<String, Object>> VALUETYPE_FUNCTION_MAP = new HashMap<>();
+
+	static {
+		VALUETYPE_FUNCTION_MAP.put(ValueType.STRING, v -> v);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.DATE, v -> LocalDateTime.parse(v, Value.LOCAL_DATE_TIME_FORMATTER));
+		VALUETYPE_FUNCTION_MAP.put(ValueType.BOOLEAN, Boolean::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.BYTE, Byte::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.SHORT, Short::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.INTEGER, Integer::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.LONG, Long::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.FLOAT, Float::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.DOUBLE, Double::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.FLOAT_COMPLEX, FloatComplex::valueOf);
+		VALUETYPE_FUNCTION_MAP.put(ValueType.DOUBLE_COMPLEX, DoubleComplex::valueOf);
+	}
+
 	// ======================================================================
 	// Constructors
 	// ======================================================================
@@ -105,7 +123,8 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 		String value = defaultValue.extract();
 		if (valueType.isEnumerationType()) {
 			Enumeration enumObject = getCatalogAttribute().getEnumerationObject();
-			return valueType.create(getName(), "", isValid, isValid ? enumObject.valueOf(value) : null, enumObject.getName());
+			return valueType.create(getName(), "", isValid, isValid ? enumObject.valueOf(value) : null,
+					enumObject.getName());
 		} else {
 			return valueType.create(getName(), isValid ? parse(value, valueType) : null);
 		}
@@ -132,25 +151,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 
 		String stringValue;
 		if (valueType.isFileLinkType()) {
-			FileLink[] values = sequence ? value.extract() : new FileLink[] { value.extract() };
-			stringValue = Stream.of(values).map(fl -> {
-				StringBuilder sb = new StringBuilder();
-				if (fl.getDescription().isEmpty()) {
-					sb.append(FileLinkParser.NO_DESC_MARKER);
-				} else {
-					sb.append(fl.getDescription());
-				}
-				sb.append('[').append(fl.getMimeType()).append(',');
-				if (fl.isRemote()) {
-					sb.append(fl.getRemotePath());
-				} else if (fl.isLocal()) {
-					sb.append(FileLinkParser.LOCAL_MARKER).append(fl.getLocalPath());
-				} else {
-					throw new IllegalStateException("File link is neither in local nor remote state: " + fl);
-				}
-
-				return sb.append(']');
-			}).collect(Collectors.joining(","));
+			stringValue = getStringValueForFileLinkType(value, sequence);
 		} else if (valueType.isDateType()) {
 			LocalDateTime[] values = sequence ? value.extract() : new LocalDateTime[] { value.extract() };
 			stringValue = Stream.of(values).map(ldt -> ldt.format(Value.LOCAL_DATE_TIME_FORMATTER))
@@ -311,34 +312,10 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 	 *             Thrown if a corresponding {@code String} is not supported.
 	 */
 	private static Function<String, Object> getParser(ValueType<?> valueType) {
-		Function<String, Object> converter;
-
-		if (valueType.isString()) {
-			converter = v -> v;
-		} else if (valueType.isDate()) {
-			converter = v -> LocalDateTime.parse(v, Value.LOCAL_DATE_TIME_FORMATTER);
-		} else if (valueType.isBoolean()) {
-			converter = Boolean::valueOf;
-		} else if (valueType.isByte()) {
-			converter = Byte::valueOf;
-		} else if (valueType.isShort()) {
-			converter = Short::valueOf;
-		} else if (valueType.isInteger()) {
-			converter = Integer::valueOf;
-		} else if (valueType.isLong()) {
-			converter = Long::valueOf;
-		} else if (valueType.isFloat()) {
-			converter = Float::valueOf;
-		} else if (valueType.isDouble()) {
-			converter = Double::valueOf;
-		} else if (valueType.isFloatComplex()) {
-			converter = FloatComplex::valueOf;
-		} else if (valueType.isDoubleComplex()) {
-			converter = DoubleComplex::valueOf;
-		} else {
+		Function<String, Object> converter = VALUETYPE_FUNCTION_MAP.get(valueType);
+		if (converter == null) {
 			throw new IllegalArgumentException("String conversion for value type '" + valueType + "' not supported.");
 		}
-
 		return converter;
 	}
 
@@ -403,4 +380,34 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 
 	}
 
+	/**
+	 * Get string value for FileLinkType
+	 *
+	 * @param value
+	 *            The {@code Value} value.
+	 * @param sequence
+	 *            The {@code boolean} sequence.
+	 * @return Return {@code String} string value for FileLinkType
+	 */
+	private String getStringValueForFileLinkType(Value value, boolean sequence) {
+		FileLink[] values = sequence ? value.extract() : new FileLink[] { value.extract() };
+		return Stream.of(values).map(fl -> {
+			StringBuilder sb = new StringBuilder();
+			if (fl.getDescription().isEmpty()) {
+				sb.append(FileLinkParser.NO_DESC_MARKER);
+			} else {
+				sb.append(fl.getDescription());
+			}
+			sb.append('[').append(fl.getMimeType()).append(',');
+			if (fl.isRemote()) {
+				sb.append(fl.getRemotePath());
+			} else if (fl.isLocal()) {
+				sb.append(FileLinkParser.LOCAL_MARKER).append(fl.getLocalPath());
+			} else {
+				throw new IllegalStateException("File link is neither in local nor remote state: " + fl);
+			}
+
+			return sb.append(']');
+		}).collect(Collectors.joining(","));
+	}
 }

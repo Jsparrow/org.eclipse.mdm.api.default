@@ -975,7 +975,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is not allowed.
 	 */
 	private static void validateCatalogName(String name, boolean isAttributeName) {
-		if (name == null || name.isEmpty() || name.length() > 30) {
+		if (!isValidCatalogName(name)) {
 			throw new IllegalArgumentException(
 					"A catalog name is not allowed to be empty and " + "must not exceed 30 characters.");
 		} else if (name.toLowerCase(Locale.ROOT).startsWith("ao")) {
@@ -987,6 +987,17 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException(
 					"A catalog attribute name is not allowed to be " + "'id', 'name' or 'mimetype' (case ignored).");
 		}
+	}
+	
+	/**
+	 * Checks whether given catalog name is valid
+	 *
+	 * @param name
+	 *            The checked name.
+	 * @return Returns {@code true} if name length is greater than 30
+	 */
+	private static boolean isValidCatalogName(String name) {
+		return name != null && !name.isEmpty() && name.length() > 30;
 	}
 
 	/**

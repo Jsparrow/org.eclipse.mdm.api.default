@@ -281,9 +281,9 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 
 		sb.append(", Sequence = ").append((boolean) sequenceValue.extract());
 
-		Optional<Unit> unit = getUnit();
-		if (unit.isPresent()) {
-			sb.append(", Unit = ").append(unit.get());
+		Optional<Unit> catalogUnit = getUnit();
+		if (catalogUnit.isPresent()) {
+			sb.append(", Unit = ").append(catalogUnit.get());
 		}
 
 		sb.append(", ").append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));

@@ -33,14 +33,6 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	// Public methods
 	// ======================================================================
 
-	// default Optional<Status> loadStatus(Class<? extends StatusAttachable>
-	// entityClass, String name)
-	// throws DataAccessException {
-	// return loadAllStatus(entityClass, name).stream()
-	// .filter(s -> s.nameMatches(name))
-	// .findAny();
-	// }
-
 	/**
 	 * Loads the entity identified by given entity class, {@link ContextType}
 	 * and its instance ID.
@@ -70,15 +62,6 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 	<T extends Entity> List<T> load(Class<T> entityClass, ContextType contextType, Collection<String> instanceIDs)
 			throws DataAccessException;
 	
-	// default List<Status> loadAllStatus(Class<? extends StatusAttachable>
-	// entityClass) throws DataAccessException {
-	// return loadAllStatus(entityClass, "*");
-	// }
-
-	// List<Status> loadAllStatus(Class<? extends StatusAttachable> entityClass,
-	// String pattern)
-	// throws DataAccessException;
-
 	/**
 	 * Loads all available entities of given type.
 	 *
@@ -104,16 +87,6 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 			throws DataAccessException {
 		return loadAll(entityClass, contextType, "*");
 	}
-
-	// default <T extends StatusAttachable> List<T> loadAll(Class<T>
-	// entityClass, Status status)
-	// throws DataAccessException {
-	// return loadAll(entityClass, status, "*");
-	// }
-
-	// <T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status
-	// status, String pattern)
-	// throws DataAccessException;
 
 	/**
 	 * Loads all available entities of given type whose name fulfills the given
@@ -185,15 +158,4 @@ public interface EntityManager extends BaseEntityManager<EntityFactory> {
 		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameEquals(name))
 				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}
-
-	// default <T extends StatusAttachable> List<T> loadChildren(Entity parent,
-	// Class<T> entityClass,
-	// Status status) throws DataAccessException {
-	// return loadChildren(parent, entityClass, status, "*");
-	// }
-
-	// <T extends StatusAttachable> List<T> loadChildren(Entity parent, Class<T>
-	// entityClass,
-	// Status status, String pattern) throws DataAccessException;
-
 }

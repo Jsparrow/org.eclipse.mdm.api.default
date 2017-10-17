@@ -855,10 +855,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *
 	 * @param name
 	 *            The checked name.
-	 * @return Returns {@code true} if name length is greater than 30
+	 * @return Returns {@code true} if name is a valid catalog name
 	 */
 	private static boolean isValidCatalogName(String name) {
-		return name != null && !name.isEmpty() && name.length() > 30;
+		return name != null && !name.isEmpty() && name.length() <= 30;
 	}
 
 	/**

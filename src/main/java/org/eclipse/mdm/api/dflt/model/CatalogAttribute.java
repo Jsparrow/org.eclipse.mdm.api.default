@@ -59,9 +59,9 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 	public static final String ATTR_ACTION_REQUEST_CLASSNAME = "ActionRequestClassname";
 
 	/**
-	 * The <u>virtual</u> '{@literal @}EnumerationClass' attribute name.
+	 * The <u>virtual</u> '{@literal @}EnumerationName' attribute name.
 	 */
-	public static final String VATTR_ENUMERATION_CLASS = "@EnumerationClass";
+	public static final String VATTR_ENUMERATION_NAME = "@EnumerationName";
 
 	/**
 	 * The <u>virtual</u> '{@literal @}ScalarType' attribute name.
@@ -77,7 +77,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 	// Instance variables
 	// ======================================================================
 
-	private final Value enumerationClassValue;
+	private Enumeration<?> enumerationObj;
 	private final Value scalarTypeValue;
 	private final Value sequenceValue;
 
@@ -97,7 +97,8 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 		super(core);
 
 		Map<String, Value> values = core.getValues();
-		enumerationClassValue = values.remove(VATTR_ENUMERATION_CLASS);
+		EnumRegistry er=EnumRegistry.getInstance();
+		enumerationObj = er.get(values.remove(VATTR_ENUMERATION_NAME).extract(ValueType.STRING));
 		scalarTypeValue = values.remove(VATTR_SCALAR_TYPE);
 		sequenceValue = values.remove(VATTR_SEQUENCE);
 
@@ -243,8 +244,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 		if (!getValueType().isEnumerationType()) {
 			throw new IllegalStateException("Catalog attribute is not of type enumeration.");
 		}
-
-		return EnumRegistry.getInstance().get(enumerationClassValue.extract(ValueType.ENUMERATION).name());
+		return enumerationObj;
 	}
 
 	/**
@@ -308,14 +308,14 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 	}
 
 	/**
-	 * Sets enumeration class of this catalog attribute.
+	 * Sets enumeration Object of this catalog attribute.
 	 *
-	 * @param enumerationValueClass
-	 *            The enumeration class.
+	 * @param enumerationObj
+	 *            The enumeration.
 	 */
-	void setEnumerationValueClass(Class<? extends EnumerationValue> enumerationValueClass) {
+	void setEnumerationObj(Enumeration<?> enumerationObj) {
 		setValueType(ValueType.ENUMERATION);
-		enumerationClassValue.set(enumerationValueClass.getName());
+		this.enumerationObj=enumerationObj;
 	}
 
 }

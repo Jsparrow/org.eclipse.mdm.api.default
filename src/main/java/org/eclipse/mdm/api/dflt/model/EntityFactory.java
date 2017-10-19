@@ -23,6 +23,7 @@ import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
+import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.EnumerationValue;
 import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
@@ -368,8 +369,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *
 	 * @param name
 	 *            Name of the created {@code CatalogAttribute}.
-	 * @param enumerationValueClass
-	 *            The enumeration class.
+	 * @param enumerationObject
+	 *            The enumeration.
 	 * @param catalogComponent
 	 *            The parent {@code CatalogComponent}.
 	 * @return The created {@code CatalogAttribute} is returned.
@@ -377,10 +378,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is already in use or not allowed or
 	 *             given enumeration class is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, Class<? extends EnumerationValue> enumerationValueClass,
+	public CatalogAttribute createCatalogAttribute(String name, Enumeration<?> enumerationObj,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
-		validateEnum(enumerationValueClass);
+		validateEnum(enumerationObj);
 		if (catalogComponent.getCatalogAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
@@ -394,7 +395,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setEnumerationValueClass(enumerationValueClass);
+		catalogAttribute.setEnumerationObj(enumerationObj);
 		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
@@ -811,15 +812,15 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 
 	/**
-	 * Checks whether given enumeration class is defined in the application
+	 * Checks whether given enumeration is defined in the application
 	 * model or not.
 	 *
-	 * @param enumClass
+	 * @param enumerationObj
 	 *            The checked enumeration class.
 	 * @throws IllegalArgumentException
 	 *             Thrown if given enumeration class is not supported.
 	 */
-	protected abstract void validateEnum(Class<? extends EnumerationValue> enumClass);
+	protected abstract void validateEnum(Enumeration<?> enumerationObj);
 
 	// ======================================================================
 	// Private methods

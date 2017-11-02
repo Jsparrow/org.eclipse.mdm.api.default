@@ -24,7 +24,6 @@ import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.model.Enumeration;
-import org.eclipse.mdm.api.base.model.EnumerationValue;
 import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;

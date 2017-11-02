@@ -17,7 +17,6 @@ import org.eclipse.mdm.api.base.BaseEntityManager;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.query.DataAccessException;
-import org.eclipse.mdm.api.dflt.model.EntityFactory;
 import org.eclipse.mdm.api.dflt.model.Versionable;
 
 /**
@@ -27,7 +26,7 @@ import org.eclipse.mdm.api.dflt.model.Versionable;
  * @since 1.0.0
  * @author Viktor Stoehr, Gigatronik Ingolstadt GmbH
  */
-public interface EntityManager extends BaseEntityManager<EntityFactory> {
+public interface EntityManager extends BaseEntityManager {
 
 	// ======================================================================
 	// Public methods

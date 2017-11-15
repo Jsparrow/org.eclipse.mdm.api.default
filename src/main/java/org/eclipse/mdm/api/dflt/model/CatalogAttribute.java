@@ -97,8 +97,11 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 		super(core);
 
 		Map<String, Value> values = core.getValues();
-		EnumRegistry er=EnumRegistry.getInstance();
-		enumerationObj = er.get(values.remove(VATTR_ENUMERATION_NAME).extract(ValueType.STRING));
+		EnumRegistry er = EnumRegistry.getInstance();
+		Value enumValue = values.remove(VATTR_ENUMERATION_NAME);
+		if (enumValue != null) {
+			enumerationObj = er.get(enumValue.extract(ValueType.STRING));
+		}
 		scalarTypeValue = values.remove(VATTR_SCALAR_TYPE);
 		sequenceValue = values.remove(VATTR_SEQUENCE);
 

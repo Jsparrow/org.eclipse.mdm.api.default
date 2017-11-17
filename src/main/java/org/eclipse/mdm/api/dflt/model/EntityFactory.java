@@ -16,12 +16,12 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.mdm.api.base.core.Core;
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextComponent;
 import org.eclipse.mdm.api.base.model.ContextRoot;
 import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.Measurement;

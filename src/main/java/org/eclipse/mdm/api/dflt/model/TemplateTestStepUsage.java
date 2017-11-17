@@ -10,8 +10,8 @@ package org.eclipse.mdm.api.dflt.model;
 
 import java.util.function.Predicate;
 
+import org.eclipse.mdm.api.base.core.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.Test;

@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
-import org.eclipse.mdm.api.base.core.Core;
+import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextComponent;

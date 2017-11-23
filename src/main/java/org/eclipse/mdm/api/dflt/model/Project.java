@@ -1,6 +1,6 @@
 package org.eclipse.mdm.api.dflt.model;
 
-import org.eclipse.mdm.api.base.core.Core;
+import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
 

@@ -14,10 +14,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextComponent;
 import org.eclipse.mdm.api.base.model.ContextRoot;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Sortable;
 import org.eclipse.mdm.api.base.model.TestStep;

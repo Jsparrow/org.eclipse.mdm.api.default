@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.ContextComponent;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.Test;

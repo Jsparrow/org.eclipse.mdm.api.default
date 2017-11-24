@@ -8,6 +8,8 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,14 +18,15 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.mdm.api.base.adapter.Core;
+import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextComponent;
 import org.eclipse.mdm.api.base.model.ContextRoot;
 import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
-import org.eclipse.mdm.api.base.model.EnumerationValue;
+import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.Measurement;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;
@@ -56,11 +59,6 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		throw new UnsupportedOperationException("Test requires a parent Pool.");
 	}
 
-	// @Override
-	// public TestStep createTestStep(String name, Test test) {
-	// throw new UnsupportedOperationException("Test step requires a status.");
-	// }
-
 	/**
 	 * Creates a new {@link Project}.
 	 *
@@ -90,8 +88,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Pool pool = new Pool(createCore(Pool.class));
 
 		// relations
-		getPermanentStore(pool).set(project);
-		getChildrenStore(project).add(pool);
+		getCore(pool).getPermanentStore().set(project);
+		getCore(project).getChildrenStore().add(pool);
 
 		// properties
 		pool.setName(name);
@@ -131,7 +129,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
 		// relations
-		getMutableStore(testStep).set(contextRoot, templateRoot.getContextType());
+		getCore(testStep).getMutableStore().set(contextRoot, templateRoot.getContextType());
 
 		return contextRoot;
 	}
@@ -151,7 +149,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
 		// relations
-		getMutableStore(measurement).set(contextRoot, templateRoot.getContextType());
+		getCore(measurement).getMutableStore().set(contextRoot, templateRoot.getContextType());
 
 		return contextRoot;
 	}
@@ -168,7 +166,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());
 
 		// relations
-		getMutableStore(contextRoot).set(templateRoot);
+		getCore(contextRoot).getMutableStore().set(templateRoot);
 
 		// create default active and mandatory context components
 		templateRoot.getTemplateComponents().stream()
@@ -207,7 +205,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 						templateComponent.get().getCatalogComponent().getName(), contextRoot);
 
 				// relations
-				getMutableStore(contextComponent).set(templateComponent.get());
+				getCore(contextComponent).getMutableStore().set(templateComponent.get());
 
 				// properties
 				contextComponent.setName(name);
@@ -255,7 +253,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 					contextComponent);
 
 			// relations
-			getMutableStore(contextSensor).set(templateSensor.get());
+			getCore(contextSensor).getMutableStore().set(templateSensor.get());
 
 			// properties
 			contextSensor.setName(name);
@@ -356,8 +354,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).set(catalogComponent);
-		getChildrenStore(catalogComponent).add(catalogAttribute);
+		getCore(catalogAttribute).getPermanentStore().set(catalogComponent);
+		getCore(catalogComponent).getChildrenStore().add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
@@ -373,8 +371,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *
 	 * @param name
 	 *            Name of the created {@code CatalogAttribute}.
-	 * @param enumerationValueClass
-	 *            The enumeration class.
+	 * @param enumerationObject
+	 *            The enumeration.
 	 * @param catalogComponent
 	 *            The parent {@code CatalogComponent}.
 	 * @return The created {@code CatalogAttribute} is returned.
@@ -382,10 +380,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is already in use or not allowed or
 	 *             given enumeration class is not supported.
 	 */
-	public CatalogAttribute createCatalogAttribute(String name, Class<? extends EnumerationValue> enumerationValueClass,
+	public CatalogAttribute createCatalogAttribute(String name, Enumeration<?> enumerationObj,
 			CatalogComponent catalogComponent) {
 		validateCatalogName(name, true);
-		validateEnum(enumerationValueClass);
+		validateEnum(enumerationObj);
 		if (catalogComponent.getCatalogAttribute(name).isPresent()) {
 			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
 		}
@@ -394,150 +392,16 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).set(catalogComponent);
-		getChildrenStore(catalogComponent).add(catalogAttribute);
+		getCore(catalogAttribute).getPermanentStore().set(catalogComponent);
+		getCore(catalogComponent).getChildrenStore().add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
-		catalogAttribute.setEnumerationValueClass(enumerationValueClass);
+		catalogAttribute.setEnumerationObj(enumerationObj);
 		catalogAttribute.setSortIndex(nextIndex(catalogComponent.getCatalogAttributes()));
 
 		return catalogAttribute;
 	}
-
-	// public CatalogSensor createCatalogSensor(String name, CatalogComponent
-	// catalogComponent) {
-	// validateCatalogName(name, false);
-	//
-	// if(!catalogComponent.getContextType().isTestEquipment()) {
-	// throw new IllegalArgumentException("Catalog component is not of type
-	// 'TESTEQUIPMENT'");
-	// } else if(catalogComponent.getCatalogSensor(name).isPresent()) {
-	// throw new IllegalArgumentException("Catalog sensor with name '" + name +
-	// "' already exists.");
-	// }
-	//
-	// CatalogSensor catalogSensor = new
-	// CatalogSensor(createCore(CatalogSensor.class));
-	//
-	// // relations
-	// getPermanentStore(catalogSensor).set(catalogComponent);
-	// getChildrenStore(catalogComponent).add(catalogSensor);
-	//
-	// // properties
-	// catalogSensor.setName(name);
-	// catalogSensor.setDateCreated(LocalDateTime.now());
-	//
-	// return catalogSensor;
-	// }
-	//
-	//
-	// /**
-	// * Creates a new {@link CatalogAttribute} for given {@link
-	// CatalogComponent}.
-	// * The {@link ValueType} may be one of the following:
-	// *
-	// * <ul>
-	// * <li>{@link ValueType#STRING}</li>
-	// * <li>{@link ValueType#STRING_SEQUENCE}</li>
-	// * <li>{@link ValueType#DATE}</li>
-	// * <li>{@link ValueType#DATE_SEQUENCE}</li>
-	// * <li>{@link ValueType#BOOLEAN}</li>
-	// * <li>{@link ValueType#BOOLEAN_SEQUENCE}</li>
-	// * <li>{@link ValueType#BYTE}</li>
-	// * <li>{@link ValueType#BYTE_SEQUENCE}</li>
-	// * <li>{@link ValueType#SHORT}</li>
-	// * <li>{@link ValueType#SHORT_SEQUENCE}</li>
-	// * <li>{@link ValueType#INTEGER}</li>
-	// * <li>{@link ValueType#INTEGER_SEQUENCE}</li>
-	// * <li>{@link ValueType#LONG}</li>
-	// * <li>{@link ValueType#LONG_SEQUENCE}</li>
-	// * <li>{@link ValueType#FLOAT}</li>
-	// * <li>{@link ValueType#FLOAT_SEQUENCE}</li>
-	// * <li>{@link ValueType#DOUBLE}</li>
-	// * <li>{@link ValueType#DOUBLE_SEQUENCE}</li>
-	// * <li>{@link ValueType#BYTE_STREAM}</li>
-	// * <li>{@link ValueType#BYTE_STREAM_SEQUENCE}</li>
-	// * <li>{@link ValueType#FLOAT_COMPLEX}</li>
-	// * <li>{@link ValueType#FLOAT_COMPLEX_SEQUENCE}</li>
-	// * <li>{@link ValueType#DOUBLE_COMPLEX}</li>
-	// * <li>{@link ValueType#DOUBLE_COMPLEX_SEQUENCE}</li>
-	// * <li>{@link ValueType#FILE_LINK}</li>
-	// * <li>{@link ValueType#FILE_LINK_SEQUENCE_SEQUENCE}</li>
-	// * </ul>
-	// *
-	// *
-	// * @param name Name of the created {@code CatalogAttribute}.
-	// * @param valueType The {@code ValueType}.
-	// * @param catalogSensor The parent {@code CatalogSensor}.
-	// * @return The created {@code CatalogAttribute} is returned.
-	// * @throws IllegalArgumentException Thrown if given name is already in use
-	// * or given {@code ValueType} is not supported.
-	// */
-	// public CatalogAttribute createCatalogAttribute(String name, ValueType
-	// valueType, CatalogSensor catalogSensor) {
-	// validateCatalogName(name, true);
-	//
-	// if(catalogSensor.getCatalogAttribute(name).isPresent()) {
-	// throw new IllegalArgumentException("Catalog attribute with name '" + name
-	// + "' already exists.");
-	// } else if(valueType.isEnumerationType() || valueType.isByteStreamType()
-	// ||
-	// valueType.isUnknown() || valueType.isBlob()) {
-	// throw new IllegalArgumentException("Value type '" + valueType + "' is not
-	// allowed.");
-	// }
-	//
-	// CatalogAttribute catalogAttribute = new
-	// CatalogAttribute(createCore(CatalogAttribute.class));
-	//
-	// // relations
-	// getPermanentStore(catalogAttribute).set(catalogSensor);
-	// getChildrenStore(catalogSensor).add(catalogAttribute);
-	//
-	// // properties
-	// catalogAttribute.setName(name);
-	// catalogAttribute.setValueType(valueType);
-	// catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
-	//
-	// return catalogAttribute;
-	// }
-	//
-	// /**
-	// * Creates a new {@link CatalogAttribute} for given {@link
-	// CatalogComponent}.
-	// *
-	// * @param name Name of the created {@code CatalogAttribute}.
-	// * @param enumerationClass The enumeration class.
-	// * @param catalogSensor The parent {@code CatalogSensor}.
-	// * @return The created {@code CatalogAttribute} is returned.
-	// * @throws IllegalArgumentException Thrown if given name is already in use
-	// * or not allowed or given enumeration class is not supported.
-	// */
-	// public CatalogAttribute createCatalogAttribute(String name, Class<?
-	// extends Enum<?>> enumerationClass,
-	// CatalogSensor catalogSensor) {
-	// validateCatalogName(name, true);
-	// validateEnum(enumerationClass);
-	// if(catalogSensor.getCatalogAttribute(name).isPresent()) {
-	// throw new IllegalArgumentException("Catalog attribute with name '" + name
-	// + "' already exists.");
-	// }
-	//
-	// CatalogAttribute catalogAttribute = new
-	// CatalogAttribute(createCore(CatalogAttribute.class));
-	//
-	// // relations
-	// getPermanentStore(catalogAttribute).set(catalogSensor);
-	// getChildrenStore(catalogSensor).add(catalogAttribute);
-	//
-	// // properties
-	// catalogAttribute.setName(name);
-	// catalogAttribute.setEnumerationClass(enumerationClass);
-	// catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
-	//
-	// return catalogAttribute;
-	// }
 
 	/**
 	 * Creates a new {@link TemplateRoot} with given {@link ContextType} and
@@ -589,9 +453,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).set(templateRoot);
-		getMutableStore(templateComponent).set(catalogComponent);
-		getChildrenStore(templateRoot).add(templateComponent);
+		getCore(templateComponent).getPermanentStore().set(templateRoot);
+		getCore(templateComponent).getMutableStore().set(catalogComponent);
+		getCore(templateRoot).getChildrenStore().add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
@@ -635,9 +499,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).set(partentComponentTemplate);
-		getMutableStore(templateComponent).set(catalogComponent);
-		getChildrenStore(partentComponentTemplate).add(templateComponent);
+		getCore(templateComponent).getPermanentStore().set(partentComponentTemplate);
+		getCore(templateComponent).getMutableStore().set(catalogComponent);
+		getCore(partentComponentTemplate).getChildrenStore().add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
@@ -676,9 +540,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 					createCore(TemplateAttribute.class, catalogComponent.getContextType()));
 
 			// relations
-			getPermanentStore(templateAttribute).set(templateComponent);
-			getMutableStore(templateAttribute).set(catalogAttribute.get());
-			getChildrenStore(templateComponent).add(templateAttribute);
+			getCore(templateAttribute).getPermanentStore().set(templateComponent);
+			getCore(templateAttribute).getMutableStore().set(catalogAttribute.get());
+			getCore(templateComponent).getChildrenStore().add(templateAttribute);
 
 			// properties
 			templateAttribute.setName(name);
@@ -753,9 +617,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateTestStepUsage.class));
 
 		// relations
-		getPermanentStore(templateTestStepUsage).set(templateTest);
-		getMutableStore(templateTestStepUsage).set(templateTestStep);
-		getChildrenStore(templateTest).add(templateTestStepUsage);
+		getCore(templateTestStepUsage).getPermanentStore().set(templateTest);
+		getCore(templateTestStepUsage).getMutableStore().set(templateTestStep);
+		getCore(templateTest).getChildrenStore().add(templateTestStepUsage);
 
 		// properties
 		templateTestStepUsage.setName(name);
@@ -800,8 +664,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ValueListValue valueListValue = new ValueListValue(createCore(ValueListValue.class));
 
 		// relations
-		getPermanentStore(valueListValue).set(valueList);
-		getChildrenStore(valueList).add(valueListValue);
+		getCore(valueListValue).getPermanentStore().set(valueList);
+		getCore(valueList).getChildrenStore().add(valueListValue);
 
 		// properties
 		valueListValue.setName(name);
@@ -842,7 +706,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Test test = createTest(name, pool, statusTest);
 
 		// relations
-		getMutableStore(test).set(templateTest);
+		getCore(test).getMutableStore().set(templateTest);
 
 		// create default active and mandatory test steps according to the
 		// template
@@ -870,8 +734,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Test test = super.createTest(name);
 
 		// relations
-		getPermanentStore(test).set(pool);
-		getChildrenStore(pool).add(test);
+		getCore(test).getPermanentStore().set(pool);
+		getCore(pool).getChildrenStore().add(test);
 
 		if (status != null) {
 			status.assign(test);
@@ -919,7 +783,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		TestStep testStep = createTestStep(templateTestStep.getName(), test, status);
 
 		// relations
-		getMutableStore(testStep).set(templateTestStep);
+		getCore(testStep).getMutableStore().set(templateTestStep);
 
 		// create initial context roots
 		templateTestStep.getTemplateRoots().forEach(templateRoot -> createContextRoot(testStep, templateRoot));
@@ -948,17 +812,34 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		return testStep;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected <T extends BaseEntity> T createBaseEntity(Class<T> clazz, Core core) {
+		try {
+			Constructor<T> constructor = clazz.getDeclaredConstructor(Core.class);
+			try {
+				return constructor.newInstance(core);
+			} catch (IllegalAccessException exc) {
+				return super.createBaseEntity(clazz, core);
+			}
+		} catch (NoSuchMethodException | InvocationTargetException | InstantiationException exc) {
+			throw new IllegalStateException(exc.getMessage(), exc);
+		}
+	}
 
 	/**
-	 * Checks whether given enumeration class is defined in the application
+	 * Checks whether given enumeration is defined in the application
 	 * model or not.
 	 *
-	 * @param enumClass
+	 * @param enumerationObj
 	 *            The checked enumeration class.
 	 * @throws IllegalArgumentException
 	 *             Thrown if given enumeration class is not supported.
 	 */
-	protected abstract void validateEnum(Class<? extends EnumerationValue> enumClass);
+	protected abstract void validateEnum(Enumeration<?> enumerationObj);
 
 	// ======================================================================
 	// Private methods
@@ -975,7 +856,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *             Thrown if given name is not allowed.
 	 */
 	private static void validateCatalogName(String name, boolean isAttributeName) {
-		if (name == null || name.isEmpty() || name.length() > 30) {
+		if (!isValidCatalogName(name)) {
 			throw new IllegalArgumentException(
 					"A catalog name is not allowed to be empty and " + "must not exceed 30 characters.");
 		} else if (name.toLowerCase(Locale.ROOT).startsWith("ao")) {
@@ -987,6 +868,17 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			throw new IllegalArgumentException(
 					"A catalog attribute name is not allowed to be " + "'id', 'name' or 'mimetype' (case ignored).");
 		}
+	}
+	
+	/**
+	 * Checks whether given catalog name is valid
+	 *
+	 * @param name
+	 *            The checked name.
+	 * @return Returns {@code true} if name is a valid catalog name
+	 */
+	private static boolean isValidCatalogName(String name) {
+		return name != null && !name.isEmpty() && name.length() <= 30;
 	}
 
 	/**

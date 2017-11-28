@@ -8,6 +8,8 @@
 
 package org.eclipse.mdm.api.dflt.model;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,12 +18,13 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.mdm.api.base.adapter.Core;
+import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.BaseEntityFactory;
 import org.eclipse.mdm.api.base.model.ContextComponent;
 import org.eclipse.mdm.api.base.model.ContextRoot;
 import org.eclipse.mdm.api.base.model.ContextSensor;
 import org.eclipse.mdm.api.base.model.ContextType;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.Measurement;
@@ -86,8 +89,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Pool pool = new Pool(createCore(Pool.class));
 
 		// relations
-		getPermanentStore(pool).set(project);
-		getChildrenStore(project).add(pool);
+		getCore(pool).getPermanentStore().set(project);
+		getCore(project).getChildrenStore().add(pool);
 
 		// properties
 		pool.setName(name);
@@ -127,7 +130,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
 		// relations
-		getMutableStore(testStep).set(contextRoot, templateRoot.getContextType());
+		getCore(testStep).getMutableStore().set(contextRoot, templateRoot.getContextType());
 
 		return contextRoot;
 	}
@@ -147,7 +150,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot);
 
 		// relations
-		getMutableStore(measurement).set(contextRoot, templateRoot.getContextType());
+		getCore(measurement).getMutableStore().set(contextRoot, templateRoot.getContextType());
 
 		return contextRoot;
 	}
@@ -164,7 +167,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ContextRoot contextRoot = createContextRoot(templateRoot.getName(), templateRoot.getContextType());
 
 		// relations
-		getMutableStore(contextRoot).set(templateRoot);
+		getCore(contextRoot).getMutableStore().set(templateRoot);
 
 		// create default active and mandatory context components
 		templateRoot.getTemplateComponents().stream()
@@ -203,7 +206,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 						templateComponent.get().getCatalogComponent().getName(), contextRoot);
 
 				// relations
-				getMutableStore(contextComponent).set(templateComponent.get());
+				getCore(contextComponent).getMutableStore().set(templateComponent.get());
 
 				// properties
 				contextComponent.setName(name);
@@ -251,7 +254,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 					contextComponent);
 
 			// relations
-			getMutableStore(contextSensor).set(templateSensor.get());
+			getCore(contextSensor).getMutableStore().set(templateSensor.get());
 
 			// properties
 			contextSensor.setName(name);
@@ -352,8 +355,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).set(catalogComponent);
-		getChildrenStore(catalogComponent).add(catalogAttribute);
+		getCore(catalogAttribute).getPermanentStore().set(catalogComponent);
+		getCore(catalogComponent).getChildrenStore().add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
@@ -390,8 +393,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(CatalogAttribute.class, catalogComponent.getContextType()));
 
 		// relations
-		getPermanentStore(catalogAttribute).set(catalogComponent);
-		getChildrenStore(catalogComponent).add(catalogAttribute);
+		getCore(catalogAttribute).getPermanentStore().set(catalogComponent);
+		getCore(catalogComponent).getChildrenStore().add(catalogAttribute);
 
 		// properties
 		catalogAttribute.setName(name);
@@ -487,9 +490,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).set(templateRoot);
-		getMutableStore(templateComponent).set(catalogComponent);
-		getChildrenStore(templateRoot).add(templateComponent);
+		getCore(templateComponent).getPermanentStore().set(templateRoot);
+		getCore(templateComponent).getMutableStore().set(catalogComponent);
+		getCore(templateRoot).getChildrenStore().add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
@@ -533,9 +536,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateComponent.class, templateRoot.getContextType()));
 
 		// relations
-		getPermanentStore(templateComponent).set(partentComponentTemplate);
-		getMutableStore(templateComponent).set(catalogComponent);
-		getChildrenStore(partentComponentTemplate).add(templateComponent);
+		getCore(templateComponent).getPermanentStore().set(partentComponentTemplate);
+		getCore(templateComponent).getMutableStore().set(catalogComponent);
+		getCore(partentComponentTemplate).getChildrenStore().add(templateComponent);
 
 		// properties
 		templateComponent.setName(name);
@@ -574,9 +577,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 					createCore(TemplateAttribute.class, catalogComponent.getContextType()));
 
 			// relations
-			getPermanentStore(templateAttribute).set(templateComponent);
-			getMutableStore(templateAttribute).set(catalogAttribute.get());
-			getChildrenStore(templateComponent).add(templateAttribute);
+			getCore(templateAttribute).getPermanentStore().set(templateComponent);
+			getCore(templateAttribute).getMutableStore().set(catalogAttribute.get());
+			getCore(templateComponent).getChildrenStore().add(templateAttribute);
 
 			// properties
 			templateAttribute.setName(name);
@@ -692,9 +695,9 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				createCore(TemplateTestStepUsage.class));
 
 		// relations
-		getPermanentStore(templateTestStepUsage).set(templateTest);
-		getMutableStore(templateTestStepUsage).set(templateTestStep);
-		getChildrenStore(templateTest).add(templateTestStepUsage);
+		getCore(templateTestStepUsage).getPermanentStore().set(templateTest);
+		getCore(templateTestStepUsage).getMutableStore().set(templateTestStep);
+		getCore(templateTest).getChildrenStore().add(templateTestStepUsage);
 
 		// properties
 		templateTestStepUsage.setName(name);
@@ -739,8 +742,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		ValueListValue valueListValue = new ValueListValue(createCore(ValueListValue.class));
 
 		// relations
-		getPermanentStore(valueListValue).set(valueList);
-		getChildrenStore(valueList).add(valueListValue);
+		getCore(valueListValue).getPermanentStore().set(valueList);
+		getCore(valueList).getChildrenStore().add(valueListValue);
 
 		// properties
 		valueListValue.setName(name);
@@ -781,7 +784,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Test test = createTest(name, pool, statusTest);
 
 		// relations
-		getMutableStore(test).set(templateTest);
+		getCore(test).getMutableStore().set(templateTest);
 
 		// create default active and mandatory test steps according to the
 		// template
@@ -809,8 +812,8 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		Test test = super.createTest(name);
 
 		// relations
-		getPermanentStore(test).set(pool);
-		getChildrenStore(pool).add(test);
+		getCore(test).getPermanentStore().set(pool);
+		getCore(pool).getChildrenStore().add(test);
 
 		if (status != null) {
 			status.assign(test);
@@ -858,7 +861,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		TestStep testStep = createTestStep(templateTestStep.getName(), test, status);
 
 		// relations
-		getMutableStore(testStep).set(templateTestStep);
+		getCore(testStep).getMutableStore().set(templateTestStep);
 
 		// create initial context roots
 		templateTestStep.getTemplateRoots().forEach(templateRoot -> createContextRoot(testStep, templateRoot));
@@ -886,6 +889,23 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		}
 
 		return testStep;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected <T extends BaseEntity> T createBaseEntity(Class<T> clazz, Core core) {
+		try {
+			Constructor<T> constructor = clazz.getDeclaredConstructor(Core.class);
+			try {
+				return constructor.newInstance(core);
+			} catch (IllegalAccessException exc) {
+				return super.createBaseEntity(clazz, core);
+			}
+		} catch (NoSuchMethodException | InvocationTargetException | InstantiationException exc) {
+			throw new IllegalStateException(exc.getMessage(), exc);
+		}
 	}
 
 	/**

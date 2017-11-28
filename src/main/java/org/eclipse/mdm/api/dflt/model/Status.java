@@ -11,8 +11,8 @@ package org.eclipse.mdm.api.dflt.model;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
-import org.eclipse.mdm.api.base.model.Core;
 import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.StatusAttachable;
 import org.eclipse.mdm.api.base.model.Test;

@@ -30,18 +30,18 @@ public interface Versionable extends Datable {
 	 * This {@code Comparator} compares {@link Versionable}s by their name (in
 	 * ascending order) and version (in descending order).
 	 */
-	static final Comparator<Versionable> COMPARATOR = Comparator.comparing(Versionable::getName)
+	Comparator<Versionable> COMPARATOR = Comparator.comparing(Versionable::getName)
 			.thenComparing(Comparator.comparing(Versionable::getVersion).reversed());
 
 	/**
 	 * The 'Version' attribute name.
 	 */
-	static final String ATTR_VERSION = "Version";
+	String ATTR_VERSION = "Version";
 
 	/**
 	 * The 'VersionState' attribute name.
 	 */
-	static final String ATTR_VERSION_STATE = "ValidFlag";
+	String ATTR_VERSION_STATE = "ValidFlag";
 
 	// ======================================================================
 	// Public methods

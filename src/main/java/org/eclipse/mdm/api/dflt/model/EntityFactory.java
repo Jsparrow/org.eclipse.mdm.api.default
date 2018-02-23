@@ -28,6 +28,7 @@ import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Entity;
 import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.Measurement;
+import org.eclipse.mdm.api.base.model.Quantity;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Test;
 import org.eclipse.mdm.api.base.model.TestStep;
@@ -402,6 +403,42 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		return catalogAttribute;
 	}
+	
+	/**
+	 * Creates a new {@link CatalogSensor} for given
+	 * {@link CatalogComponent}.
+	 *
+	 * @param name
+	 *            Name of the created {@code CatalogSensor}.
+	 * @param enumerationObject
+	 *            The enumeration.
+	 * @param catalogComponent
+	 *            The parent {@code CatalogComponent}.
+	 * @return The created {@code CatalogSensor} is returned.
+	 * @throws IllegalArgumentException
+	 *             Thrown if given name is already in use or not allowed 
+	 */
+	public CatalogSensor createCatalogSensor(String name, CatalogComponent catalogComponent) {
+		validateCatalogName(name, false);
+
+		if (!catalogComponent.getContextType().isTestEquipment()) {
+			throw new IllegalArgumentException("Catalog component is not of type 'TESTEQUIPMENT'");
+		} else if (catalogComponent.getCatalogSensor(name).isPresent()) {
+			throw new IllegalArgumentException("Catalog sensor with name '" + name + "' already exists.");
+		}
+
+		CatalogSensor catalogSensor = new CatalogSensor(createCore(CatalogSensor.class));
+
+		// relations
+		getPermanentStore(catalogSensor).set(catalogComponent);
+		getChildrenStore(catalogComponent).add(catalogSensor);
+
+		// properties
+		catalogSensor.setName(name);
+		catalogSensor.setDateCreated(LocalDateTime.now());
+
+		return catalogSensor;
+	}
 
 	/**
 	 * Creates a new {@link TemplateRoot} with given {@link ContextType} and
@@ -555,7 +592,48 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		throw new IllegalArgumentException("Catalog attribute with name '" + name + "' does not exists.");
 	}
 
-	// TODO create templateSensors...
+	/**
+	 * Creates a new {@link TemplateSensor} for given {@link TemplateComponent}
+	 * based on the given {@link CatalogSensor}.
+	 *
+	 * @param name
+	 *            Name of the created {@code TemplateAttribute}.
+	 * @param templateComponent
+	 *            The parent {@code TemplateComponent}.
+	 * @param catalogSensor
+	 *            reference CatalogSensor
+	 * @param quantity
+	 *            Quantity to create {@link TemplateSensor} for
+	 * @return The created {@code TemplateSensor} is returned.
+	 * @throws IllegalArgumentException
+	 *             Thrown if given name is already in use.
+	 */
+	public TemplateSensor createTemplateSensor(String name, TemplateComponent templateComponent,
+			CatalogSensor catalogSensor, Quantity quantity) {
+		if (templateComponent.getTemplateSensor(name)
+				.isPresent()) {
+			throw new IllegalArgumentException("Template sensor with name '" + name + "' already exists.");
+		}
+
+		if (catalogSensor != null) {
+			TemplateSensor templateSensor = new TemplateSensor(createCore(TemplateSensor.class));
+
+			// relations
+			getPermanentStore(templateSensor).set(templateComponent);
+			getMutableStore(templateSensor).set(catalogSensor);
+			getMutableStore(templateSensor).set(quantity);
+			getChildrenStore(templateComponent).add(templateSensor);
+
+			// properties
+			templateSensor.setName(name);
+			templateSensor.setDefaultActive(true);
+			templateSensor.setOptional(Boolean.TRUE);
+
+			return templateSensor;
+		}
+
+		throw new IllegalArgumentException("Catalog attribute with name '" + name + "' does not exists.");
+	}
 
 	/**
 	 * Creates a new {@link TemplateTestStep}.

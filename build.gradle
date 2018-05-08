@@ -27,3 +27,8 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.13.0'
     testCompile 'org.assertj:assertj-core:3.6.2'
 }
+
+jar {
+	metaInf { from 'NOTICE.txt' }
+	metaInf { from 'LICENSE.txt' }
+}

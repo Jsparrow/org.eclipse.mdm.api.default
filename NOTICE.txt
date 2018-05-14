@@ -31,9 +31,6 @@ org.eclipse.mdm.realms.git	        - A GlassFish realm using ODS authentication.
 
 ## Third-party Content
 
-activation-1.1.jar (1.1)
-    * License: CDDL
-
 antlr4-4.5.3.jar(2.5.3)
     * License: New BSD license
 
@@ -47,9 +44,6 @@ commons-httpclient-3.1.jar  (3.1)
     * License: Apache License, 2.0
 
 commons-lang3-3.4.jar (3.4)
-    * License: Apache License, 2.0
-
-commons-logging-1.0.4.jar(1.0.4)
     * License: Apache License, 2.0
 
 gson-2.7.jar (2.7)
@@ -76,9 +70,6 @@ jackson-core-2.9.2.jar(2.9.2)
 jackson-databind-2.9.2.jar  (2.9.2)
     * License: Apache License, 2.0
 
-jackson-databind-2.9.2.jar  (2.8.6)
-        * License: Apache License, 2.0
-
 jackson-jaxrs-base-2.9.2.jar(2.9.2)
     * License: Apache License, 2.0
 
@@ -88,27 +79,15 @@ jackson-jaxrs-json-provider-2.9.2.jar(2.9.2)
 jackson-module-jaxb-annotations-2.9.2.jar  (2.9.2)
     * License: Apache License, 2.0
 
-javaee-api-7.0.jar (7.0)
-    * License: Apache-2.0 AND W3C
-
 javassist-3.20.0-GA.jar  (2.20.0-GA)
     * License: Mozilla Public License 1.1 (MPL), Apache 2.0
 
 javax.annotation-api-1.2.jar(1.2)
     * License: (CDDL-1.1 OR GPL-2.0 OR GPL-2.0-with-classpath-exception) AND Apache-2.0
 
-javax.inject-1.jar (1.0)
-    * License: Apache License, 2.0
-
-javax.inject-2.5.0-b05.jar  (2.5.0-b05)
-    * License: Apache License, 2.0
-
-javax.mail-1.5.0.jar  (1.5)
-    * License: CDDL-1.0 OR GPL-2.0
-
-javax.ws.rs-api-2.0.1.jar(2.0.1)
-    * License: CDDL
-
+jcl-over-slf4j-1.7.25.jar(1.7.25)
+    * License: MIT License
+    
 jersey-client-2.23.2.jar (2.23.2)
      * License: CDDL
 
@@ -150,6 +129,8 @@ protobuf-java-util-3.2.0.jar  (3.2.0)
 
 slf4j-api-1.7.25.jar  (1.7.25)
     * License: MIT license
+    * Project URL: https://github.com/qos-ch/slf4j
+    * Source URL:  https://github.com/qos-ch/slf4j/releases/tag/v_1.7.25
 
 validation-api-1.1.0.Final.jar (1.1.0.Final)
 * License: Apache License, 2.0

@@ -8,7 +8,7 @@
 
 description = 'MDM API - Default Model'
 group = 'org.eclipse.mdm'
-version = '1.0.0'
+version = '5.0.0M1'
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-	compile 'org.eclipse.mdm:org.eclipse.mdm.api.base:1.0.0'
+	compile "org.eclipse.mdm:org.eclipse.mdm.api.base:${version}"
 	
 	// testing
     testCompile 'junit:junit:4.12'

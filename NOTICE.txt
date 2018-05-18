@@ -1,0 +1,260 @@
+# Notices for the mdmbl webapplication , openMDM(R) Eclipse Working Groupo
+
+This content is produced and maintained by the Eclipse mdmbl project.
+
+ * Project home: https://projects.eclipse.org/projects/technology.mdmbl
+
+## Trademarks
+
+Eclipse mdmbl are
+trademarks of the Eclipse Foundation. Eclipse, and the Eclipse Logo are
+registered trademarks of the Eclipse Foundation.
+
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License v. 1.0 which is available at
+http://www.eclipse.org/legal/epl-v10.html.
+
+SPDX-License-Identifier: EPL-1.0
+
+## Source Code
+
+The project maintains the following source code repositories:
+
+org.eclipse.mdm.api.base.git	        - The openMDM(R) API.
+org.eclipse.mdm.api.default.git	        - Extension of the openMDM(R) API containing default elements.
+org.eclipse.mdm.api.odsadapter.git	- ODS implementation of persistence adapter.
+org.eclipse.mdm.nucleus.git	        - Core building blocks for the openMDM Business Logic and Web Frontend.
+org.eclipse.mdm.realms.git	        - A GlassFish realm using ODS authentication.
+
+
+## Third-party Content
+
+antlr4-4.5.3.jar(2.5.3)
+    * License: New BSD license
+
+aopalliance-repackaged-2.5.0-b05.jar (2.5.0-b05)
+    * License: CDDL
+
+commons-codec-1.2.jar (1.2)
+    * License: Apache License, 2.0
+
+commons-httpclient-3.1.jar  (3.1)
+    * License: Apache License, 2.0
+
+commons-lang3-3.4.jar (3.4)
+    * License: Apache License, 2.0
+
+gson-2.7.jar (2.7)
+    * License: Apache License, 2.0
+
+guava-18.0.jar  (18.0)
+    * License: Apache License, 2.0
+
+hk2-api-2.5.0-b05.jar (2.5.0-b05)
+    * License: CDDL-1.1 OR GPL-2.0
+
+hk2-locator-2.5.0-b05.jar(2.5.0-b05)
+    * License: CDDL
+
+hk2-utils-2.5.0-b05.jar  (2.5.0-b05)
+    * License: CDDL
+
+jackson-annotations-2.9.0.jar  (2.9.0)
+    * License: Apache License, 2.0
+
+jackson-core-2.9.2.jar(2.9.2)
+    * License: Apache License, 2.0
+
+jackson-databind-2.9.2.jar  (2.9.2)
+    * License: Apache License, 2.0
+
+jackson-jaxrs-base-2.9.2.jar(2.9.2)
+    * License: Apache License, 2.0
+
+jackson-jaxrs-json-provider-2.9.2.jar(2.9.2)
+    * License: Apache License, 2.0
+
+jackson-module-jaxb-annotations-2.9.2.jar  (2.9.2)
+    * License: Apache License, 2.0
+
+javassist-3.20.0-GA.jar  (2.20.0-GA)
+    * License: Mozilla Public License 1.1 (MPL), Apache 2.0
+
+javax.annotation-api-1.2.jar(1.2)
+    * License: (CDDL-1.1 OR GPL-2.0 OR GPL-2.0-with-classpath-exception) AND Apache-2.0
+
+jcl-over-slf4j-1.7.25.jar(1.7.25)
+    * License: MIT License
+    
+jersey-client-2.23.2.jar (2.23.2)
+     * License: CDDL
+
+jersey-common-2.23.2.jar (2.23.2)
+    * License: CDDL
+
+jersey-container-servlet-2.23.2.jar  (2.23.2)
+    * License: CDDL
+
+jersey-container-servlet-core-2.23.3.jar(2.23.2)
+    * License: CDDL
+
+jersey-guava-2.23.2.jar  (2.23.2)
+    * License: Apache License, 2.0
+
+jersey-media-jaxb-2.23.2.jar(2.23.2)
+    * License: CDDL
+
+jersey-media-sse-2.23.2.jar (2.23.2)
+    * License: CDDL
+
+jersey-server-2.23.2.jar (2.23.2)
+    * License: (CDDL-1.1 OR GPL-2.0) AND Apache-2.0
+
+logback-classic-1.2.3.jar(1.2.3)
+    * License: Eclipse Public License 1.0
+
+logback-core-1.2.3.jar(1.2.3)
+    * License: Eclipse Public License 1.0
+
+osgi-resource-locator-1.0.1.jar(1.0.1)
+    * License: CDDL
+
+protobuf-java-3.2.0.jar (3.2.0)
+    * License: New BSD license
+
+protobuf-java-util-3.2.0.jar  (3.2.0)
+    * License: New BSD license
+
+slf4j-api-1.7.25.jar  (1.7.25)
+    * License: MIT license
+    * Project URL: https://github.com/qos-ch/slf4j
+    * Source URL:  https://github.com/qos-ch/slf4j/releases/tag/v_1.7.25
+
+validation-api-1.1.0.Final.jar (1.1.0.Final)
+* License: Apache License, 2.0
+
+@angular/common@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/compiler@2.4.8 License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/core@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/forms@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/http@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/platform-browser-dynamic@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/platform-browser@2.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@angular/router@3.4.8
+    * License: MIT
+    * Project: https: //github.com/angular/angular
+    * Source:  https: //github.com/angular/angular
+
+@types/file-saver@0.0.0
+    * License: MIT
+    * Project: https: //wwwhub.com/DefinitelyTyped/DefinitelyTyped
+    * Source:  https: //wwwhub.com/DefinitelyTyped/DefinitelyTyped
+
+bootstrap@3.3.7
+    * License: MIT
+    * Project: https: //github.com/twbs/bootstrap
+    * Source:  https: //github.com/twbs/bootstrap
+
+class-transformer@0.1.6
+    * License: MIT
+    * Project: https: //github.com/pleerock/class-transformer
+    * Source:  https: //github.com/pleerock/class-transformer
+
+core-js@2.4.1
+    * License: MIT
+    * Project: https: //github.com/zloirock/core-js
+    * Source:  https: //github.com/zloirock/core-js
+
+file-saver@1.3.3
+    * License: MIT
+    * Project: https: //github.com/eligrey/FileSaver.js
+    * Source:  https: //github.com/eligrey/FileSaver.js
+
+font-awesome@4.7.0
+    * License: SIL OPEN FONT LICENSE (OFL-1.1) AND MIT
+    * Project: https: //github.com/FortAwesome/Font-Awesome
+    * Source:  https: //github.com/FortAwesome/Font-Awesome
+
+moment@2.17.1
+    * License: MIT
+    * Project: https: //github.com/moment/moment
+    * Source:  https: //github.com/moment/moment
+
+ng2-bootstrap@1.3.1
+    * License: MIT
+    * Project: https: //github.com/valor-software/ng2-bootstrap
+    * Source:  https: //github.com/valor-software/ng2-bootstrap
+
+ng2-split-pane@1.3.1
+    * License: MIT
+    * Project: https: //github.com/wannabegeek/ng2-split-pane
+    * Source:  https: //github.com/wannabegeek/ng2-split-pane
+
+primeng@2.0.5
+    * License: MIT
+    * Project: https: //github.com/primefaces/primeng
+    * Source:  https: //github.com/primefaces/primeng
+
+reflect-metadata@0.1.3
+    * License: Apache-2.0
+    * Project: https: //github.com/rbuckton/ReflectDecorators
+    * Source:  https: //github.com/rbuckton/ReflectDecorators
+
+rxjs@5.1.0
+    * License: Apache-2.0
+    * Project: https: //github.com/ReactiveX/RxJS
+    * Source:  https: //github.com/ReactiveX/RxJS
+
+symbol-observable@1.2.0
+    * License: MIT
+    * Project: https: //github.com/blesh/symbol-observable
+    * Source:  https: //github.com/blesh/symbol-observable
+
+ts-helpers@1.1.1
+    * License: MIT
+    * Project: https: //github.com/ngParty/ts-helpers
+    * Source:  https: //github.com/ngParty/ts-helpers
+
+zone.js@0.7.6
+    * License: MIT
+    * Project: https: //github.com/angular
+    * Source:  https: //github.com/angular/zone.js
+
+
+## Cryptography
+
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.

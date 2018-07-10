@@ -3,33 +3,49 @@
 This content is produced and maintained by the Eclipse mdmbl project.
 
  * Project home: https://projects.eclipse.org/projects/technology.mdmbl
+ 
 
 ## Trademarks
 
-Eclipse mdmbl are
+Eclipse mdmbl and Eclipse openMDM(R) logo are
 trademarks of the Eclipse Foundation. Eclipse, and the Eclipse Logo are
 registered trademarks of the Eclipse Foundation.
 
 ## Declared Project Licenses
 
-This program and the accompanying materials are made available under the terms
-of the Eclipse Public License v. 1.0 which is available at
-http://www.eclipse.org/legal/epl-v10.html.
+The Eclipse Foundation makes available all content in this program ("Content"). 
+Unless otherwise indicated below, the Content is provided to you under the terms and conditions 
+of the Eclipse Public License Version 1.0 ("EPL"). A copy of the EPL is available at 
+http://www.eclipse.org/legal/epl-v10.html. For purposes of the EPL, "Program" will mean the Content.
 
 SPDX-License-Identifier: EPL-1.0
+
+If you did not receive this Content directly from the Eclipse Foundation, 
+the Content is being redistributed by another party ("Redistributor") 
+and different terms and conditions may apply to your use of any object code in the Content. 
+Check the Redistributor's license that was provided with the Content. 
+If no such license exists, contact the Redistributor. Unless otherwise indicated below, 
+the terms and conditions of the EPL still apply to any source code in the Content and 
+such source code may be obtained at http://www.eclipse.org.
+ 
 
 ## Source Code
 
 The project maintains the following source code repositories:
 
-org.eclipse.mdm.api.base.git	        - The openMDM(R) API.
-org.eclipse.mdm.api.default.git	        - Extension of the openMDM(R) API containing default elements.
+org.eclipse.mdm.api.base.git	    - The openMDM(R) API.
+org.eclipse.mdm.api.default.git	    - Extension of the openMDM(R) API containing default elements.
 org.eclipse.mdm.api.odsadapter.git	- ODS implementation of persistence adapter.
 org.eclipse.mdm.nucleus.git	        - Core building blocks for the openMDM Business Logic and Web Frontend.
 org.eclipse.mdm.realms.git	        - A GlassFish realm using ODS authentication.
 
 
 ## Third-party Content
+
+The Content includes items that have been sourced from third parties as set out below.
+ If you did not receive this Content directly from the Eclipse Foundation, the following 
+ is provided for informational purposes only, and you should look to 
+ the Redistributor's license for terms and conditions of use.
 
 antlr4-4.5.3.jar(2.5.3)
     * License: New BSD license
@@ -49,7 +65,7 @@ commons-lang3-3.4.jar (3.4)
 gson-2.7.jar (2.7)
     * License: Apache License, 2.0
 
-guava-18.0.jar  (18.0)
+Google Guava Version: 25.0-jre  (25.0)
     * License: Apache License, 2.0
 
 hk2-api-2.5.0-b05.jar (2.5.0-b05)
@@ -133,6 +149,9 @@ slf4j-api-1.7.25.jar  (1.7.25)
     * Source URL:  https://github.com/qos-ch/slf4j/releases/tag/v_1.7.25
 
 validation-api-1.1.0.Final.jar (1.1.0.Final)
+* License: Apache License, 2.0
+
+vavr-0.9.1-sources.jar (0.9.1)
 * License: Apache License, 2.0
 
 @angular/common@2.4.8
@@ -248,6 +267,33 @@ zone.js@0.7.6
     * License: MIT
     * Project: https: //github.com/angular
     * Source:  https: //github.com/angular/zone.js
+    
+ods530.idl
+Permission of use:
+From Hans-Georg Swolana, Chairman of the Board ASAM e.V.,
+ Prof. Dr. Marcus Rieker, Member of the Board ASAM e.V.
+Date: Hoehenkirchen, 06/01/2016
+"The ASAM Board of Directors releases the IDL files for use under the EPL to the Eclipse IWG openMDM. 
+This is valid for all versions of ASAM ODS 5.3.x.
+This permission is valid under the conditions of Eclipse will not modify the file."
+
+AvalonEvent.idl, CorbaFileServer.idl
+Permission of use:
+From Dr. Ralph Noerenberg
+Date: 08/15/2016
+"Herewith, we release the generated Client-Source-Code generated from our CORBA IDLs, namely
+* CORBANotification Service (generated from „AvalonEvent.idl”)
+* CORBAFileServer (generated from „CorbaFileServer.idl“),
+Under the Eclipse Public License (EPL). This agreement does not include the „AvalonEvent.idl“ and
+„CorbaFileServer.idl“ itself, which remain protected property of HighQSoft. "
+
+OMG Notification Service Specification Version: 1.1
+The terms of use are defined in section "Freely Available And Available
+Free" see: http://www.omg.org/gettingstarted/overview.htm
+
+OMG Event Service Specification Version: 1.2
+The terms of use are defined in section "Freely Available And Available
+Free" see: http://www.omg.org/gettingstarted/overview.htm
 
 
 ## Cryptography

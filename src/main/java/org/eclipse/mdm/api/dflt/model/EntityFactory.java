@@ -405,8 +405,49 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	}
 	
 	/**
-	 * Creates a new {@link CatalogSensor} for given
-	 * {@link CatalogComponent}.
+	 * Creates a new {@link CatalogAttribute} for given {@link CatalogSensor}. The
+	 * {@link ValueType} may be one of the following like in
+	 * {@link #createCatalogAttribute(String, ValueType, CatalogComponent)}:
+	 *
+	 * @param name
+	 *            Name of the created {@code CatalogAttribute}.
+	 * @param valueType
+	 *            The {@code ValueType}.
+	 * @param catalogSensor
+	 *            The parent {@code CatalogSensor}.
+	 * @return The created {@code CatalogAttribute} is returned.
+	 * @throws IllegalArgumentException
+	 *             Thrown if given name is already in use or not allowed or given
+	 *             {@code ValueType} is not supported.
+	 */
+	public CatalogAttribute createCatalogSensorAttribute(String name, ValueType<?> valueType,
+			CatalogSensor catalogSensor) {
+		validateCatalogName(name, true);
+
+		if (catalogSensor.getCatalogAttribute(name).isPresent()) {
+			throw new IllegalArgumentException("CatalogSensor attribute with name '" + name + "' already exists.");
+		} else if (valueType.isEnumerationType() || valueType.isByteStreamType() || valueType.isUnknown()
+				|| valueType.isBlob()) {
+			throw new IllegalArgumentException("Value type '" + valueType + "' is not allowed.");
+		}
+
+		CatalogAttribute catalogAttribute = new CatalogAttribute(
+				createCore(CatalogAttribute.class));
+
+		// relations
+		getCore(catalogAttribute).getPermanentStore().set(catalogSensor);
+		getCore(catalogSensor).getChildrenStore().add(catalogAttribute);
+
+		// properties
+		catalogAttribute.setName(name);
+		catalogAttribute.setValueType(valueType);
+		catalogAttribute.setSortIndex(nextIndex(catalogSensor.getCatalogAttributes()));
+
+		return catalogAttribute;
+	}
+
+	/**
+	 * Creates a new {@link CatalogSensor} for given {@link CatalogComponent}.
 	 *
 	 * @param name
 	 *            Name of the created {@code CatalogSensor}.
@@ -416,7 +457,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 *            The parent {@code CatalogComponent}.
 	 * @return The created {@code CatalogSensor} is returned.
 	 * @throws IllegalArgumentException
-	 *             Thrown if given name is already in use or not allowed 
+	 *             Thrown if given name is already in use or not allowed
 	 */
 	public CatalogSensor createCatalogSensor(String name, CatalogComponent catalogComponent) {
 		validateCatalogName(name, false);
@@ -617,6 +658,17 @@ public abstract class EntityFactory extends BaseEntityFactory {
 
 		if (catalogSensor != null) {
 			TemplateSensor templateSensor = new TemplateSensor(createCore(TemplateSensor.class));
+			// create all implicit TemplateAttributes
+			for (CatalogAttribute catAttr : catalogSensor.getCatalogAttributes()) {
+				TemplateAttribute tplAttr = new TemplateAttribute(createCore(TemplateAttribute.class));
+				tplAttr.setName(catAttr.getName());
+				tplAttr.setValueReadOnly(Boolean.FALSE);
+				tplAttr.setOptional(Boolean.TRUE);
+				getPermanentStore(tplAttr).set(templateSensor);
+				getMutableStore(tplAttr).set(catAttr);
+				getCore(templateSensor).getChildrenStore()
+						.add(tplAttr);
+			}
 
 			// relations
 			getPermanentStore(templateSensor).set(templateComponent);

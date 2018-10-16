@@ -100,9 +100,6 @@ jackson-module-jaxb-annotations-2.9.2.jar  (2.9.2)
 javassist-3.20.0-GA.jar  (2.20.0-GA)
     * License: Apache 2.0
 
-javax.annotation-api-1.2.jar(1.2)
-    * License: Apache-2.0
-
 jcl-over-slf4j-1.7.25.jar(1.7.25)
     * License: MIT License
     * Licence Path: https://www.slf4j.org/license.html

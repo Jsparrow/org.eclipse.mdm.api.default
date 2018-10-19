@@ -69,6 +69,9 @@ gson-2.7.jar (2.7)
 
 Google Guava Version: 25.0-jre  (25.0)
     * License: Apache License, 2.0
+    
+Gradle Wrapper (4.10.2)
+    * License: Apache License, 2.0    
 
 hk2-api-2.5.0-b05.jar (2.5.0-b05)
     * License: CDDL-1.1

@@ -1,48 +1,53 @@
-# Notices for Eclipse MDM|BL, openMDM(R) Eclipse Working Groupo
+# Notices for Eclipse MDM|BL
 
-This content is produced and maintained by the Eclipse MDM|BL project.
+This content is produced and maintained by the Eclipse MDM|BL project,
+it is a project of the openMDM(R) Eclipse Working Group.
 
 * Project home: https://projects.eclipse.org/projects/technology.mdmbl
 
 ## Trademarks
 
-Eclipse MDM|BL, MDM|BL and Eclipse openMDM(R) logo are registered trademarks 
-of the Eclipse Foundation. 
-Eclipse, and the Eclipse Logo are registered trademarks 
+Eclipse MDM|BL, MDM|BL and Eclipse openMDM(R) logo are registered trademarks
 of the Eclipse Foundation.
 
 ## Copyright
 
-All content is the property of the respective authors or their employers. For
-more information regarding authorship of content, please consult the listed
+All content is the property of the following respective authors or their employers.
+For more information regarding authorship of content, please consult the listed
 source code repository logs.
+
+Copyright (c) 2016-2018 Gigatronik Ingolstadt GmbH
+Copyright (c) 2016-2018 Peak Solution GmbH
+Copyright (c) 2017-2018 science + computing AG Tuebingen (ATOS SE)
+Copyright (c) 2017-2018 Canoo Engineering AG
+Copyright (c) 2017 Florian Schmitt
+Copyright (c) 2017-2018 Angelika Wittek
+Copyright (c) 2018 Elektronische Fahrwerksysteme GMBH
+Copyright (c) 2018 Karakun AG
 
 ## Declared Project Licenses
 
-This program and the accompanying materials are made available under the terms
-of the Eclipse Public License v. 1.0 which is available at
-http://www.eclipse.org/legal/epl-v10.html.
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0 which is available at
+http://www.eclipse.org/legal/epl-2.0.
 
-SPDX-License-Identifier: EPL-1.0
- 
+SPDX-License-Identifier: EPL-2.0
 
 ## Source Code
 
 The project maintains the following source code repositories:
 
-org.eclipse.mdm.api.base.git	    - The openMDM(R) API.
+org.eclipse.mdm.api.base.git	      - The openMDM(R) API.
 org.eclipse.mdm.api.default.git	    - Extension of the openMDM(R) API containing default elements.
 org.eclipse.mdm.api.odsadapter.git	- ODS implementation of persistence adapter.
 org.eclipse.mdm.nucleus.git	        - Core building blocks for the openMDM Business Logic and Web Frontend.
-org.eclipse.mdm.realms.git	        - A GlassFish realm using ODS authentication.
-
 
 ## Third-party Content
 
 The Content includes items that have been sourced from third parties as set out below.
- If you did not receive this Content directly from the Eclipse Foundation, the following 
- is provided for informational purposes only, and you should look to 
- the Redistributor's license for terms and conditions of use.
+If you did not receive this Content directly from the Eclipse Foundation, the following
+is provided for informational purposes only, and you should look to
+the Redistributor's license for terms and conditions of use.
 
 antlr4-4.5.3.jar(2.5.3)
     * License: New BSD license
@@ -64,9 +69,12 @@ gson-2.7.jar (2.7)
 
 Google Guava Version: 25.0-jre  (25.0)
     * License: Apache License, 2.0
+    
+Gradle Wrapper (4.10.2)
+    * License: Apache License, 2.0    
 
 hk2-api-2.5.0-b05.jar (2.5.0-b05)
-    * License: CDDL-1.1 
+    * License: CDDL-1.1
 
 hk2-locator-2.5.0-b05.jar(2.5.0-b05)
     * License: CDDL
@@ -95,15 +103,12 @@ jackson-module-jaxb-annotations-2.9.2.jar  (2.9.2)
 javassist-3.20.0-GA.jar  (2.20.0-GA)
     * License: Apache 2.0
 
-javax.annotation-api-1.2.jar(1.2)
-    * License: Apache-2.0
-
 jcl-over-slf4j-1.7.25.jar(1.7.25)
     * License: MIT License
-    * Licence Path: https://www.slf4j.org/license.html  
+    * Licence Path: https://www.slf4j.org/license.html
     * Project URL:  https://www.slf4j.org
-    * Source URL:   https://github.com/qos-ch/slf4j 
-    
+    * Source URL:   https://github.com/qos-ch/slf4j
+
 jersey-client-2.23.2.jar (2.23.2)
      * License: CDDL
 
@@ -145,7 +150,7 @@ protobuf-java-util-3.2.0.jar  (3.2.0)
 
 slf4j-api-1.7.25.jar  (1.7.25)
     * License: MIT license
-    * Licence Path: https://www.slf4j.org/license.html 
+    * Licence Path: https://www.slf4j.org/license.html
     * Project URL: https://github.com/qos-ch/slf4j
     * Source URL:  https://github.com/qos-ch/slf4j/releases/tag/v_1.7.25
 
@@ -161,7 +166,7 @@ vavr-0.9.1-sources.jar (0.9.1)
     * Project: https://github.com/angular/angular
     * Source:  https://github.com/angular/angular
 
-@angular/compiler@2.4.8 
+@angular/compiler@2.4.8
     * License: MIT
     * Licence Path: https://github.com/angular/angular/blob/master/LICENSE
     * Licence Path: https://github.com/angular/angular/blob/master/LICENSE
@@ -245,12 +250,12 @@ moment@2.17.1
     * Licence Path: https://github.com/moment/moment/raw/master/LICENSE
     * Project: https://github.com/moment/moment
     * Source:  https://github.com/moment/moment
-    
+
 ngx-bootstrap@1.9.1
     * License: MIT
     * Licence Path: https://github.com/valor-software/ngx-bootstrap/blob/development/LICENSE
     * Project: https://valor-software.com/ngx-bootstrap
-    * Source:  https://github.com/valor-software/ngx-bootstrap    
+    * Source:  https://github.com/valor-software/ngx-bootstrap
 
 ng2-split-pane@1.3.1
     * License: MIT
@@ -292,12 +297,18 @@ zone.js@0.7.6
     * Project: https://github.com/angular
     * Source:  https://github.com/angular/zone.js
     
+FFAMFAMFAM Silk Icon, Version 1.3
+    * License: Creative Commons Attribution 3.0 License 
+    * Licence Path: https://creativecommons.org/licenses/by/3.0/
+    * Project: http://www.famfamfam.com/lab/icons/silk/
+    * Source:  http://www.famfamfam.com/lab/icons/silk/
+
 ods530.idl
 Permission of use:
 From Hans-Georg Swolana, Chairman of the Board ASAM e.V.,
  Prof. Dr. Marcus Rieker, Member of the Board ASAM e.V.
 Date: Hoehenkirchen, 06/01/2016
-"The ASAM Board of Directors releases the IDL files for use under the EPL to the Eclipse IWG openMDM. 
+"The ASAM Board of Directors releases the IDL files for use under the EPL to the Eclipse IWG openMDM.
 This is valid for all versions of ASAM ODS 5.3.x.
 This permission is valid under the conditions of Eclipse will not modify the file."
 

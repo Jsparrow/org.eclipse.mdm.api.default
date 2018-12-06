@@ -814,6 +814,34 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		return valueListValue;
 	}
 
+	public Classification createClassification(String name, Status status, ProjectDomain projectDomain, Domain domain) {
+		Classification classification = new Classification(createCore(Classification.class));
+
+		getMutableStore(classification).set(status);
+		getMutableStore(classification).set(projectDomain);
+		getMutableStore(classification).set(domain);
+
+		// properties
+		classification.setName(name);
+
+		return classification;
+	}
+
+	public ProjectDomain createProjectDomain(String name) {
+		ProjectDomain projectDomain = new ProjectDomain(createCore(ProjectDomain.class));
+		// properties
+		projectDomain.setName(name);
+		return projectDomain;
+	}
+
+	public Domain createDomain(String name) {
+		Domain domain = new Domain(createCore(Domain.class));
+
+		// properties
+		domain.setName(name);
+		return domain;
+	}
+
 	// ======================================================================
 	// Protected methods
 	// ======================================================================

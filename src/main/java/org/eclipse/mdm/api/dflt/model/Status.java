@@ -84,7 +84,11 @@ public class Status extends BaseEntity implements Describable {
 	 * @return Optional is empty if no {@code Status} is attached.
 	 */
 	public static Optional<Status> of(StatusAttachable statusAttachable) {
-		return Optional.ofNullable(getCore(statusAttachable).getMutableStore().get(Status.class));
+		Classification classification = getCore(statusAttachable).getMutableStore().get(Classification.class);
+		if ( classification == null ) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(getCore(classification).getMutableStore().get(Status.class));
 	}
 
 }

@@ -22,7 +22,9 @@ import java.util.Optional;
 import org.eclipse.mdm.api.base.BaseEntityManager;
 import org.eclipse.mdm.api.base.model.ContextType;
 import org.eclipse.mdm.api.base.model.Entity;
+import org.eclipse.mdm.api.base.model.StatusAttachable;
 import org.eclipse.mdm.api.base.query.DataAccessException;
+import org.eclipse.mdm.api.dflt.model.Status;
 import org.eclipse.mdm.api.dflt.model.Versionable;
 
 /**
@@ -163,4 +165,7 @@ public interface EntityManager extends BaseEntityManager {
 		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameEquals(name))
 				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}
+
+
+	<T extends StatusAttachable> List<T> loadAll(Class<T> entityClass, Status status, String pattern);
 }

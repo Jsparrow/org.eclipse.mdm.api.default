@@ -11,30 +11,25 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  ********************************************************************************/
+package org.eclipse.mdm.api.dflt.model;
 
-description = 'MDM API - Default Model'
-group = 'org.eclipse.mdm'
-version = '5.1.0M1-SNAPSHOT'
+import org.eclipse.mdm.api.base.adapter.Core;
+import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.Describable;
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
+public class Domain extends BaseEntity implements Describable {
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
+    // ======================================================================
+    // Constructors
+    // ======================================================================
 
-dependencies {
-	compile "org.eclipse.mdm:org.eclipse.mdm.api.base:${version}"
-	
-	// testing
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.13.0'
-    testCompile 'org.assertj:assertj-core:3.6.2'
-}
-
-jar {
-	metaInf { from 'NOTICE.txt' }
-	metaInf { from 'LICENSE.txt' }
+    /**
+     * Constructor.
+     *
+     * @param core
+     *            The {@link Core}.
+     */
+    Domain(Core core) {
+        super(core);
+    }
 }

@@ -12,29 +12,24 @@
  *
  ********************************************************************************/
 
-description = 'MDM API - Default Model'
-group = 'org.eclipse.mdm'
-version = '5.1.0M1-SNAPSHOT'
+package org.eclipse.mdm.api.dflt.model;
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
+import org.eclipse.mdm.api.base.adapter.Core;
+import org.eclipse.mdm.api.base.model.BaseEntity;
+import org.eclipse.mdm.api.base.model.Describable;
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
+public class ProjectDomain extends BaseEntity implements Describable {
 
-dependencies {
-	compile "org.eclipse.mdm:org.eclipse.mdm.api.base:${version}"
-	
-	// testing
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.13.0'
-    testCompile 'org.assertj:assertj-core:3.6.2'
-}
+    // ======================================================================
+    // Constructors
+    // ======================================================================
 
-jar {
-	metaInf { from 'NOTICE.txt' }
-	metaInf { from 'LICENSE.txt' }
+    /**
+     * Constructor.
+     *
+     * @param core The {@link Core}.
+     */
+    ProjectDomain(Core core) {
+        super(core);
+    }
 }

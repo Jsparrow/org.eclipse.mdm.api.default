@@ -146,17 +146,16 @@ public class TemplateRoot extends BaseEntity implements Deletable, Versionable {
 	 */
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
-		if (templateComponent.isPresent()) {
-			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
-			if (parentTemplateComponent.isPresent()) {
-				parentTemplateComponent.get().removeTemplateComponent(name);
-			} else {
-				getCore().getChildrenStore().remove(templateComponent.get());
-			}
-			return true;
+		if (!templateComponent.isPresent()) {
+			return false;
 		}
-
-		return false;
+		Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
+		if (parentTemplateComponent.isPresent()) {
+			parentTemplateComponent.get().removeTemplateComponent(name);
+		} else {
+			getCore().getChildrenStore().remove(templateComponent.get());
+		}
+		return true;
 	}
 
 	/**

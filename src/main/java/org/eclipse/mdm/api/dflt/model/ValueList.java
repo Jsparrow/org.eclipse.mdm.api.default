@@ -86,12 +86,11 @@ public class ValueList extends BaseEntity implements Datable, Describable, Delet
 	 */
 	public boolean removeValueListValue(String name) {
 		Optional<ValueListValue> valueListValue = getValueListValue(name);
-		if (valueListValue.isPresent()) {
-			getCore().getChildrenStore().remove(valueListValue.get());
-			return true;
+		if (!valueListValue.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(valueListValue.get());
+		return true;
 	}
 
 	/**

@@ -13,11 +13,11 @@
  ********************************************************************************/
 package org.eclipse.mdm.api.dflt.model;
 
+import java.util.List;
+
 import org.eclipse.mdm.api.base.adapter.Core;
 import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.StatusAttachable;
-
-import java.util.List;
 
 public class Classification
         extends BaseEntity  {

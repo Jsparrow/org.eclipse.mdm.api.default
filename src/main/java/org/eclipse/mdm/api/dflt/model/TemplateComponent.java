@@ -250,12 +250,11 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 */
 	public boolean removeTemplateAttribute(String name) {
 		Optional<TemplateAttribute> templateAttribute = getTemplateAttribute(name);
-		if (templateAttribute.isPresent()) {
-			getCore().getChildrenStore().remove(templateAttribute.get());
-			return true;
+		if (!templateAttribute.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(templateAttribute.get());
+		return true;
 	}
 
 	/**
@@ -313,17 +312,16 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 */
 	public boolean removeTemplateComponent(String name) {
 		Optional<TemplateComponent> templateComponent = getTemplateComponent(name);
-		if (templateComponent.isPresent()) {
-			Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
-			if (parentTemplateComponent.isPresent()) {
-				parentTemplateComponent.get().removeTemplateComponent(name);
-			} else {
-				getCore().getChildrenStore().remove(templateComponent.get());
-			}
-			return true;
+		if (!templateComponent.isPresent()) {
+			return false;
 		}
-
-		return false;
+		Optional<TemplateComponent> parentTemplateComponent = templateComponent.get().getParentTemplateComponent();
+		if (parentTemplateComponent.isPresent()) {
+			parentTemplateComponent.get().removeTemplateComponent(name);
+		} else {
+			getCore().getChildrenStore().remove(templateComponent.get());
+		}
+		return true;
 	}
 
 	/**
@@ -362,12 +360,11 @@ public class TemplateComponent extends BaseEntity implements Deletable, Sortable
 	 */
 	public boolean removeTemplateSensor(String name) {
 		Optional<TemplateSensor> templateSensor = getTemplateSensor(name);
-		if (templateSensor.isPresent()) {
-			getCore().getChildrenStore().remove(templateSensor.get());
-			return true;
+		if (!templateSensor.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(templateSensor.get());
+		return true;
 	}
 
 	/**

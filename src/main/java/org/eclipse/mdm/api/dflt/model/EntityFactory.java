@@ -178,9 +178,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		// create default active and mandatory context components
 		templateRoot.getTemplateComponents().stream()
 				.filter(TemplateComponent.IS_DEFAULT_ACTIVE.or(TemplateComponent.IS_MANDATORY))
-				.forEach(templateComponent -> {
-					createContextComponent(templateComponent.getName(), contextRoot);
-				});
+				.forEach(templateComponent -> createContextComponent(templateComponent.getName(), contextRoot));
 
 		return contextRoot;
 	}
@@ -193,7 +191,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	@Override
 	public ContextComponent createContextComponent(String name, ContextRoot contextRoot) {
 		if (contextRoot.getContextComponent(name).isPresent()) {
-			throw new IllegalArgumentException("Context component with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Context component with name '").append(name).append("' already exists.").toString());
 		}
 
 		TemplateRoot templateRoot = TemplateRoot.of(contextRoot)
@@ -219,27 +217,21 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				contextComponent
 						.setMimeType(contextComponent.getMimeType().addSubType(templateComponent.get().getName()));
 				hideValues(getCore(contextComponent), templateComponent.get().getTemplateAttributes());
-				templateComponent.get().getTemplateAttributes().forEach(ta -> {
-					contextComponent.getValue(ta.getName()).set(ta.getDefaultValue().extract());
-				});
+				templateComponent.get().getTemplateAttributes().forEach(ta -> contextComponent.getValue(ta.getName()).set(ta.getDefaultValue().extract()));
 
 				// create default active and mandatory child context components
 				templateComponent.get().getTemplateComponents().stream().filter(TemplateComponent.IS_IMPLICIT_CREATE)
-						.forEach(childTemplateComponent -> {
-							createContextComponent(childTemplateComponent.getName(), contextRoot);
-						});
+						.forEach(childTemplateComponent -> createContextComponent(childTemplateComponent.getName(), contextRoot));
 
 				// create default active and mandatory context sensors
 				templateComponent.get().getTemplateSensors().stream().filter(TemplateSensor.IS_IMPLICIT_CREATE)
-						.forEach(templateSensor -> {
-							createContextSensor(templateSensor.getName(), contextComponent);
-						});
+						.forEach(templateSensor -> createContextSensor(templateSensor.getName(), contextComponent));
 
 				return contextComponent;
 			}
 		}
 
-		throw new IllegalArgumentException("Template component with name '" + name + "' does not exist.");
+		throw new IllegalArgumentException(new StringBuilder().append("Template component with name '").append(name).append("' does not exist.").toString());
 	}
 
 	/**
@@ -248,7 +240,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	@Override
 	public ContextSensor createContextSensor(String name, ContextComponent contextComponent) {
 		if (contextComponent.getContextSensor(name).isPresent()) {
-			throw new IllegalArgumentException("Context sensor with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Context sensor with name '").append(name).append("' already exists.").toString());
 		}
 
 		TemplateComponent templateComponent = TemplateComponent.of(contextComponent)
@@ -265,14 +257,12 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			// properties
 			contextSensor.setName(name);
 			hideValues(getCore(contextSensor), templateSensor.get().getTemplateAttributes());
-			templateSensor.get().getTemplateAttributes().forEach(ta -> {
-				contextSensor.getValue(ta.getName()).set(ta.getDefaultValue().extract());
-			});
+			templateSensor.get().getTemplateAttributes().forEach(ta -> contextSensor.getValue(ta.getName()).set(ta.getDefaultValue().extract()));
 			
 			return contextSensor;
 		}
 
-		throw new IllegalArgumentException("Template sensor with name '" + name + "' does not exist.");
+		throw new IllegalArgumentException(new StringBuilder().append("Template sensor with name '").append(name).append("' does not exist.").toString());
 	}
 
 	/**
@@ -351,10 +341,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		validateCatalogName(name, true);
 
 		if (catalogComponent.getCatalogAttribute(name).isPresent()) {
-			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Catalog attribute with name '").append(name).append("' already exists.").toString());
 		} else if (valueType.isEnumerationType() || valueType.isByteStreamType() || valueType.isUnknown()
 				|| valueType.isBlob()) {
-			throw new IllegalArgumentException("Value type '" + valueType + "' is not allowed.");
+			throw new IllegalArgumentException(new StringBuilder().append("Value type '").append(valueType).append("' is not allowed.").toString());
 		}
 
 		CatalogAttribute catalogAttribute = new CatalogAttribute(
@@ -392,7 +382,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		validateCatalogName(name, true);
 		validateEnum(enumerationObj);
 		if (catalogComponent.getCatalogAttribute(name).isPresent()) {
-			throw new IllegalArgumentException("Catalog attribute with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Catalog attribute with name '").append(name).append("' already exists.").toString());
 		}
 
 		CatalogAttribute catalogAttribute = new CatalogAttribute(
@@ -431,10 +421,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		validateCatalogName(name, true);
 
 		if (catalogSensor.getCatalogAttribute(name).isPresent()) {
-			throw new IllegalArgumentException("CatalogSensor attribute with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("CatalogSensor attribute with name '").append(name).append("' already exists.").toString());
 		} else if (valueType.isEnumerationType() || valueType.isByteStreamType() || valueType.isUnknown()
 				|| valueType.isBlob()) {
-			throw new IllegalArgumentException("Value type '" + valueType + "' is not allowed.");
+			throw new IllegalArgumentException(new StringBuilder().append("Value type '").append(valueType).append("' is not allowed.").toString());
 		}
 
 		CatalogAttribute catalogAttribute = new CatalogAttribute(
@@ -471,7 +461,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		if (!catalogComponent.getContextType().isTestEquipment()) {
 			throw new IllegalArgumentException("Catalog component is not of type 'TESTEQUIPMENT'");
 		} else if (catalogComponent.getCatalogSensor(name).isPresent()) {
-			throw new IllegalArgumentException("Catalog sensor with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Catalog sensor with name '").append(name).append("' already exists.").toString());
 		}
 
 		CatalogSensor catalogSensor = new CatalogSensor(createCore(CatalogSensor.class));
@@ -527,10 +517,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 */
 	public TemplateComponent createTemplateComponent(String name, TemplateRoot templateRoot,
 			CatalogComponent catalogComponent) {
-		if (!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
+		if (templateRoot.getContextType() != catalogComponent.getContextType()) {
 			throw new IllegalArgumentException("Context type of template root and catalog component do not match.");
 		} else if (templateRoot.getTemplateComponent(name).isPresent()) {
-			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Template component with name '").append(name).append("' already exists.").toString());
 		}
 
 		TemplateComponent templateComponent = new TemplateComponent(
@@ -573,10 +563,10 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	public TemplateComponent createTemplateComponent(String name, TemplateComponent partentComponentTemplate,
 			CatalogComponent catalogComponent) {
 		TemplateRoot templateRoot = partentComponentTemplate.getTemplateRoot();
-		if (!templateRoot.getContextType().equals(catalogComponent.getContextType())) {
+		if (templateRoot.getContextType() != catalogComponent.getContextType()) {
 			throw new IllegalArgumentException("Context type of template root and catalog component do not match.");
 		} else if (templateRoot.getTemplateComponent(name).isPresent()) {
-			throw new IllegalArgumentException("Template component with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Template component with name '").append(name).append("' already exists.").toString());
 		}
 
 		TemplateComponent templateComponent = new TemplateComponent(
@@ -614,7 +604,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 */
 	public TemplateAttribute createTemplateAttribute(String name, TemplateComponent templateComponent) {
 		if (templateComponent.getTemplateAttribute(name).isPresent()) {
-			throw new IllegalArgumentException("Template attribute with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Template attribute with name '").append(name).append("' already exists.").toString());
 		}
 
 		CatalogComponent catalogComponent = templateComponent.getCatalogComponent();
@@ -636,7 +626,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			return templateAttribute;
 		}
 
-		throw new IllegalArgumentException("Catalog attribute with name '" + name + "' does not exists.");
+		throw new IllegalArgumentException(new StringBuilder().append("Catalog attribute with name '").append(name).append("' does not exists.").toString());
 	}
 
 	/**
@@ -659,13 +649,13 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			CatalogSensor catalogSensor, Quantity quantity) {
 		if (templateComponent.getTemplateSensor(name)
 				.isPresent()) {
-			throw new IllegalArgumentException("Template sensor with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Template sensor with name '").append(name).append("' already exists.").toString());
 		}
 
 		if (catalogSensor != null) {
 			TemplateSensor templateSensor = new TemplateSensor(createCore(TemplateSensor.class));
 			// create all implicit TemplateAttributes
-			for (CatalogAttribute catAttr : catalogSensor.getCatalogAttributes()) {
+			catalogSensor.getCatalogAttributes().forEach(catAttr -> {
 				TemplateAttribute tplAttr = new TemplateAttribute(createCore(TemplateAttribute.class));
 				tplAttr.setName(catAttr.getName());
 				tplAttr.setValueReadOnly(Boolean.FALSE);
@@ -674,7 +664,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 				getMutableStore(tplAttr).set(catAttr);
 				getCore(templateSensor).getChildrenStore()
 						.add(tplAttr);
-			}
+			});
 
 			// relations
 			getPermanentStore(templateSensor).set(templateComponent);
@@ -690,7 +680,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 			return templateSensor;
 		}
 
-		throw new IllegalArgumentException("Catalog attribute with name '" + name + "' does not exists.");
+		throw new IllegalArgumentException(new StringBuilder().append("Catalog attribute with name '").append(name).append("' does not exists.").toString());
 	}
 
 	/**
@@ -746,7 +736,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	public TemplateTestStepUsage createTemplateTestStepUsage(String name, TemplateTest templateTest,
 			TemplateTestStep templateTestStep) {
 		if (templateTest.getTemplateTestStepUsage(name).isPresent()) {
-			throw new IllegalArgumentException("Template test step usage with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Template test step usage with name '").append(name).append("' already exists.").toString());
 		}
 
 		TemplateTestStepUsage templateTestStepUsage = new TemplateTestStepUsage(
@@ -794,7 +784,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 	 */
 	public ValueListValue createValueListValue(String name, ValueList valueList) {
 		if (valueList.getValueListValue(name).isPresent()) {
-			throw new IllegalArgumentException("Value list value with name '" + name + "' already exists.");
+			throw new IllegalArgumentException(new StringBuilder().append("Value list value with name '").append(name).append("' already exists.").toString());
 		}
 
 		ValueListValue valueListValue = new ValueListValue(createCore(ValueListValue.class));
@@ -875,9 +865,7 @@ public abstract class EntityFactory extends BaseEntityFactory {
 		// create default active and mandatory test steps according to the
 		// template
 		templateTest.getTemplateTestStepUsages().stream().filter(TemplateTestStepUsage.IS_IMPLICIT_CREATE)
-				.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> {
-					createTestStep(test, statusTestStep, templateTestStep);
-				});
+				.map(TemplateTestStepUsage::getTemplateTestStep).forEach(templateTestStep -> createTestStep(test, statusTestStep, templateTestStep));
 
 		return test;
 	}

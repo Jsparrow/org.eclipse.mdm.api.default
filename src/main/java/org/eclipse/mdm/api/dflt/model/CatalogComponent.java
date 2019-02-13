@@ -120,12 +120,11 @@ public class CatalogComponent extends BaseEntity implements Datable, Deletable, 
 	 */
 	public boolean removeCatalogAttribute(String name) {
 		Optional<CatalogAttribute> catalogAttribute = getCatalogAttribute(name);
-		if (catalogAttribute.isPresent()) {
-			getCore().getChildrenStore().remove(catalogAttribute.get());
-			return true;
+		if (!catalogAttribute.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(catalogAttribute.get());
+		return true;
 	}
 
 	/**
@@ -164,12 +163,11 @@ public class CatalogComponent extends BaseEntity implements Datable, Deletable, 
 	 */
 	public boolean removeCatalogSensor(String name) {
 		Optional<CatalogSensor> catalogSensor = getCatalogSensor(name);
-		if (catalogSensor.isPresent()) {
-			getCore().getChildrenStore().remove(catalogSensor.get());
-			return true;
+		if (!catalogSensor.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(catalogSensor.get());
+		return true;
 	}
 
 	/**

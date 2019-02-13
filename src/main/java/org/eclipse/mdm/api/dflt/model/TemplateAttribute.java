@@ -320,7 +320,7 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 	private static Function<String, Object> getParser(ValueType<?> valueType) {
 		Function<String, Object> converter = VALUETYPE_FUNCTION_MAP.get(valueType);
 		if (converter == null) {
-			throw new IllegalArgumentException("String conversion for value type '" + valueType + "' not supported.");
+			throw new IllegalArgumentException(new StringBuilder().append("String conversion for value type '").append(valueType).append("' not supported.").toString());
 		}
 		return converter;
 	}
@@ -349,7 +349,8 @@ public class TemplateAttribute extends BaseEntity implements Deletable {
 
 		// pattern
 		private static final Pattern FILE_LINK_PATTERN = Pattern
-				.compile("(?<" + DESCRIPTION + ">.*?)\\[(?<" + MIMETYPE + ">.*?),(?<" + PATH + ">.*?)\\]");
+				.compile(new StringBuilder().append("(?<").append(DESCRIPTION).append(">.*?)\\[(?<").append(MIMETYPE).append(">.*?),(?<").append(PATH)
+						.append(">.*?)\\]").toString());
 
 		// ======================================================================
 		// Public methods

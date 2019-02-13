@@ -56,8 +56,7 @@ public interface EntityManager extends BaseEntityManager {
 	 * @throws DataAccessException
 	 *             Thrown if unable to retrieve the entity.
 	 */
-	default <T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID)
-			throws DataAccessException {
+	default <T extends Entity> T load(Class<T> entityClass, ContextType contextType, String instanceID) {
 		List<T> entities = load(entityClass, contextType, Collections.singletonList(instanceID));
 		if (entities.size() != 1) {
 			throw new DataAccessException("Failed to load entity by instance ID.");
@@ -66,8 +65,7 @@ public interface EntityManager extends BaseEntityManager {
 		
 	}
 
-	<T extends Entity> List<T> load(Class<T> entityClass, ContextType contextType, Collection<String> instanceIDs)
-			throws DataAccessException;
+	<T extends Entity> List<T> load(Class<T> entityClass, ContextType contextType, Collection<String> instanceIDs);
 	
 	/**
 	 * Loads all available entities of given type.
@@ -90,8 +88,7 @@ public interface EntityManager extends BaseEntityManager {
 	 *             Thrown if unable to retrieve the entities.
 	 * @see #loadAll(Class, ContextType, String)
 	 */
-	default <T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType)
-			throws DataAccessException {
+	default <T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType) {
 		return loadAll(entityClass, contextType, "*");
 	}
 
@@ -122,8 +119,7 @@ public interface EntityManager extends BaseEntityManager {
 	 *             Thrown if unable to retrieve the entities.
 	 * @see #loadAll(Class)
 	 */
-	<T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType, String pattern)
-			throws DataAccessException;
+	<T extends Entity> List<T> loadAll(Class<T> entityClass, ContextType contextType, String pattern);
 
 	/**
 	 * Loads the latest valid {@link Versionable} entity of given type and name.
@@ -138,8 +134,7 @@ public interface EntityManager extends BaseEntityManager {
 	 * @throws DataAccessException
 	 *             Thrown if unable to retrieve the entity.
 	 */
-	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name)
-			throws DataAccessException {
+	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, String name) {
 		return loadAll(entityClass, name).stream().filter(v -> v.nameEquals(name)).filter(Versionable::isValid)
 				.max(Versionable.COMPARATOR);
 	}
@@ -161,7 +156,7 @@ public interface EntityManager extends BaseEntityManager {
 	 *             Thrown if unable to retrieve the entity.
 	 */
 	default <T extends Versionable> Optional<T> loadLatestValid(Class<T> entityClass, ContextType contextType,
-			String name) throws DataAccessException {
+			String name) {
 		return loadAll(entityClass, contextType, name).stream().filter(v -> v.nameEquals(name))
 				.filter(Versionable::isValid).max(Versionable.COMPARATOR);
 	}

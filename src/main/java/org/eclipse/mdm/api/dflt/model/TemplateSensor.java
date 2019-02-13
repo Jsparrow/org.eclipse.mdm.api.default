@@ -308,12 +308,11 @@ public class TemplateSensor extends BaseEntity implements Deletable, Describable
 	 */
 	public boolean removeTemplateAttribute(String name) {
 		Optional<TemplateAttribute> templateAttribute = getTemplateAttribute(name);
-		if (templateAttribute.isPresent()) {
-			getCore().getChildrenStore().remove(templateAttribute.get());
-			return true;
+		if (!templateAttribute.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(templateAttribute.get());
+		return true;
 	}
 
 	/**

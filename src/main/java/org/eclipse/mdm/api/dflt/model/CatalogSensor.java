@@ -102,12 +102,11 @@ public class CatalogSensor extends BaseEntity implements Datable, Deletable, Des
 	 */
 	public boolean removeCatalogAttribute(String name) {
 		Optional<CatalogAttribute> catalogAttribute = getCatalogAttribute(name);
-		if (catalogAttribute.isPresent()) {
-			getCore().getChildrenStore().remove(catalogAttribute.get());
-			return true;
+		if (!catalogAttribute.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(catalogAttribute.get());
+		return true;
 	}
 
 	/**

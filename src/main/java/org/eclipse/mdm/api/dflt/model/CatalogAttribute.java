@@ -23,7 +23,6 @@ import org.eclipse.mdm.api.base.model.BaseEntity;
 import org.eclipse.mdm.api.base.model.Deletable;
 import org.eclipse.mdm.api.base.model.Describable;
 import org.eclipse.mdm.api.base.model.EnumRegistry;
-import org.eclipse.mdm.api.base.model.EnumerationValue;
 import org.eclipse.mdm.api.base.model.Enumeration;
 import org.eclipse.mdm.api.base.model.ScalarType;
 import org.eclipse.mdm.api.base.model.Sortable;
@@ -291,9 +290,7 @@ public class CatalogAttribute extends BaseEntity implements Deletable, Describab
 		sb.append(", Sequence = ").append((boolean) sequenceValue.extract());
 
 		Optional<Unit> catalogUnit = getUnit();
-		if (catalogUnit.isPresent()) {
-			sb.append(", Unit = ").append(catalogUnit.get());
-		}
+		catalogUnit.ifPresent(value -> sb.append(", Unit = ").append(value));
 
 		sb.append(", ").append(getValues().values().stream().map(Value::toString).collect(Collectors.joining(", ")));
 

@@ -173,12 +173,11 @@ public class TemplateTest extends BaseEntity implements Deletable, Describable, 
 	 */
 	public boolean removeTemplateTestStepUsage(String name) {
 		Optional<TemplateTestStepUsage> templateTestStepUsage = getTemplateTestStepUsage(name);
-		if (templateTestStepUsage.isPresent()) {
-			getCore().getChildrenStore().remove(templateTestStepUsage.get());
-			return true;
+		if (!templateTestStepUsage.isPresent()) {
+			return false;
 		}
-
-		return false;
+		getCore().getChildrenStore().remove(templateTestStepUsage.get());
+		return true;
 	}
 
 	/**
